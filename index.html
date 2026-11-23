@@ -65,20 +65,6 @@ h2 { font-family: var(--f-display); font-weight: 700; text-transform: uppercase;
 .tag { font-family: var(--f-mono); font-size: .7rem; color: var(--sulfur); border: 1px solid var(--sulfur-dim); border-radius: 999px; padding: 2px 8px; }
 .note { font-size: .78rem; color: var(--muted); margin: 0; }
 
-/* Patlayıcı seçici */
-.picker { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
-.pick {
-  background: var(--panel); border: 1.5px solid var(--line); border-radius: 14px;
-  padding: 10px 4px 9px; display: flex; flex-direction: column; align-items: center; gap: 4px; min-width: 0;
-  transition: transform .12s, border-color .15s, background .15s;
-}
-.pick svg { width: 44px; height: 44px; }
-.pick b { font-family: var(--f-display); font-weight: 700; font-size: 1rem; letter-spacing: .02em; line-height: 1.1; }
-.pick small { font-family: var(--f-mono); font-size: .66rem; color: var(--muted); }
-.pick[aria-pressed="true"] { border-color: var(--sulfur); background: var(--raised); box-shadow: 0 0 0 3px rgba(232,197,71,.14); }
-.pick[aria-pressed="true"] b { color: var(--sulfur); }
-.pick:active { transform: scale(.96); }
-
 /* Hedef kutuları */
 .tiles { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 .tile {
@@ -146,7 +132,6 @@ h2 { font-family: var(--f-display); font-weight: 700; text-transform: uppercase;
 .step button:active { background: var(--raised); }
 .step output { text-align: center; font-family: var(--f-mono); font-weight: 700; font-size: 1.05rem; font-variant-numeric: tabular-nums; }
 .tile.on .step output { color: var(--sulfur); }
-.tile.na .need { color: var(--danger); }
 .tile .flags { display: flex; gap: 4px; flex-wrap: wrap; }
 .new { font-family: var(--f-display); font-weight: 700; font-size: .68rem; letter-spacing: .08em; text-transform: uppercase; background: var(--danger); color: var(--sulfur-ink); border-radius: 5px; padding: 1px 6px; }
 .est { font-family: var(--f-mono); font-size: .66rem; color: var(--muted); border: 1px solid var(--line); border-radius: 5px; padding: 0 5px; }
@@ -179,11 +164,6 @@ h2 { font-family: var(--f-display); font-weight: 700; text-transform: uppercase;
 .tab[aria-selected="true"] { color: var(--sulfur); }
 
 /* Malzeme listesi */
-.hero-need { display: flex; align-items: center; gap: 14px; background: var(--panel); border: 1.5px solid var(--sulfur-dim); border-radius: 18px; padding: 16px; }
-.hero-need svg { width: 64px; height: 64px; }
-.hero-need .n { font-family: var(--f-display); font-weight: 800; font-size: 2rem; line-height: 1; text-transform: uppercase; }
-.hero-need .n span { color: var(--sulfur); }
-.hero-need .sub { color: var(--muted); font-size: .85rem; margin-top: 4px; }
 .mats { display: flex; flex-direction: column; background: var(--panel); border: 1px solid var(--line); border-radius: 16px; overflow: hidden; }
 .mat { display: flex; align-items: center; gap: 12px; padding: 10px 14px; border-bottom: 1px solid var(--line); }
 .mat:last-child { border-bottom: 0; }
@@ -225,9 +205,40 @@ h2 { font-family: var(--f-display); font-weight: 700; text-transform: uppercase;
 .recipe-h svg { width: 48px; height: 48px; }
 .recipe-h b { font-family: var(--f-display); font-weight: 700; font-size: 1.2rem; text-transform: uppercase; letter-spacing: .02em; display: block; line-height: 1.1; }
 .recipe-h small { color: var(--muted); font-size: .78rem; }
-.eq { font-family: var(--f-display); color: var(--muted); font-weight: 700; }
 
-@media (max-width: 370px) { .pick small { display: none; } .tile .art svg { width: 44px; height: 44px; } }
+@media (max-width: 370px) { .tile .art svg { width: 44px; height: 44px; } }
+@media (max-width: 430px) { #top-sub { display: none; } }
+
+/* Üst başlık düğmeleri */
+.top-r { display: flex; align-items: center; gap: 8px; }
+.hbtn { min-width: 34px; height: 34px; padding: 0 8px; border-radius: 10px; border: 1px solid var(--line); background: var(--panel); color: var(--fg); font-family: var(--f-display); font-weight: 700; font-size: .95rem; letter-spacing: .04em; }
+.hbtn.lang { color: var(--sulfur); border-color: var(--sulfur-dim); }
+
+/* Tanıtım rehberi */
+.tour::before { content: ""; position: fixed; inset: 0; z-index: 40; background: rgba(8,7,4,.62); }
+.spot { position: relative; z-index: 41; border-radius: 14px; box-shadow: 0 0 0 3px var(--sulfur), 0 0 0 9999px rgba(8,7,4,0); scroll-margin-top: 90px; }
+body.spot-dock .dock { z-index: 41; }
+.tour-card {
+  position: fixed; z-index: 42; left: max(12px, env(safe-area-inset-left, 0px)); right: max(12px, env(safe-area-inset-right, 0px));
+  bottom: calc(150px + env(safe-area-inset-bottom, 0px)); max-width: 520px; margin: 0 auto;
+  background: var(--panel); border: 1.5px solid var(--sulfur); border-radius: 18px; padding: 16px; display: flex; flex-direction: column; gap: 10px;
+  box-shadow: 0 14px 40px rgba(0,0,0,.55);
+}
+.tour.center .tour-card { bottom: auto; top: 50%; transform: translateY(-50%); }
+.tour.top .tour-card { bottom: auto; top: calc(70px + env(safe-area-inset-top, 0px)); }
+.tour-top { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.tour-count { font-family: var(--f-mono); font-size: .75rem; color: var(--sulfur); }
+.tour-dots { display: flex; gap: 5px; }
+.tour-dots i { width: 7px; height: 7px; border-radius: 50%; background: var(--line); }
+.tour-dots i.on { background: var(--sulfur); }
+.tour-card h3 { margin: 0; font-family: var(--f-display); font-weight: 800; font-size: 1.35rem; text-transform: uppercase; letter-spacing: .02em; line-height: 1.1; }
+.tour-card p { margin: 0; color: var(--fg); font-size: .92rem; line-height: 1.45; }
+.tour-lang { display: flex; gap: 6px; }
+.tour-lang button { border: 1px solid var(--line); border-radius: 999px; padding: 6px 12px; font-size: .82rem; font-weight: 600; }
+.tour-lang button[aria-pressed="true"] { background: var(--sulfur); color: var(--sulfur-ink); border-color: var(--sulfur); }
+.tour-actions { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-top: 4px; }
+.tour-btns { display: flex; gap: 8px; }
+.btn.ghost { background: none; color: var(--fg); border: 1px solid var(--line); }
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
 </style>
 
@@ -562,7 +573,11 @@ h2 { font-family: var(--f-display); font-weight: 700; text-transform: uppercase;
 <header class="top">
   <div class="top-in">
     <div class="brand"><svg class="i"><use href="#i-c4"/></svg><h1>Raid <span>Hesap</span></h1></div>
-    <small id="top-sub">Rust araç kiti</small>
+    <div class="top-r">
+      <small id="top-sub"></small>
+      <button class="hbtn" id="help-btn" aria-label="Rehber / Guide">?</button>
+      <button class="hbtn lang" id="lang-btn" aria-label="Dil / Language"></button>
+    </div>
   </div>
 </header>
 
@@ -570,16 +585,16 @@ h2 { font-family: var(--f-display); font-weight: 700; text-transform: uppercase;
   <!-- RAID -->
   <section class="view" id="view-raid">
     <div class="sec">
-      <span class="mini">Kullanabileceğin patlayıcılar</span>
+      <span class="mini" data-i18n="expsTitle">Kullanabileceğin patlayıcılar</span>
       <div class="quick wrap" id="exps"></div>
-      <span class="mini">Bomba atarın (Grenade Launcher) var mı?</span>
+      <span class="mini" data-i18n="glTitle">Bomba atarın (Grenade Launcher) var mı?</span>
       <div class="quick wrap" id="gl"></div>
       <p class="note" id="gl-note"></p>
     </div>
     <div class="sec">
       <div class="sec-h">
-        <h2>Ne patlatacaksın?</h2>
-        <span style="display:flex;gap:10px;align-items:center"><span class="tag" id="example-tag">örnek</span><button class="link" id="reset">Sıfırla</button></span>
+        <h2 data-i18n="whatBreak">Ne patlatacaksın?</h2>
+        <span style="display:flex;gap:10px;align-items:center"><span class="tag" id="example-tag" data-i18n="example">örnek</span><button class="link" id="reset" data-i18n="reset">Sıfırla</button></span>
       </div>
       <div class="sec" id="tiles"></div>
     </div>
@@ -592,25 +607,25 @@ h2 { font-family: var(--f-display); font-weight: 700; text-transform: uppercase;
   <!-- KİT -->
   <section class="view" id="view-kit" hidden>
     <div class="sec">
-      <div class="sec-h"><h2>Raid kiti</h2><button class="link" id="kit-reset">Kiti temizle</button></div>
-      <p class="note">Raid için yanına alacaklarını seç. Patlayıcılar Raid ekranından gelir; burada mermi, bomba, smoke, sağlık ve yedek patlayıcı eklersin. Hepsi plana ve toplama hesabına eklenir.</p>
+      <div class="sec-h"><h2 data-i18n="kitTitle">Raid kiti</h2><button class="link" id="kit-reset" data-i18n="kitClear">Kiti temizle</button></div>
+      <p class="note" data-i18n="kitNote">Raid için yanına alacaklarını seç. Patlayıcılar Raid ekranından gelir; burada mermi, bomba, smoke, sağlık ve yedek patlayıcı eklersin. Hepsi plana ve toplama hesabına eklenir.</p>
     </div>
     <div id="kit-list" class="sec"></div>
-    <div class="sec"><h2>Kitin maliyeti</h2><div class="mats" id="kit-total"></div></div>
+    <div class="sec"><h2 data-i18n="kitCost">Kitin maliyeti</h2><div class="mats" id="kit-total"></div></div>
   </section>
 
   <!-- SÜLFÜR -->
   <section class="view" id="view-sulfur" hidden>
     <div class="sec">
-      <h2>Toplama hesabı</h2>
+      <h2 data-i18n="farmTitle">Toplama hesabı</h2>
       <div class="field">
         <svg class="i"><use href="#i-node"/></svg>
-        <div style="flex:1;min-width:0"><label for="need-in">Gereken sülfür</label><input id="need-in" type="number" inputmode="numeric" min="0" step="100"></div>
+        <div style="flex:1;min-width:0"><label for="need-in" data-i18n="needLabel">Gereken sülfür</label><input id="need-in" type="number" inputmode="numeric" min="0" step="100"></div>
       </div>
       <div class="quick"><button id="from-plan" class="link-chip"></button></div>
-      <span class="mini">Sunucu çarpanı</span>
+      <span class="mini" data-i18n="rate">Sunucu çarpanı</span>
       <div class="quick" id="mult"></div>
-      <span class="mini">Alet</span>
+      <span class="mini" data-i18n="tool">Alet</span>
       <div class="quick" id="tool"></div>
       <span class="mini">Furnace</span>
       <div class="quick" id="furn"></div>
@@ -619,49 +634,68 @@ h2 { font-family: var(--f-display); font-weight: 700; text-transform: uppercase;
       <p class="note" id="gather-note"></p>
     </div>
     <div class="sec">
-      <h2>Elindeki sülfür</h2>
+      <h2 data-i18n="haveTitle">Elindeki sülfür</h2>
       <div class="field">
         <svg class="i"><use href="#i-sulfur"/></svg>
-        <div style="flex:1;min-width:0"><label for="sulfur-in">Miktar</label><input id="sulfur-in" type="number" inputmode="numeric" min="0" step="100" value="10000"></div>
+        <div style="flex:1;min-width:0"><label for="sulfur-in" data-i18n="amount">Miktar</label><input id="sulfur-in" type="number" inputmode="numeric" min="0" step="100" value="10000"></div>
       </div>
       <div class="quick" id="quick"></div>
     </div>
     <div class="sec">
-      <h2>Bununla yapabileceğin</h2>
+      <h2 data-i18n="canCraft">Bununla yapabileceğin</h2>
       <div class="craft" id="craft"></div>
     </div>
   </section>
 
   <!-- TARİFLER -->
   <section class="view" id="view-book" hidden>
-    <div class="sec"><h2>Her hedef için en ucuz yol</h2><div class="mats" id="best-all"></div></div>
-    <div class="sec" id="recipes"><h2>Ne neyle yapılır?</h2></div>
-    <p class="note">Tarifler ve raid sayıları 22 Eylül 2026 tarihli sunucu dosyalarına göredir; Facepunch'ın aylık güncellemelerinde değişebilir. Modlu sunucularda farklı olabilir.</p>
+    <div class="sec"><h2 data-i18n="bestAll">Her hedef için en ucuz yol</h2><div class="mats" id="best-all"></div></div>
+    <div class="sec" id="recipes"><h2 data-i18n="recipesTitle">Ne neyle yapılır?</h2></div>
+    <p class="note" data-i18n="bookNote">Tarifler ve raid sayıları 22 Eylül 2026 tarihli sunucu dosyalarına göredir; Facepunch'ın aylık güncellemelerinde değişebilir. Modlu sunucularda farklı olabilir.</p>
   </section>
 </main>
+
+<div class="tour" id="tour" hidden>
+  <div class="tour-card" role="dialog" aria-modal="true" aria-labelledby="tour-title">
+    <div class="tour-top"><span class="tour-count" id="tour-count"></span><div class="tour-dots" id="tour-dots"></div></div>
+    <h3 id="tour-title"></h3>
+    <p id="tour-text"></p>
+    <div class="tour-lang" id="tour-lang"></div>
+    <div class="tour-actions">
+      <button class="link" id="tour-skip"></button>
+      <span class="tour-btns"><button class="btn ghost" id="tour-back"></button><button class="btn" id="tour-next"></button></span>
+    </div>
+  </div>
+</div>
 
 <nav class="dock">
   <div class="dock-in">
     <button class="strip" id="strip"></button>
     <div class="tabs" role="tablist">
-      <button class="tab" role="tab" data-tab="raid"><svg class="i"><use href="#t-raid"/></svg>Raid</button>
-      <button class="tab" role="tab" data-tab="mat"><svg class="i"><use href="#t-mat"/></svg>Plan</button>
-      <button class="tab" role="tab" data-tab="kit"><svg class="i"><use href="#t-kit"/></svg>Kit</button>
-      <button class="tab" role="tab" data-tab="sulfur"><svg class="i"><use href="#t-sulfur"/></svg>Toplama</button>
-      <button class="tab" role="tab" data-tab="book"><svg class="i"><use href="#t-book"/></svg>Tarifler</button>
+      <button class="tab" role="tab" data-tab="raid"><svg class="i"><use href="#t-raid"/></svg><span>Raid</span></button>
+      <button class="tab" role="tab" data-tab="mat"><svg class="i"><use href="#t-mat"/></svg><span>Plan</span></button>
+      <button class="tab" role="tab" data-tab="kit"><svg class="i"><use href="#t-kit"/></svg><span>Kit</span></button>
+      <button class="tab" role="tab" data-tab="sulfur"><svg class="i"><use href="#t-sulfur"/></svg><span data-i18n="tabFarm">Toplama</span></button>
+      <button class="tab" role="tab" data-tab="book"><svg class="i"><use href="#t-book"/></svg><span data-i18n="tabBook">Tarifler</span></button>
     </div>
   </div>
 </nav>
 
 <script>
 const ico = (id, cls = "i", style = "") => `<svg class="${cls}"${style ? ` style="${style}"` : ""}><use href="#i-${id}"/></svg>`;
-const fmt = n => Math.round(n).toLocaleString("tr-TR");
+// Dil: tr ya da en (kayıttan okunur; değişince sayfa yeniden yüklenir)
+let LANG = "tr";
+try { LANG = (JSON.parse(localStorage.getItem("raidhesap4")) || {}).lang === "en" ? "en" : "tr"; } catch (e) {}
+document.documentElement.lang = LANG;
+const L = (tr, en) => LANG === "en" ? en : tr;
+const fmt = n => Math.round(n).toLocaleString(LANG === "en" ? "en-US" : "tr-TR");
+const dec = v => LANG === "en" ? String(v) : String(v).replace(".", ",");
 const $ = id => document.getElementById(id);
 
 /* ───────── Oyun verisi ─────────
    Kaynak: Rust sunucu dosyaları, public build 2633.288.1 (22 Eylül 2026, "Breach and Clear"),
    GameServerKings'in sunucu dosyalarından çıkardığı tablo ve hesaplayıcı kodu. */
-const BUILD = { protocol: "2633.288.1", date: "22 Eylül 2026", update: "Breach and Clear" };
+const BUILD = { protocol: "2633.288.1", date: L("22 Eylül 2026", "22 September 2026"), update: "Breach and Clear" };
 
 // Ham madde ve ara ürünler
 const MAT = {
@@ -691,7 +725,7 @@ const RECIPE = {
 };
 // Raid kiti (Facepunch wiki tarifleri; out = bir üretimde çıkan adet, wb = gereken çalışma tezgâhı, step = +/− adımı)
 const BUL = (a, b) => `--t1:${a};--t2:${b}`;
-const KIT_GROUPS = { ammo: "Mermiler", throw: "Bombalar ve smoke", med: "Sağlık", exp: "Yedek patlayıcılar" };
+const KIT_GROUPS = { ammo: L("Mermiler", "Ammo"), throw: L("Bombalar ve smoke", "Grenades and smoke"), med: L("Sağlık", "Medical"), exp: L("Yedek patlayıcılar", "Spare explosives") };
 const KIT = [
   { id: "r556",   g: "ammo",  name: "5.56 Rifle Ammo",            icon: "bullet",  st: BUL("#c9a54a", "#d6b257"), out: 3, wb: 2, step: 30, ins: { gp: 5, frag: 10 } },
   { id: "r556hv", g: "ammo",  name: "HV 5.56 Rifle Ammo",         icon: "bullet",  st: BUL("#5f87a3", "#d6b257"), out: 3, wb: 3, step: 30, ins: { gp: 10, frag: 10 } },
@@ -722,7 +756,7 @@ const EXP = {
   he:      { name: "40mm HE", long: "40mm HE Grenade",           icon: "he",      out: 2, ins: { explosives: 1, gp: 30, pipe: 1 },         delivery: "splash", dmg: { Blunt: 55, Explosion: 35 } },
 };
 const ORDER = ["c4", "rocket", "satchel", "ammo", "beancan", "hv", "he"];
-const NEEDS = { ammo: "Tüfek gerekir", hv: "Rocket Launcher", he: "Grenade Launcher (MGL)", beancan: "%15 dud", satchel: "%20 dud" };
+const NEEDS = { ammo: L("Tüfek gerekir", "Needs a rifle"), hv: "Rocket Launcher", he: "Grenade Launcher (MGL)", beancan: L("%15 dud", "15% dud"), satchel: L("%20 dud", "20% dud") };
 // Explo 5.56: her mermi = mermi vuruşu (50 Bullet + 0,01 Explosion) + 1,5 m'lik küçük patlama (5 Explosion)
 const AMMO_BULLET = { Bullet: 50, Explosion: 0.01 }, AMMO_BLAST = { Explosion: 5 }, AMMO_FAR = 0.8;
 // Sert (dış) yüz: darbe ve delmenin %90'ını, mermi hasarının %50'sini ayrıca engeller. Yapışan patlayıcılar bunu atlar.
@@ -745,7 +779,7 @@ const T = {
   armor: "--t1:#4d5358;--t2:#2f3438",
   stone: "--t1:#9a958a;--t2:#6f6b63",
 };
-const GROUPS = { turret: "Taretler", door: "Kapılar", hatch: "Kapaklar", wall: "Duvarlar", window: "Pencere ve açıklıklar", ext: "Dış surlar", dep: "Eşyalar" };
+const GROUPS = { turret: L("Taretler", "Turrets"), door: L("Kapılar", "Doors"), hatch: L("Kapaklar", "Hatches"), wall: L("Duvarlar", "Walls"), window: L("Pencere ve açıklıklar", "Windows and openings"), ext: L("Dış surlar", "High externals"), dep: L("Eşyalar", "Deployables") };
 const TARGETS = [
   { id: "wdoor",   g: "door",   name: "Wooden Door",              icon: "door",     tier: "wood",  hp: 200,  prot: "wdoor", shell: true },
   { id: "wddoor",  g: "door",   name: "Wood Double Door",         icon: "ddoor",    tier: "wood",  hp: 200,  prot: "wdoor", shell: true },
@@ -836,7 +870,7 @@ const unitSulfur = k => UNIT[k];
 
 /* ───────── Durum ───────── */
 const EXAMPLE = { gdoor: 1, stwall: 2 };
-let state = { counts: { ...EXAMPLE }, choice: {}, kit: {}, example: true, tab: "raid", sulfur: 10000, side: "hard",
+let state = { counts: { ...EXAMPLE }, choice: {}, kit: {}, example: true, tab: "raid", sulfur: 10000, side: "hard", lang: LANG, tourDone: false,
   enabled: { c4: true, rocket: true, satchel: true, ammo: true, beancan: true, hv: true, he: false } };
 try { const s = JSON.parse(localStorage.getItem("raidhesap4")); if (s && s.counts) state = { ...state, ...s, choice: s.choice || {}, kit: s.kit || {}, enabled: { ...state.enabled, ...(s.enabled || {}) } }; } catch (e) {}
 // Bir kerelik: eski kayıtta kapalı kalan patlayıcıları aç (bomba atar hariç)
@@ -879,7 +913,7 @@ const icons = parts => ORDER.filter(k => parts[k]).map(k => ico(EXP[k].icon)).jo
 const chosen = t => t.methods.find(m => m.key === state.choice[t.id]) || t.methods[0];
 
 /* ───────── Raid ekranı kurulum ───────── */
-$("gl").innerHTML = `<button data-v="0">Yok</button><button data-v="1" class="expchip">${ico("he")}Var · 40mm HE kullan</button>`;
+$("gl").innerHTML = `<button data-v="0">${L("Yok", "No")}</button><button data-v="1" class="expchip">${ico("he")}${L("Var · 40mm HE kullan", "Yes · use 40mm HE")}</button>`;
 $("gl").querySelectorAll("button").forEach(b => b.onclick = () => { state.enabled.he = b.dataset.v === "1"; render(); });
 state.side = "hard"; // raid her zaman dıştan (sert taraftan) hesaplanır
 $("exps").innerHTML = ORDER.filter(k => k !== "he").map(k => `<button data-v="${k}" class="expchip">${ico(EXP[k].icon)}${EXP[k].name}</button>`).join("");
@@ -888,15 +922,17 @@ $("exps").querySelectorAll("button").forEach(b => b.onclick = () => {
   if (!ORDER.some(x => state.enabled[x])) state.enabled[k] = true; // en az biri açık kalsın
   render();
 });
-$("build-note").textContent = `Veriler Rust sunucu dosyalarından: build ${BUILD.protocol} (${BUILD.date}, "${BUILD.update}" güncellemesi). Hesap sunucunun kendi hasar formülüyle yapılır. Facepunch her ayın ilk perşembesi güncelleme çıkarır; modlu sunucularda sayılar farklı olabilir.`;
+$("build-note").textContent = L(
+  `Veriler Rust sunucu dosyalarından: build ${BUILD.protocol} (${BUILD.date}, "${BUILD.update}" güncellemesi). Hesap sunucunun kendi hasar formülüyle yapılır. Facepunch her ayın ilk perşembesi güncelleme çıkarır; modlu sunucularda sayılar farklı olabilir.`,
+  `Data from the Rust server files: build ${BUILD.protocol} (${BUILD.date}, "${BUILD.update}" update). Counts use the server's own damage formula. Facepunch updates on the first Thursday of each month; modded servers may differ.`);
 
 $("tiles").innerHTML = Object.keys(GROUPS).map(g => `<div class="grp"><h3>${GROUPS[g]}</h3><div class="tiles">` + TARGETS.filter(t => t.g === g).map(t => `
   <div class="tile" data-id="${t.id}">
     <div class="art">${ico(t.icon, "i", T[t.tier])}<span class="badge"></span></div>
     <div class="tname">${t.name}<small>${fmt(t.hp)} HP</small></div>
-    ${t.isNew || t.est ? `<div class="flags">${t.isNew ? `<span class="new">Yeni</span>` : ""}${t.est ? `<span class="est">kare kapakla aynı sayıldı</span>` : ""}</div>` : ""}
+    ${t.isNew || t.est ? `<div class="flags">${t.isNew ? `<span class="new">${L("Yeni", "New")}</span>` : ""}${t.est ? `<span class="est">${L("kare kapakla aynı sayıldı", "same as square hatch")}</span>` : ""}</div>` : ""}
     <button class="need" data-plan="${t.id}"></button>
-    <div class="step"><button aria-label="${t.name} azalt" data-d="-1">−</button><output>0</output><button aria-label="${t.name} artır" data-d="1">+</button></div>
+    <div class="step"><button aria-label="${t.name} ${L("azalt", "fewer")}" data-d="-1">−</button><output>0</output><button aria-label="${t.name} ${L("artır", "more")}" data-d="1">+</button></div>
   </div>`).join("") + `</div></div>`).join("");
 $("tiles").querySelectorAll(".tile").forEach(el => {
   el.querySelectorAll(".step button").forEach(b => b.onclick = () => {
@@ -920,17 +956,18 @@ $("strip").onclick = () => { const next = FLOW[state.tab] || "mat"; if (next ===
 
 /* ───────── Toplama hesabı verileri ───────── */
 const TOOLS = [
-  { id: "pick", name: "Pickaxe / Icepick / Jackhammer", short: "Metal kazma / Jackhammer", ore: 300 },
+  { id: "pick", name: "Pickaxe / Icepick / Jackhammer", short: L("Metal kazma / Jackhammer", "Metal pickaxe / Jackhammer"), ore: 300 },
   { id: "stone", name: "Stone Pickaxe", short: "Stone Pickaxe", ore: 257 },
 ];
 const CHAR_PER_WOOD = 0.75;
 const FURNACES = [
-  { id: "large", name: "Large Furnace", sec: 1 / 3, wood: 0.17, note: "Dakikada 180 sülfür" },
-  { id: "small", name: "Furnace", sec: 1 / 0.6, wood: 0.83, note: "Dakikada 36 sülfür" },
-  { id: "electric", name: "Electric Furnace", sec: 1, wood: 0, note: "Dakikada 60 sülfür, elektrikle çalışır" },
+  { id: "large", name: "Large Furnace", sec: 1 / 3, wood: 0.17, note: L("Dakikada 180 sülfür", "180 sulfur per minute") },
+  { id: "small", name: "Furnace", sec: 1 / 0.6, wood: 0.83, note: L("Dakikada 36 sülfür", "36 sulfur per minute") },
+  { id: "electric", name: "Electric Furnace", sec: 1, wood: 0, note: L("Dakikada 60 sülfür, elektrikle çalışır", "60 sulfur per minute, runs on power") },
 ];
 const dur = s => { s = Math.ceil(s); const h = Math.floor(s / 3600), m = Math.floor(s % 3600 / 60), r = s % 60;
-  return h ? `${h} sa ${m} dk` : m ? `${m} dk ${r ? r + " sn" : ""}`.trim() : `${r} sn`; };
+  const [H, M, S] = LANG === "en" ? ["h", "min", "s"] : ["sa", "dk", "sn"];
+  return h ? `${h} ${H} ${m} ${M}` : m ? `${m} ${M} ${r ? r + " " + S : ""}`.trim() : `${r} ${S}`; };
 if (state.mult == null) state.mult = 1;
 if (!TOOLS.some(x => x.id === state.tool)) state.tool = "pick";
 if (state.linked == null) state.linked = true;
@@ -938,9 +975,9 @@ if (!FURNACES.some(f => f.id === state.furnace)) state.furnace = "large";
 if (state.fcount == null) state.fcount = 1;
 $("furn").innerHTML = FURNACES.map(f => `<button data-v="${f.id}">${f.name}</button>`).join("");
 $("furn").querySelectorAll("button").forEach(b => b.onclick = () => { state.furnace = b.dataset.v; render(); });
-$("fcount").innerHTML = [1, 2, 3, 4, 6].map(v => `<button data-v="${v}">${v} tane</button>`).join("");
+$("fcount").innerHTML = [1, 2, 3, 4, 6].map(v => `<button data-v="${v}">${L(v + " tane", v + " ×")}</button>`).join("");
 $("fcount").querySelectorAll("button").forEach(b => b.onclick = () => { state.fcount = Number(b.dataset.v); render(); });
-$("mult").innerHTML = [1, 1.5, 2, 3, 5, 10].map(v => `<button data-v="${v}">${String(v).replace(".", ",")}x</button>`).join("");
+$("mult").innerHTML = [1, 1.5, 2, 3, 5, 10].map(v => `<button data-v="${v}">${dec(v)}x</button>`).join("");
 $("mult").querySelectorAll("button").forEach(b => b.onclick = () => { state.mult = Number(b.dataset.v); render(); });
 $("tool").innerHTML = TOOLS.map(x => `<button data-v="${x.id}">${x.short}</button>`).join("");
 $("tool").querySelectorAll("button").forEach(b => b.onclick = () => { state.tool = b.dataset.v; render(); });
@@ -959,13 +996,13 @@ const chip = (m, q) => `<span class="chip">${ico(MAT[m].icon)}<b>${fmt(q)}</b> $
 $("recipes").insertAdjacentHTML("beforeend",
   ORDER.map(k => `
     <div class="recipe">
-      <div class="recipe-h">${ico(EXP[k].icon)}<div><b>${EXP[k].out > 1 ? EXP[k].out + " × " : ""}${EXP[k].long}</b><small>Adet başına ${fmt(UNIT[k])} sülfür${NEEDS[k] ? " · " + NEEDS[k] : ""}</small></div></div>
+      <div class="recipe-h">${ico(EXP[k].icon)}<div><b>${EXP[k].out > 1 ? EXP[k].out + " × " : ""}${EXP[k].long}</b><small>${L(`Adet başına ${fmt(UNIT[k])} sülfür`, `${fmt(UNIT[k])} sulfur each`)}${NEEDS[k] ? " · " + NEEDS[k] : ""}</small></div></div>
       <div class="chips">${Object.entries(EXP[k].ins).map(([m, q]) => chip(m, q)).join("")}</div>
     </div>`).join("") +
-  `<h2 style="margin-top:8px">Ara ürünler</h2>` +
+  `<h2 style="margin-top:8px">${L("Ara ürünler", "Intermediates")}</h2>` +
   INTER.map(m => `
     <div class="recipe">
-      <div class="recipe-h">${ico(MAT[m].icon)}<div><b>${RECIPE[m].out > 1 ? RECIPE[m].out + " × " : ""}${MAT[m].name}</b><small>Çalışma tezgâhında</small></div></div>
+      <div class="recipe-h">${ico(MAT[m].icon)}<div><b>${RECIPE[m].out > 1 ? RECIPE[m].out + " × " : ""}${MAT[m].name}</b><small>${L("Çalışma tezgâhında", "At a workbench")}</small></div></div>
       <div class="chips">${Object.entries(RECIPE[m].ins).map(([x, q]) => chip(x, q)).join("")}</div>
     </div>`).join(""));
 
@@ -974,8 +1011,8 @@ ORDER.forEach(k => KIT.push({ id: "x" + k, g: "exp", name: EXP[k].long, icon: EX
 const kitRecipe = it => Object.entries(it.ins).map(([m, v]) => `${v} ${MAT[m].name}`).join(" + ");
 $("kit-list").innerHTML = Object.keys(KIT_GROUPS).map(g => `<div class="grp"><h3>${KIT_GROUPS[g]}</h3><div class="mats">` + KIT.filter(it => it.g === g).map(it => `
   <div class="kitrow" data-k="${it.id}">${ico(it.icon, "i", it.st || "")}
-    <span class="nm">${it.name}<small>${it.exp ? `${fmt(UNIT[it.exp])} sülfür / adet${NEEDS[it.exp] ? " · " + NEEDS[it.exp] : ""}` : `${it.out > 1 ? it.out + "'li üretilir · " : ""}${kitRecipe(it)}${it.wb ? " · WB" + it.wb : ""}`}<br><b class="ks"></b></small></span>
-    <div class="kstep"><button aria-label="${it.name} azalt" data-d="-1">−</button><input type="number" inputmode="numeric" min="0" aria-label="${it.name} adedi" id="kit-${it.id}"><button aria-label="${it.name} artır" data-d="1">+</button></div>
+    <span class="nm">${it.name}<small>${it.exp ? `${fmt(UNIT[it.exp])} ${L("sülfür / adet", "sulfur each")}${NEEDS[it.exp] ? " · " + NEEDS[it.exp] : ""}` : `${it.out > 1 ? L(it.out + "'li üretilir · ", "makes " + it.out + " · ") : ""}${kitRecipe(it)}${it.wb ? " · WB" + it.wb : ""}`}<br><b class="ks"></b></small></span>
+    <div class="kstep"><button aria-label="${it.name} ${L("azalt", "fewer")}" data-d="-1">−</button><input type="number" inputmode="numeric" min="0" aria-label="${it.name} ${L("adedi", "amount")}" id="kit-${it.id}"><button aria-label="${it.name} ${L("artır", "more")}" data-d="1">+</button></div>
   </div>`).join("") + `</div></div>`).join("");
 $("kit-list").querySelectorAll(".kitrow").forEach(el => {
   const it = KIT.find(x => x.id === el.dataset.k), inp = el.querySelector("input");
@@ -998,13 +1035,111 @@ function kitTotals() {
   return { B, items };
 }
 
+/* ───────── Sabit yazılar ve dil ───────── */
+const STATIC = {
+  expsTitle: ["Kullanabileceğin patlayıcılar", "Explosives you can use"],
+  glTitle: ["Bomba atarın (Grenade Launcher) var mı?", "Do you have a grenade launcher?"],
+  whatBreak: ["Ne patlatacaksın?", "What are you breaking?"],
+  example: ["örnek", "example"], reset: ["Sıfırla", "Reset"],
+  kitTitle: ["Raid kiti", "Raid kit"], kitClear: ["Kiti temizle", "Clear kit"],
+  kitNote: ["Raid için yanına alacaklarını seç. Patlayıcılar Raid ekranından gelir; burada mermi, bomba, smoke, sağlık ve yedek patlayıcı eklersin. Hepsi plana ve toplama hesabına eklenir.",
+            "Pick what you bring on the raid. Explosives come from the Raid tab; here you add ammo, grenades, smoke, meds and spare explosives. Everything goes into the plan and the farming math."],
+  kitCost: ["Kitin maliyeti", "Kit cost"],
+  farmTitle: ["Toplama hesabı", "Farming calculator"], needLabel: ["Gereken sülfür", "Sulfur needed"],
+  rate: ["Sunucu çarpanı", "Server gather rate"], tool: ["Alet", "Tool"],
+  haveTitle: ["Elindeki sülfür", "Sulfur you have"], amount: ["Miktar", "Amount"], canCraft: ["Bununla yapabileceğin", "What you can craft"],
+  bestAll: ["Her hedef için en ucuz yol", "Cheapest way for every target"], recipesTitle: ["Ne neyle yapılır?", "Recipes"],
+  bookNote: ["Tarifler ve raid sayıları 22 Eylül 2026 tarihli sunucu dosyalarına göredir; Facepunch'ın aylık güncellemelerinde değişebilir. Modlu sunucularda farklı olabilir.",
+             "Recipes and raid counts follow the 22 September 2026 server files and can change with Facepunch's monthly updates. Modded servers may differ."],
+  tabFarm: ["Toplama", "Farm"], tabBook: ["Tarifler", "Recipes"],
+};
+document.querySelectorAll("[data-i18n]").forEach(el => { const v = STATIC[el.dataset.i18n]; if (v) el.textContent = L(v[0], v[1]); });
+const setLang = lang => {
+  state.lang = lang; save();
+  try { location.reload(); } catch (e) {}
+};
+$("lang-btn").textContent = LANG === "en" ? "TR" : "EN";
+$("lang-btn").title = LANG === "en" ? "Türkçe" : "English";
+$("lang-btn").onclick = () => setLang(LANG === "en" ? "tr" : "en");
+
+/* ───────── Tanıtım rehberi (5 adım) ───────── */
+const TOUR = [
+  { tab: "raid", spot: () => $("exps").closest(".sec"),
+    t: ["1 · Patlayıcılar", "1 · Explosives"],
+    p: ["Elindeki patlayıcılar otomatik seçili gelir. Olmayanı kapat. Bomba atarın varsa \"Var\" de, 40mm HE de hesaba girer.",
+        "Your explosives come pre-selected. Turn off what you don't have. If you have a grenade launcher, pick \"Yes\" and 40mm HE is included."] },
+  { tab: "raid", spot: () => $("tiles").querySelector(".tile.on") || $("tiles").querySelector(".tile"),
+    t: ["2 · Hedefler", "2 · Targets"],
+    p: ["Kıracağın kapı, duvar, kapak ya da tareti +/− ile ekle. Kutuda en ucuz yol ve sülfürü yazar; dokunursan diğer yolları görürsün.",
+        "Add the doors, walls, hatches or turrets you'll break with +/−. Each box shows the cheapest way and its sulfur; tap it to see other options."] },
+  { tab: "mat", spot: () => $("view-mat").querySelector(".plan") || $("view-mat").querySelector(".mats"),
+    t: ["3 · Plan", "3 · Plan"],
+    p: ["Plan'da toplam patlayıcı, sülfür ve toplanacak ham madde var. Her hedef için istersen başka bir yol seçebilirsin.",
+        "The Plan shows total explosives, sulfur and raw materials. You can pick a different option for any target."] },
+  { tab: "kit", spot: () => $("kit-list").querySelector(".mats"),
+    t: ["4 · Kit", "4 · Kit"],
+    p: ["Mermi, bomba, smoke, sağlık ve yedek patlayıcı ekle. Hepsi raid planına ve toplama hesabına eklenir.",
+        "Add ammo, grenades, smoke, meds and spare explosives. Everything is added to the raid plan and the farming math."] },
+  { tab: "sulfur", spot: () => $("strip"), dock: true, pos: "top",
+    t: ["5 · Toplama ve sarı şerit", "5 · Farming and the yellow bar"],
+    p: ["Toplama'da sunucu çarpanını, kazmanı ve furnace'ını seç; kaç taş kıracağını ve eritme süresini gör. Alttaki sarı şerit seni Raid → Plan → Kit → Toplama sırasıyla götürür. Dili ve bu rehberi üstteki düğmelerden açabilirsin.",
+        "In Farm, pick the gather rate, your pickaxe and furnace to see how many nodes to hit and how long smelting takes. The yellow bar walks you Raid → Plan → Kit → Farm. Change language or reopen this guide from the buttons at the top."] },
+];
+let tourStep = -1;
+function clearSpot() { document.querySelectorAll(".spot").forEach(e => e.classList.remove("spot")); document.body.classList.remove("spot-dock"); }
+function showTour(i) {
+  tourStep = i; clearSpot();
+  const box = $("tour"); box.hidden = false; box.className = "tour";
+  $("tour-dots").innerHTML = TOUR.map((_, k) => `<i class="${k === i - 1 ? "on" : ""}"></i>`).join("");
+  if (i === 0) {
+    box.classList.add("center");
+    $("tour-count").textContent = "";
+    $("tour-title").textContent = L("Raid Hesap'a hoş geldin", "Welcome to Raid Hesap");
+    $("tour-text").textContent = L("Uygulamayı 5 kısa adımda tanıtayım mı?", "Want a quick 5-step tour of the app?");
+    $("tour-lang").hidden = false;
+    $("tour-lang").innerHTML = `<button data-l="tr" aria-pressed="${LANG === "tr"}">Türkçe</button><button data-l="en" aria-pressed="${LANG === "en"}">English</button>`;
+    $("tour-lang").querySelectorAll("button").forEach(b => b.onclick = () => { if (b.dataset.l !== LANG) setLang(b.dataset.l); });
+    $("tour-skip").textContent = L("Hayır, geç", "No, skip");
+    $("tour-back").hidden = true;
+    $("tour-next").textContent = L("Evet, göster", "Yes, show me");
+    return;
+  }
+  const st = TOUR[i - 1];
+  $("tour-lang").hidden = true;
+  $("tour-count").textContent = `${i} / ${TOUR.length}`;
+  $("tour-title").textContent = L(st.t[0], st.t[1]);
+  $("tour-text").textContent = L(st.p[0], st.p[1]);
+  $("tour-skip").textContent = L("Kapat", "Close");
+  $("tour-back").hidden = false; $("tour-back").textContent = L("Geri", "Back");
+  $("tour-next").textContent = i === TOUR.length ? L("Bitir", "Done") : L("İleri", "Next");
+  if (st.pos) box.classList.add(st.pos);
+  if (state.tab !== st.tab) { state.tab = st.tab; render(); }
+  const el = st.spot();
+  if (el) {
+    el.classList.add("spot");
+    if (st.dock) document.body.classList.add("spot-dock");
+    else el.scrollIntoView({ block: "start" });
+  }
+}
+function endTour() {
+  clearSpot(); $("tour").hidden = true; tourStep = -1;
+  state.tourDone = true; state.tab = "raid"; render(); window.scrollTo(0, 0);
+}
+$("tour-next").onclick = () => tourStep >= TOUR.length ? endTour() : showTour(tourStep + 1);
+$("tour-back").onclick = () => showTour(Math.max(1, tourStep - 1));
+$("tour-skip").onclick = endTour;
+$("help-btn").onclick = () => showTour(1);
+document.addEventListener("keydown", e => { if (e.key === "Escape" && tourStep >= 0) endTour(); });
+
 /* ───────── Çizim ───────── */
 function render() {
   $("exps").querySelectorAll("button").forEach(b => b.setAttribute("aria-pressed", !!state.enabled[b.dataset.v]));
   $("gl").querySelectorAll("button").forEach(b => b.setAttribute("aria-pressed", (b.dataset.v === "1") === !!state.enabled.he));
   $("gl-note").textContent = state.enabled.he
-    ? "40mm HE hesaba katılıyor. Çoğu hedefte en ucuz yol bu olur (ör. Metal Door: 9 tane, 765 sülfür). Kit sekmesinden yedek 40mm HE de ekleyebilirsin."
-    : "Bomba atarın varsa \"Var\" de; 40mm HE mermileri de hesaba katılır. Yoksa hiç kullanılmaz.";
+    ? L("40mm HE hesaba katılıyor. Çoğu hedefte en ucuz yol bu olur (ör. Metal Door: 9 tane, 765 sülfür). Kit sekmesinden yedek 40mm HE de ekleyebilirsin.",
+        "40mm HE is included. It is the cheapest option for most targets (e.g. Metal Door: 9 rounds, 765 sulfur). You can add spare 40mm HE in the Kit tab.")
+    : L("Bomba atarın varsa \"Var\" de; 40mm HE mermileri de hesaba katılır. Yoksa hiç kullanılmaz.",
+        "If you have a grenade launcher, pick \"Yes\" and 40mm HE rounds are included. Otherwise they are never used.");
   TARGETS.forEach(t => t.methods = methods(t));
 
   const tot = {}, sel = [];
@@ -1016,14 +1151,14 @@ function render() {
     if (!m) {
       el.classList.add("na");
       el.querySelector(".badge").textContent = n ? "?" : "";
-      el.querySelector(".need").innerHTML = `<span><b>Seçili patlayıcılarla kırılmaz</b><small>Yukarıdan başka patlayıcı aç</small></span>`;
+      el.querySelector(".need").innerHTML = `<span><b>${L("Seçili patlayıcılarla kırılmaz", "Can't break with selected explosives")}</b><small>${L("Yukarıdan başka patlayıcı aç", "Turn on another explosive above")}</small></span>`;
       if (n) broken += n;
       return;
     }
     el.classList.remove("na");
     el.querySelector(".badge").textContent = n ? fmt(m.sulfur * n) + " S" : "";
     const best = m === t.methods[0];
-    el.querySelector(".need").innerHTML = `<span class="ic">${icons(m.parts)}</span><span><b>${label(m.parts)}</b><small>${best ? "En ucuz" : "Senin seçimin"} · ${fmt(m.sulfur)} S ›</small></span>`;
+    el.querySelector(".need").innerHTML = `<span class="ic">${icons(m.parts)}</span><span><b>${label(m.parts)}</b><small>${best ? L("En ucuz", "Cheapest") : L("Senin seçimin", "Your pick")} · ${fmt(m.sulfur)} S ›</small></span>`;
     if (!n) return;
     sel.push(t);
     for (const k in m.parts) tot[k] = (tot[k] || 0) + m.parts[k] * n;
@@ -1043,48 +1178,48 @@ function render() {
     el.classList.toggle("on", q > 0);
     if (document.activeElement !== inp) inp.value = q || "";
     const x = KT.items.find(i => i.it === it);
-    el.querySelector(".ks").textContent = x ? `${x.sulfur ? fmt(x.sulfur) + " sülfür" : "Sülfür gerekmez"}${x.made !== q ? ` · ${fmt(x.made)} adet çıkar` : ""}` : "";
+    el.querySelector(".ks").textContent = x ? `${x.sulfur ? fmt(x.sulfur) + " " + L("sülfür", "sulfur") : L("Sülfür gerekmez", "No sulfur needed")}${x.made !== q ? ` · ${fmt(x.made)} ${L("adet çıkar", "made")}` : ""}` : "";
   });
   $("kit-total").innerHTML = kitAny
-    ? [`<div class="mat total"><span class="nm">Kit sülfürü</span><span class="v">${fmt(KT.B.sulfur)}</span></div>`,
+    ? [`<div class="mat total"><span class="nm">${L("Kit sülfürü", "Kit sulfur")}</span><span class="v">${fmt(KT.B.sulfur)}</span></div>`,
        ...RAW.concat(INTER).filter(m => m !== "sulfur" && KT.B[m] > 0).map(m => `<div class="mat">${ico(MAT[m].icon)}<span class="nm">${MAT[m].name}</span><span class="v">${fmt(KT.B[m])}</span></div>`)].join("")
-    : `<div class="mat"><span class="nm">Kit boş. Yukarıdan mermi, bomba ya da sağlık ekle.</span></div>`;
+    : `<div class="mat"><span class="nm">${L("Kit boş. Yukarıdan mermi, bomba ya da sağlık ekle.", "Kit is empty. Add ammo, grenades or meds above.")}</span></div>`;
   const any = sel.length > 0 || kitAny, first = ORDER.find(k => tot[k]) || "c4";
 
   // Sarı şerit
   const strip = $("strip");
   strip.disabled = !any && state.tab === "raid";
-  const go = `<span class="go">${{ raid: "Plan ›", mat: "Kit ›", kit: "Toplama ›", sulfur: "‹ Raid" }[state.tab] || ""}</span>`;
+  const go = `<span class="go">${{ raid: "Plan ›", mat: "Kit ›", kit: L("Toplama ›", "Farm ›"), sulfur: "‹ Raid" }[state.tab] || ""}</span>`;
   strip.innerHTML = any
-    ? `${ico(sel.length ? EXP[first].icon : "bullet", "i big", sel.length ? "" : BUL("#c9a54a", "#d6b257"))}<span class="txt"><span class="q">${sel.length ? label(tot) : "Sadece kit"}${kitAny && sel.length ? " + kit" : ""}</span><span class="s">${fmt(B.sulfur)} sülfür</span></span>${go}`
-    : `${ico("c4", "i big")}<span class="txt"><span class="q">Hedef seç</span><span class="s">Kapı, kapak ya da duvar ekle</span></span>${state.tab === "raid" ? "" : go}`;
+    ? `${ico(sel.length ? EXP[first].icon : "bullet", "i big", sel.length ? "" : BUL("#c9a54a", "#d6b257"))}<span class="txt"><span class="q">${sel.length ? label(tot) : L("Sadece kit", "Kit only")}${kitAny && sel.length ? " + kit" : ""}</span><span class="s">${fmt(B.sulfur)} ${L("sülfür", "sulfur")}</span></span>${go}`
+    : `${ico("c4", "i big")}<span class="txt"><span class="q">${L("Hedef seç", "Pick a target")}</span><span class="s">${L("Kapı, kapak ya da duvar ekle", "Add a door, hatch or wall")}</span></span>${state.tab === "raid" ? "" : go}`;
 
   // Plan ekranı
   const row = (m, v, key, sub) => `<div class="mat${key ? " key" : ""}">${ico(MAT[m].icon)}<span class="nm">${MAT[m].name}${sub ? `<small>${sub}</small>` : ""}</span><span class="v">${fmt(v)}</span></div>`;
   const list = (ms, opts = {}) => ms.filter(m => B[m] > 0).map(m => row(m, B[m], opts.key === m, opts.sub && opts.sub[m])).join("");
-  const duds = ORDER.filter(k => tot[k] && EXP[k].dud).map(k => `${EXP[k].name}: ortalama ${Math.ceil(tot[k] * EXP[k].dud)} tanesi dud olur`).join(" · ");
+  const duds = ORDER.filter(k => tot[k] && EXP[k].dud).map(k => L(`${EXP[k].name}: ortalama ${Math.ceil(tot[k] * EXP[k].dud)} tanesi dud olur`, `${EXP[k].name}: about ${Math.ceil(tot[k] * EXP[k].dud)} will dud`)).join(" · ");
   $("view-mat").innerHTML = any ? `
-    <div class="sec"><h2>Patlayıcılar</h2><div class="mats">${ORDER.filter(k => tot[k]).map(k =>
-      `<div class="mat key">${ico(EXP[k].icon)}<span class="nm">${EXP[k].long}<small>${fmt(UNIT[k])} sülfür / adet${NEEDS[k] ? " · " + NEEDS[k] : ""}</small></span><span class="v">${fmt(tot[k])}</span></div>`).join("")}
-      ${kitAny ? `<div class="mat"><span class="nm">Patlayıcıların sülfürü</span><span class="v">${fmt(raidSulfur)}</span></div><div class="mat"><span class="nm">Kitin sülfürü<small>${KT.items.map(x => `${fmt(x.q)} ${x.it.name}`).join(", ")}</small></span><span class="v">${fmt(KT.B.sulfur)}</span></div>` : ""}
-      <div class="mat total"><span class="nm">Toplam sülfür</span><span class="v">${fmt(B.sulfur)}</span></div></div>
-      ${duds ? `<p class="note warn">Yedek al: ${duds}.</p>` : ""}
-      ${broken ? `<p class="note warn">${broken} hedef seçili patlayıcılarla kırılamıyor, toplama eklenmedi.</p>` : ""}</div>
-    ${sel.length ? "" : `<p class="note">Raid hedefi seçmedin; sadece kit hesaplanıyor.</p>`}<div class="sec"${sel.length ? "" : " hidden"}><h2>Hedef başına yollar</h2>${sel.map(t => {
+    <div class="sec"><h2>${L("Patlayıcılar", "Explosives")}</h2><div class="mats">${ORDER.filter(k => tot[k]).map(k =>
+      `<div class="mat key">${ico(EXP[k].icon)}<span class="nm">${EXP[k].long}<small>${fmt(UNIT[k])} ${L("sülfür / adet", "sulfur each")}${NEEDS[k] ? " · " + NEEDS[k] : ""}</small></span><span class="v">${fmt(tot[k])}</span></div>`).join("")}
+      ${kitAny ? `<div class="mat"><span class="nm">${L("Patlayıcıların sülfürü", "Explosives sulfur")}</span><span class="v">${fmt(raidSulfur)}</span></div><div class="mat"><span class="nm">${L("Kitin sülfürü", "Kit sulfur")}<small>${KT.items.map(x => `${fmt(x.q)} ${x.it.name}`).join(", ")}</small></span><span class="v">${fmt(KT.B.sulfur)}</span></div>` : ""}
+      <div class="mat total"><span class="nm">${L("Toplam sülfür", "Total sulfur")}</span><span class="v">${fmt(B.sulfur)}</span></div></div>
+      ${duds ? `<p class="note warn">${L("Yedek al", "Bring spares")}: ${duds}.</p>` : ""}
+      ${broken ? `<p class="note warn">${L(`${broken} hedef seçili patlayıcılarla kırılamıyor, toplama eklenmedi.`, `${broken} target(s) can't be broken with the selected explosives and were left out.`)}</p>` : ""}</div>
+    ${sel.length ? "" : `<p class="note">${L("Raid hedefi seçmedin; sadece kit hesaplanıyor.", "No raid targets picked; only the kit is counted.")}</p>`}<div class="sec"${sel.length ? "" : " hidden"}><h2>${L("Hedef başına yollar", "Options per target")}</h2>${sel.map(t => {
       const n = state.counts[t.id], c = chosen(t);
       const far = state.enabled.ammo ? shots(t.hp, hits("ammo", t, state.side, true)) : null;
       return `<div class="plan" id="plan-${t.id}">
         <div class="plan-h">${ico(t.icon, "i", T[t.tier])}<b>${t.name}<small>${fmt(t.hp)} HP</small></b><span class="x">× ${n}</span></div>
         ${t.methods.map((m, i) => `<button class="opt" data-t="${t.id}" data-m="${m.key}" aria-pressed="${m === c}">
           <span class="dot"></span><span class="ic">${icons(m.parts)}</span>
-          <span class="lb">${label(m.parts)}${i === 0 ? ` <em class="best">En ucuz</em>` : ""}${m.mix ? ` <em class="mix">karışık</em>` : ""}</span>
+          <span class="lb">${label(m.parts)}${i === 0 ? ` <em class="best">${L("En ucuz", "Cheapest")}</em>` : ""}${m.mix ? ` <em class="mix">${L("karışık", "mixed")}</em>` : ""}</span>
           <span class="sv">${fmt(m.sulfur * n)}</span></button>`).join("")}
-        ${far && c && c.parts.ammo ? `<p class="note">Explo sayısı 20 m içinden. 100 m ve üstünden tek başına ${fmt(far)} mermi gerekir.</p>` : ""}
+        ${far && c && c.parts.ammo ? `<p class="note">${L(`Explo sayısı 20 m içinden. 100 m ve üstünden tek başına ${fmt(far)} mermi gerekir.`, `Explo count is from within 20 m. From 100 m or more it takes ${fmt(far)} rounds on their own.`)}</p>` : ""}
       </div>`; }).join("")}
-      <p class="note">Sayılar sunucunun hasar formülüyle hesaplandı: her patlayıcının hasar türleri, hedefin koruması ve dış yüz kuralı. Explo için Assault Rifle esas alındı; diğer tüfekler sayıyı biraz değiştirebilir. Sağdaki sayı o hedefin toplam sülfürüdür.</p></div>
-    <div class="sec"><h2>Toplanacak ham madde${kitAny ? " (raid + kit)" : ""}</h2><div class="mats">${list(RAW, { key: "sulfur", sub: { char: "Odun yakarak elde edilir", sulfur: "Barut dahil toplam", pipe: "Her biri 2 HQM + 20 scrap", stones: "Handmade Shell için", lgf: "Her 4'ü 3 Animal Fat + 1 Cloth", tech: "Her biri 2 HQM + 50 scrap", rope: "Her biri 30 cloth", stash: "Her biri 10 cloth" } })}</div></div>
-    <div class="sec"><h2>Ara ürün</h2><div class="mats">${list(INTER.concat("syringe"), { sub: { gp: "Kendin üretirsen gereken", syringe: "Large Medkit için" } })}</div></div>`
-    : `<div class="empty">${ico("c4")}<div>Henüz hedef seçmedin.<br>Raid sekmesinden kapı, kapak ya da duvar ekle.</div><button class="btn" id="go-raid">Hedef seç</button></div>`;
+      <p class="note">${L("Sayılar sunucunun hasar formülüyle hesaplandı: her patlayıcının hasar türleri, hedefin koruması ve dış yüz kuralı. Explo için Assault Rifle esas alındı; diğer tüfekler sayıyı biraz değiştirebilir. Sağdaki sayı o hedefin toplam sülfürüdür.", "Counts use the server's damage formula: each explosive's damage types, the target's protection and the hard-side rule. Explo assumes an Assault Rifle; other rifles shift the count slightly. The number on the right is the total sulfur for that target.")}</p></div>
+    <div class="sec"><h2>${L("Toplanacak ham madde", "Raw materials to gather")}${kitAny ? " (raid + kit)" : ""}</h2><div class="mats">${list(RAW, { key: "sulfur", sub: { char: L("Odun yakarak elde edilir", "Made by burning wood"), sulfur: L("Barut dahil toplam", "Total incl. gunpowder"), pipe: L("Her biri 2 HQM + 20 scrap", "Each: 2 HQM + 20 scrap"), stones: L("Handmade Shell için", "For Handmade Shells"), lgf: L("Her 4'ü 3 Animal Fat + 1 Cloth", "4 per 3 Animal Fat + 1 Cloth"), tech: L("Her biri 2 HQM + 50 scrap", "Each: 2 HQM + 50 scrap"), rope: L("Her biri 30 cloth", "Each: 30 cloth"), stash: L("Her biri 10 cloth", "Each: 10 cloth") } })}</div></div>
+    <div class="sec"><h2>${L("Ara ürün", "Intermediates")}</h2><div class="mats">${list(INTER.concat("syringe"), { sub: { gp: L("Kendin üretirsen gereken", "If you craft it yourself"), syringe: L("Large Medkit için", "For Large Medkits") } })}</div></div>`
+    : `<div class="empty">${ico("c4")}<div>${L("Henüz hedef seçmedin.<br>Raid sekmesinden kapı, kapak ya da duvar ekle.", "No targets yet.<br>Add a door, hatch or wall in the Raid tab.")}</div><button class="btn" id="go-raid">${L("Hedef seç", "Pick a target")}</button></div>`;
   const gr = $("go-raid"); if (gr) gr.onclick = () => { state.tab = "raid"; render(); };
   $("view-mat").querySelectorAll(".opt").forEach(b => b.onclick = () => { state.choice[b.dataset.t] = b.dataset.m; render(); });
   $("view-mat").querySelectorAll(".mats").forEach(m => { if (!m.children.length) m.parentElement.hidden = true; });
@@ -1093,7 +1228,7 @@ function render() {
   $("best-all").innerHTML = TARGETS.map(t => {
     const b = t.methods[0]; if (!b) return "";
     const pure = t.methods.find(m => !m.mix), save = pure ? pure.sulfur - b.sulfur : 0;
-    return `<div class="mat best-row">${ico(t.icon, "i", T[t.tier])}<span class="nm">${t.name}<small><span class="ic">${icons(b.parts)}</span>${label(b.parts)}${save > 0 ? ` · tek patlayıcıya göre ${fmt(save)} S ucuz` : ""}</small></span><span class="v">${fmt(b.sulfur)}</span></div>`;
+    return `<div class="mat best-row">${ico(t.icon, "i", T[t.tier])}<span class="nm">${t.name}<small><span class="ic">${icons(b.parts)}</span>${label(b.parts)}${save > 0 ? " · " + L(`tek patlayıcıya göre ${fmt(save)} S ucuz`, `${fmt(save)} S cheaper than a single explosive`) : ""}</small></span><span class="v">${fmt(b.sulfur)}</span></div>`;
   }).join("");
 
   // Toplama hesabı
@@ -1102,7 +1237,7 @@ function render() {
   const needIn = $("need-in");
   if (document.activeElement !== needIn) needIn.value = state.need || "";
   const need = Math.max(0, Number(state.need) || 0);
-  $("from-plan").textContent = planNeed ? `Raid planından al (${fmt(planNeed)})` : "Raid planı boş";
+  $("from-plan").textContent = planNeed ? L(`Raid planından al (${fmt(planNeed)})`, `Use raid plan (${fmt(planNeed)})`) : L("Raid planı boş", "Raid plan is empty");
   $("from-plan").setAttribute("aria-pressed", !!state.linked && planNeed > 0);
   $("mult").querySelectorAll("button").forEach(b => b.setAttribute("aria-pressed", Number(b.dataset.v) === state.mult));
   $("tool").querySelectorAll("button").forEach(b => b.setAttribute("aria-pressed", b.dataset.v === state.tool));
@@ -1119,31 +1254,33 @@ function render() {
   const extraChar = Math.max(0, char - byChar);
   const extraWood = Math.ceil(extraChar / CHAR_PER_WOOD);
   const wood = burn + extraWood;
-  const mx = String(state.mult).replace(".", ",");
+  const mx = dec(state.mult);
   const grow = (icon, name, sub, v, vsub, key) => `<div class="mat${key ? " key" : ""}">${icon}<span class="nm">${name}<small>${sub}</small></span><span class="v">${v}${vsub ? `<small>${vsub}</small>` : ""}</span></div>`;
   $("gather").innerHTML = need ? [
-    grow(ico("node"), "Sülfür taşı", `Taş başına ${fmt(perNode)} ore · ${tool.name} · ${mx}x`, fmt(nodes), "taş", true),
-    grow(ico("sulfur"), "Sulfur Ore", "Furnace'ta 1 ore = 1 sülfür", fmt(need)),
-    grow(ico("furnace"), "Eritme süresi", `${state.fcount} × ${F.name} · ${F.note}`, dur(need * F.sec / state.fcount), "", true),
-    grow(ico("wood"), "Eritirken yanan odun", F.wood ? `Ore başına ≈ ${String(F.wood).replace(".", ",")} odun` : "Odun yakmaz", fmt(burn)),
-    grow(ico("char"), "Charcoal (gereken)", fromPlan ? "Raid planı ve kitteki barut için" : "≈ hepsi barut olursa", fmt(char)),
-    grow(ico("char"), "Charcoal (eritmeden çıkan)", "Yanan odundan kendiliğinden çıkar", "≈ " + fmt(Math.min(byChar, char)), byChar > char ? `${fmt(byChar - char)} fazla` : ""),
-    grow(ico("wood"), "Ek odun (kalan kömür için)", extraChar ? `${fmt(extraChar)} kömür daha lazım` : "Gerek yok, eritme yetiyor", "≈ " + fmt(extraWood)),
-    grow(ico("wood"), "Toplam odun", `Eritme + ek kömür${state.mult > 1 ? ` · ${mx}x'te ağaçlardan daha hızlı toplarsın` : ""}`, "≈ " + fmt(wood), "", false),
-  ].join("") : `<div class="mat"><span class="nm">Gereken sülfürü yaz ya da raid planından al.</span></div>`;
-  $("gather-note").textContent = "Çarpan, taştan ve ağaçtan topladığın miktarı artırır; eritme süresi ve gereken odun değişmez. Taş başına ore oyun verisinden (metal kazma 300, Stone Pickaxe 257). Furnace hızları resmi wiki'den; odun tüketimi furnace'ın saniyede 0,5 odun yakmasından hesaplandı. Yanan her odunun %75 şansı kömüre döner, bu yüzden kömür sayısı ortalamadır.";
+    grow(ico("node"), L("Sülfür taşı", "Sulfur nodes"), L(`Taş başına ${fmt(perNode)} ore`, `${fmt(perNode)} ore per node`) + ` · ${tool.name} · ${mx}x`, fmt(nodes), L("taş", "nodes"), true),
+    grow(ico("sulfur"), "Sulfur Ore", L("Furnace'ta 1 ore = 1 sülfür", "1 ore = 1 sulfur in a furnace"), fmt(need)),
+    grow(ico("furnace"), L("Eritme süresi", "Smelting time"), `${state.fcount} × ${F.name} · ${F.note}`, dur(need * F.sec / state.fcount), "", true),
+    grow(ico("wood"), L("Eritirken yanan odun", "Wood burned while smelting"), F.wood ? L(`Ore başına ≈ ${dec(F.wood)} odun`, `≈ ${dec(F.wood)} wood per ore`) : L("Odun yakmaz", "Burns no wood"), fmt(burn)),
+    grow(ico("char"), L("Charcoal (gereken)", "Charcoal (needed)"), fromPlan ? L("Raid planı ve kitteki barut için", "For the gunpowder in your raid plan and kit") : L("≈ hepsi barut olursa", "≈ if it all becomes gunpowder"), fmt(char)),
+    grow(ico("char"), L("Charcoal (eritmeden çıkan)", "Charcoal (from smelting)"), L("Yanan odundan kendiliğinden çıkar", "Comes from the wood you burn"), "≈ " + fmt(Math.min(byChar, char)), byChar > char ? `${fmt(byChar - char)} ${L("fazla", "extra")}` : ""),
+    grow(ico("wood"), L("Ek odun (kalan kömür için)", "Extra wood (for the rest)"), extraChar ? L(`${fmt(extraChar)} kömür daha lazım`, `${fmt(extraChar)} more charcoal needed`) : L("Gerek yok, eritme yetiyor", "Not needed, smelting covers it"), "≈ " + fmt(extraWood)),
+    grow(ico("wood"), L("Toplam odun", "Total wood"), L("Eritme + ek kömür", "Smelting + extra charcoal") + (state.mult > 1 ? " · " + L(`${mx}x'te ağaçlardan daha hızlı toplarsın`, `you gather it faster at ${mx}x`) : ""), "≈ " + fmt(wood), "", false),
+  ].join("") : `<div class="mat"><span class="nm">${L("Gereken sülfürü yaz ya da raid planından al.", "Type the sulfur you need or use your raid plan.")}</span></div>`;
+  $("gather-note").textContent = L("Çarpan, taştan ve ağaçtan topladığın miktarı artırır; eritme süresi ve gereken odun değişmez. Taş başına ore oyun verisinden (metal kazma 300, Stone Pickaxe 257). Furnace hızları resmi wiki'den; odun tüketimi furnace'ın saniyede 0,5 odun yakmasından hesaplandı. Yanan her odunun %75 şansı kömüre döner, bu yüzden kömür sayısı ortalamadır.",
+    "The gather rate raises what you get from nodes and trees; smelting time and wood needed stay the same. Ore per node is from game data (metal pickaxe 300, Stone Pickaxe 257). Furnace speeds are from the official wiki; wood use assumes a furnace burns 0.5 wood per second. Each burned wood has a 75% chance to become charcoal, so the charcoal figure is an average.");
 
   // Elindeki sülfür
   const s = Math.max(0, Number(state.sulfur) || 0);
   $("craft").innerHTML = ORDER.map(x =>
-    `<div>${ico(EXP[x].icon)}<b>${fmt(Math.floor(s / UNIT[x]))}</b><span>${EXP[x].long}</span><small>${fmt(UNIT[x])} sülfür / adet</small></div>`).join("");
+    `<div>${ico(EXP[x].icon)}<b>${fmt(Math.floor(s / UNIT[x]))}</b><span>${EXP[x].long}</span><small>${fmt(UNIT[x])} ${L("sülfür / adet", "sulfur each")}</small></div>`).join("");
 
   // Sekmeler
   ["raid", "mat", "kit", "sulfur", "book"].forEach(v => $("view-" + v).hidden = state.tab !== v);
   document.querySelectorAll(".tab").forEach(b => b.setAttribute("aria-selected", b.dataset.tab === state.tab));
   strip.hidden = !(state.tab in FLOW);
-  $("top-sub").textContent = { raid: "Raid planla", mat: "Raid planı", kit: "Raid kiti", sulfur: "Toplama ve eritme", book: "Tarifler" }[state.tab];
+  $("top-sub").textContent = { raid: L("Raid planla", "Plan a raid"), mat: L("Raid planı", "Raid plan"), kit: L("Raid kiti", "Raid kit"), sulfur: L("Toplama ve eritme", "Farming and smelting"), book: L("Tarifler", "Recipes") }[state.tab];
   save();
 }
 render();
+if (!state.tourDone) showTour(0);
 </script>
