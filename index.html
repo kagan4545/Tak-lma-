@@ -230,6 +230,21 @@ h2 { font-family: var(--f-display); font-weight: 700; text-transform: uppercase;
 .hbtn.lang { color: var(--sulfur); border-color: var(--sulfur-dim); }
 
 /* Tanıtım rehberi */
+/* Sponsor sunucu kutusu */
+.sponsor { position: relative; border: 1px solid var(--line); border-radius: 16px; padding: 14px 14px 14px 16px; display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
+  background: linear-gradient(135deg, rgba(226,81,58,.10), rgba(226,81,58,0) 55%), linear-gradient(180deg, #1e1714, #161110); overflow: hidden; }
+.sponsor::before { content: ""; position: absolute; inset: 0 auto 0 0; width: 4px; background: var(--sulfur); }
+.sponsor .sp-tag { position: absolute; top: 8px; right: 10px; font-family: var(--f-mono); font-size: .62rem; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+.sponsor .sp-ico { width: 46px; height: 46px; flex: none; border-radius: 12px; background: radial-gradient(circle at 50% 35%, #3a241e, #150f0d); border: 1px solid var(--line); display: grid; place-items: center; }
+.sponsor .sp-ico svg { width: 34px; height: 34px; }
+.sponsor .sp-txt { flex: 1; min-width: 180px; display: flex; flex-direction: column; gap: 2px; }
+.sponsor .sp-txt b { font-family: var(--f-display); font-weight: 700; font-size: 1.1rem; letter-spacing: .02em; }
+.sponsor .sp-txt span { font-size: .84rem; color: var(--muted); }
+.sponsor .sp-txt code { font-family: var(--f-mono); font-size: .8rem; color: var(--fg); background: #0f0b0a; border: 1px solid var(--line); border-radius: 6px; padding: 2px 6px; align-self: flex-start; margin-top: 4px; user-select: all; -webkit-user-select: all; }
+.sponsor .sp-act { display: flex; gap: 8px; flex-wrap: wrap; }
+.sponsor .sp-act a, .sponsor .sp-act button { font-family: var(--f-display); font-weight: 700; letter-spacing: .05em; text-transform: uppercase; font-size: .82rem; padding: 9px 14px; border-radius: 10px; text-decoration: none; }
+.sponsor .sp-act .pri { background: linear-gradient(180deg, var(--sulfur-hi), #b8341f); color: var(--sulfur-ink); }
+.sponsor .sp-act .sec2 { border: 1px solid var(--line); color: var(--fg); }
 .tour::before { content: ""; position: fixed; inset: 0; z-index: 40; background: rgba(8,7,4,.62); }
 .spot { position: relative; z-index: 41; border-radius: 14px; box-shadow: 0 0 0 3px var(--sulfur), 0 0 0 9999px rgba(8,7,4,0); scroll-margin-top: 90px; }
 body.spot-dock .dock { z-index: 41; }
@@ -802,6 +817,7 @@ body.spot-dock .dock { z-index: 41; }
       </div>
       <div class="sec" id="tiles"></div>
     </div>
+    <div class="sponsor" data-sponsor></div>
     <p class="note" id="build-note"></p>
   </section>
 
@@ -855,6 +871,7 @@ body.spot-dock .dock { z-index: 41; }
   <section class="view" id="view-book" hidden>
     <div class="sec"><h2 data-i18n="bestAll">Her hedef için en ucuz yol</h2><div class="mats" id="best-all"></div></div>
     <div class="sec" id="recipes"><h2 data-i18n="recipesTitle">Ne neyle yapılır?</h2></div>
+    <div class="sponsor" data-sponsor></div>
     <p class="note" data-i18n="bookNote">Tarifler ve raid sayıları 22 Eylül 2026 tarihli sunucu dosyalarına göredir; Facepunch'ın aylık güncellemelerinde değişebilir. Modlu sunucularda farklı olabilir.</p>
   </section>
 </main>
@@ -1210,6 +1227,36 @@ $("recipes").insertAdjacentHTML("beforeend",
       <div class="recipe-h">${ico(MAT[m].icon)}<div><b>${RECIPE[m].out > 1 ? RECIPE[m].out + " × " : ""}${MAT[m].name}</b><small>${L("Çalışma tezgâhında", "At a workbench")}</small></div></div>
       <div class="chips">${Object.entries(RECIPE[m].ins).map(([x, q]) => chip(x, q)).join("")}</div>
     </div>`).join(""));
+
+/* ───────── Sponsor sunucu ─────────
+   Sponsor bulununca SPONSOR'u doldur, örnek:
+   const SPONSOR = { name: "TR Vanilla 2x", text: "Haftalık wipe · Türk topluluğu", connect: "123.45.67.89:28015", url: "https://discord.gg/xxxx" };
+   Sponsor yokken null kalsın; kutu "Sunucunu burada tanıt" der. */
+const SPONSOR = null;
+const SPONSOR_CONTACT = "https://github.com/kagan4545/Tak-lma-/issues/new?title=" + encodeURIComponent("Sponsorluk: sunucumu RaidKit'te tanıtmak istiyorum") +
+  "&body=" + encodeURIComponent("Sunucu adı:\nDiscord linki:\nSana nasıl ulaşabilirim:\n");
+function renderSponsor() {
+  const html = SPONSOR ? `
+    <span class="sp-tag">${L("Sponsor", "Sponsor")}</span>
+    <div class="sp-ico">${ico("c4")}</div>
+    <div class="sp-txt"><b>${SPONSOR.name}</b><span>${SPONSOR.text || ""}</span>${SPONSOR.connect ? `<code>client.connect ${SPONSOR.connect}</code>` : ""}</div>
+    <div class="sp-act">${SPONSOR.connect ? `<button class="pri" data-copy="client.connect ${SPONSOR.connect}">${L("Adresi kopyala", "Copy address")}</button>` : ""}${SPONSOR.url ? `<a class="sec2" href="${SPONSOR.url}" target="_blank" rel="noopener">Discord</a>` : ""}</div>`
+    : `
+    <span class="sp-tag">${L("Sponsor alanı", "Sponsor spot")}</span>
+    <div class="sp-ico">${ico("turret")}</div>
+    <div class="sp-txt"><b>${L("Rust sunucun mu var?", "Run a Rust server?")}</b><span>${L("Sunucunu burada binlerce raid planının yanında tanıt.", "Show your server here, next to every raid plan.")}</span></div>
+    <div class="sp-act"><a class="pri" href="${SPONSOR_CONTACT}" target="_blank" rel="noopener">${L("Burada tanıt", "Advertise here")}</a></div>`;
+  document.querySelectorAll("[data-sponsor]").forEach(el => {
+    el.innerHTML = html;
+    el.querySelectorAll("[data-copy]").forEach(b => b.onclick = async () => {
+      const t = b.dataset.copy, old = b.textContent;
+      try { await navigator.clipboard.writeText(t); b.textContent = L("Kopyalandı", "Copied"); }
+      catch (e) { const r = document.createRange(); const c = el.querySelector("code"); r.selectNodeContents(c); const sel = getSelection(); sel.removeAllRanges(); sel.addRange(r); b.textContent = L("Seçildi, kopyala", "Selected, copy it"); }
+      setTimeout(() => b.textContent = old, 1800);
+    });
+  });
+}
+renderSponsor();
 
 /* ───────── Kit kurulum ───────── */
 ORDER.filter(k => !EXP[k].loot).forEach(k => KIT.push({ id: "x" + k, g: "exp", name: EXP[k].long, icon: EXP[k].icon, out: EXP[k].out, step: 1, ins: EXP[k].ins, exp: k }));
