@@ -570,8 +570,6 @@ h2 { font-family: var(--f-display); font-weight: 700; text-transform: uppercase;
   <!-- RAID -->
   <section class="view" id="view-raid">
     <div class="sec">
-      <span class="mini">Hangi taraftan?</span>
-      <div class="quick wrap" id="side"></div>
       <span class="mini">Kullanabileceğin patlayıcılar</span>
       <div class="quick wrap" id="exps"></div>
       <span class="mini">Bomba atarın (Grenade Launcher) var mı?</span>
@@ -839,8 +837,10 @@ const unitSulfur = k => UNIT[k];
 /* ───────── Durum ───────── */
 const EXAMPLE = { gdoor: 1, stwall: 2 };
 let state = { counts: { ...EXAMPLE }, choice: {}, kit: {}, example: true, tab: "raid", sulfur: 10000, side: "hard",
-  enabled: { c4: true, rocket: true, satchel: true, ammo: true, beancan: true, hv: false, he: false } };
+  enabled: { c4: true, rocket: true, satchel: true, ammo: true, beancan: true, hv: true, he: false } };
 try { const s = JSON.parse(localStorage.getItem("raidhesap4")); if (s && s.counts) state = { ...state, ...s, choice: s.choice || {}, kit: s.kit || {}, enabled: { ...state.enabled, ...(s.enabled || {}) } }; } catch (e) {}
+// Bir kerelik: eski kayıtta kapalı kalan patlayıcıları aç (bomba atar hariç)
+if (!state.enabledV2) { ["c4", "rocket", "satchel", "ammo", "beancan", "hv"].forEach(k => state.enabled[k] = true); state.enabled.he = false; state.enabledV2 = true; }
 const save = () => { try { localStorage.setItem("raidhesap4", JSON.stringify(state)); } catch (e) {} };
 
 /* ───────── Bir hedefi kırmanın yolları ───────── */
@@ -881,8 +881,7 @@ const chosen = t => t.methods.find(m => m.key === state.choice[t.id]) || t.metho
 /* ───────── Raid ekranı kurulum ───────── */
 $("gl").innerHTML = `<button data-v="0">Yok</button><button data-v="1" class="expchip">${ico("he")}Var · 40mm HE kullan</button>`;
 $("gl").querySelectorAll("button").forEach(b => b.onclick = () => { state.enabled.he = b.dataset.v === "1"; render(); });
-$("side").innerHTML = [["hard", "Dıştan · sert"], ["soft", "İçten · yumuşak"]].map(([v, l]) => `<button data-v="${v}">${l}</button>`).join("");
-$("side").querySelectorAll("button").forEach(b => b.onclick = () => { state.side = b.dataset.v; render(); });
+state.side = "hard"; // raid her zaman dıştan (sert taraftan) hesaplanır
 $("exps").innerHTML = ORDER.filter(k => k !== "he").map(k => `<button data-v="${k}" class="expchip">${ico(EXP[k].icon)}${EXP[k].name}</button>`).join("");
 $("exps").querySelectorAll("button").forEach(b => b.onclick = () => {
   const k = b.dataset.v; state.enabled[k] = !state.enabled[k];
@@ -1001,7 +1000,6 @@ function kitTotals() {
 
 /* ───────── Çizim ───────── */
 function render() {
-  $("side").querySelectorAll("button").forEach(b => b.setAttribute("aria-pressed", b.dataset.v === state.side));
   $("exps").querySelectorAll("button").forEach(b => b.setAttribute("aria-pressed", !!state.enabled[b.dataset.v]));
   $("gl").querySelectorAll("button").forEach(b => b.setAttribute("aria-pressed", (b.dataset.v === "1") === !!state.enabled.he));
   $("gl-note").textContent = state.enabled.he
@@ -1072,7 +1070,7 @@ function render() {
       <div class="mat total"><span class="nm">Toplam sülfür</span><span class="v">${fmt(B.sulfur)}</span></div></div>
       ${duds ? `<p class="note warn">Yedek al: ${duds}.</p>` : ""}
       ${broken ? `<p class="note warn">${broken} hedef seçili patlayıcılarla kırılamıyor, toplama eklenmedi.</p>` : ""}</div>
-    ${sel.length ? "" : `<p class="note">Raid hedefi seçmedin; sadece kit hesaplanıyor.</p>`}<div class="sec"${sel.length ? "" : " hidden"}><h2>Hedef başına yollar (${state.side === "hard" ? "dıştan" : "içten"})</h2>${sel.map(t => {
+    ${sel.length ? "" : `<p class="note">Raid hedefi seçmedin; sadece kit hesaplanıyor.</p>`}<div class="sec"${sel.length ? "" : " hidden"}><h2>Hedef başına yollar</h2>${sel.map(t => {
       const n = state.counts[t.id], c = chosen(t);
       const far = state.enabled.ammo ? shots(t.hp, hits("ammo", t, state.side, true)) : null;
       return `<div class="plan" id="plan-${t.id}">
