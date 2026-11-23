@@ -1,265 +1,562 @@
 <title>Raid Hesap</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#14120d">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Saira+Condensed:wght@600;800&family=IBM+Plex+Sans:wght@400;600&family=JetBrains+Mono:wght@500;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Saira+Condensed:wght@600;700;800&family=IBM+Plex+Sans:wght@400;500;600&family=JetBrains+Mono:wght@500;700&display=swap">
 <style>
-/* Layout: tek sütun, telefon öncelikli; üstte sabit özet paneli, altta hedef listesi */
+/* Layout: telefon uygulaması — üst başlık, kayan içerik, altta sabit özet şeridi + sekme çubuğu */
 :root {
   color-scheme: dark;
-  --bg: #17150f;
-  --panel: #221f17;
-  --panel-2: #2c281d;
-  --line: #3b3526;
-  --fg: #ece6d4;
-  --muted: #a39b84;
+  --bg: #14120d;
+  --panel: #1f1c15;
+  --panel-2: #29251b;
+  --raised: #332e21;
+  --line: #3a3426;
+  --fg: #efe9d6;
+  --muted: #9f977f;
   --sulfur: #e8c547;
+  --sulfur-dim: #6b5c27;
   --sulfur-ink: #1d1a0c;
-  --warn: #e07a4a;
+  --danger: #e0674a;
   --f-display: "Saira Condensed", "Arial Narrow", system-ui, sans-serif;
   --f-body: "IBM Plex Sans", system-ui, -apple-system, sans-serif;
   --f-mono: "JetBrains Mono", ui-monospace, Menlo, monospace;
+  --gutter-l: max(16px, env(safe-area-inset-left, 0px));
+  --gutter-r: max(16px, env(safe-area-inset-right, 0px));
 }
 * { box-sizing: border-box; }
+[hidden] { display: none !important; }
 html, body { background: var(--bg); color: var(--fg); }
 body {
-  font-family: var(--f-body); font-size: 15px; line-height: 1.45;
-  padding-left: max(16px, env(safe-area-inset-left, 0px));
-  padding-right: max(16px, env(safe-area-inset-right, 0px));
-  padding-block: 12px 40px;
-  -webkit-tap-highlight-color: transparent;
+  font-family: var(--f-body); font-size: 15px; line-height: 1.4;
+  -webkit-tap-highlight-color: transparent; -webkit-user-select: none; user-select: none;
+  overscroll-behavior-y: none;
 }
-body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--bg); }
-.wrap { max-width: 560px; margin: 0 auto; display: flex; flex-direction: column; gap: 14px; }
-header { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
-h1 { font-family: var(--f-display); font-weight: 800; font-size: 2rem; letter-spacing: .02em; margin: 0; text-transform: uppercase; line-height: 1; }
-h1 span { color: var(--sulfur); }
-.tabs { display: flex; gap: 4px; background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 4px; }
-.tabs button { flex: 1; }
-button { font: inherit; color: inherit; cursor: pointer; border: 0; background: none; }
+input { -webkit-user-select: text; user-select: text; }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 30; background: var(--bg); }
+button { font: inherit; color: inherit; cursor: pointer; border: 0; background: none; padding: 0; }
 button:focus-visible, input:focus-visible { outline: 2px solid var(--sulfur); outline-offset: 2px; }
-.tab { padding: 9px 8px; border-radius: 7px; font-weight: 600; color: var(--muted); }
-.tab[aria-selected="true"] { background: var(--panel-2); color: var(--fg); }
-.label { font-family: var(--f-display); font-weight: 600; text-transform: uppercase; letter-spacing: .08em; font-size: .8rem; color: var(--muted); }
+svg.i { display: block; flex: none; }
 
-/* Özet */
-.summary { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: var(--sulfur); color: var(--sulfur-ink); border-radius: 12px; padding: 14px 16px; display: grid; gap: 10px; box-shadow: 0 8px 24px rgba(0,0,0,.45); }
-.summary .big { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
-.summary .num { font-family: var(--f-mono); font-weight: 700; font-size: 2.1rem; line-height: 1; font-variant-numeric: tabular-nums; }
-.summary .unit { font-family: var(--f-display); font-weight: 800; text-transform: uppercase; letter-spacing: .06em; font-size: 1rem; }
-.summary .items { font-family: var(--f-display); font-weight: 600; font-size: 1.05rem; text-align: right; }
-.summary .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; border-top: 1px solid rgba(29,26,12,.25); padding-top: 9px; }
-.summary .grid div { display: flex; flex-direction: column; min-width: 0; }
-.summary .grid b { font-family: var(--f-mono); font-size: 1rem; font-variant-numeric: tabular-nums; }
-.summary .grid small { font-size: .72rem; text-transform: uppercase; letter-spacing: .06em; opacity: .75; }
-.summary .extra { font-size: .8rem; opacity: .85; }
+/* Üst başlık */
+.top {
+  position: sticky; top: env(safe-area-inset-top, 0px); z-index: 20; background: var(--bg);
+  padding-left: var(--gutter-l); padding-right: var(--gutter-r); padding-block: 12px 10px;
+  border-bottom: 1px solid var(--line);
+}
+.top-in { max-width: 560px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.brand { display: flex; align-items: center; gap: 10px; }
+.brand svg { width: 34px; height: 34px; }
+h1 { font-family: var(--f-display); font-weight: 800; font-size: 1.55rem; letter-spacing: .03em; margin: 0; text-transform: uppercase; line-height: 1; }
+h1 span { color: var(--sulfur); }
+.top small { font-family: var(--f-display); font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); font-size: .72rem; }
 
-/* Patlayıcı seçimi */
-.seg { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; }
-.seg button { background: var(--panel); border: 1px solid var(--line); border-radius: 9px; padding: 8px 4px; display: flex; flex-direction: column; align-items: center; gap: 2px; min-width: 0; }
-.seg button b { font-family: var(--f-display); font-size: .95rem; letter-spacing: .02em; }
-.seg button small { font-family: var(--f-mono); font-size: .68rem; color: var(--muted); }
-.seg button[aria-pressed="true"] { border-color: var(--sulfur); background: var(--panel-2); }
-.seg button[aria-pressed="true"] b { color: var(--sulfur); }
+main {
+  padding-left: var(--gutter-l); padding-right: var(--gutter-r);
+  padding-block: 16px calc(160px + env(safe-area-inset-bottom, 0px));
+}
+.view { max-width: 560px; margin: 0 auto; display: flex; flex-direction: column; gap: 22px; }
+.sec { display: flex; flex-direction: column; gap: 10px; }
+.sec-h { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; }
+h2 { font-family: var(--f-display); font-weight: 700; text-transform: uppercase; letter-spacing: .08em; font-size: .9rem; color: var(--muted); margin: 0; }
+.link { color: var(--muted); font-size: .84rem; text-decoration: underline; text-underline-offset: 3px; }
+.tag { font-family: var(--f-mono); font-size: .7rem; color: var(--sulfur); border: 1px solid var(--sulfur-dim); border-radius: 999px; padding: 2px 8px; }
+.note { font-size: .78rem; color: var(--muted); margin: 0; }
 
-/* Hedef listesi */
-.group { display: flex; flex-direction: column; gap: 6px; }
-.row { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 10px; background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 10px 10px 10px 14px; }
-.row.on { border-color: #6b5c27; background: var(--panel-2); }
-.row .name { font-weight: 600; }
-.row .meta { font-family: var(--f-mono); font-size: .74rem; color: var(--muted); }
-.row .meta em { font-style: normal; color: var(--sulfur); }
-.step { display: flex; align-items: center; gap: 4px; }
-.step button { width: 40px; height: 40px; border-radius: 8px; background: var(--bg); border: 1px solid var(--line); font-size: 1.3rem; line-height: 1; }
-.step button:active { background: var(--line); }
-.step output { width: 30px; text-align: center; font-family: var(--f-mono); font-weight: 700; font-size: 1.1rem; font-variant-numeric: tabular-nums; }
-.row.on .step output { color: var(--sulfur); }
-.actions { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
-.ghost { color: var(--muted); font-size: .85rem; padding: 6px 2px; text-decoration: underline; text-underline-offset: 3px; }
-.note { font-size: .78rem; color: var(--muted); }
-.tag { font-size: .72rem; font-family: var(--f-mono); color: var(--warn); }
+/* Patlayıcı seçici */
+.picker { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+.pick {
+  background: var(--panel); border: 1.5px solid var(--line); border-radius: 14px;
+  padding: 10px 4px 9px; display: flex; flex-direction: column; align-items: center; gap: 4px; min-width: 0;
+  transition: transform .12s, border-color .15s, background .15s;
+}
+.pick svg { width: 44px; height: 44px; }
+.pick b { font-family: var(--f-display); font-weight: 700; font-size: 1rem; letter-spacing: .02em; line-height: 1.1; }
+.pick small { font-family: var(--f-mono); font-size: .66rem; color: var(--muted); }
+.pick[aria-pressed="true"] { border-color: var(--sulfur); background: var(--raised); box-shadow: 0 0 0 3px rgba(232,197,71,.14); }
+.pick[aria-pressed="true"] b { color: var(--sulfur); }
+.pick:active { transform: scale(.96); }
 
-/* Sülfür sekmesi */
-.field { display: flex; flex-direction: column; gap: 6px; }
-.field input { font-family: var(--f-mono); font-size: 1.6rem; font-weight: 700; background: var(--panel); border: 1px solid var(--line); color: var(--fg); border-radius: 10px; padding: 12px 14px; width: 100%; }
-.quick { display: flex; gap: 6px; flex-wrap: wrap; }
-.quick button { background: var(--panel); border: 1px solid var(--line); border-radius: 999px; padding: 6px 12px; font-family: var(--f-mono); font-size: .82rem; }
-.craft { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-.craft div { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 12px; display: flex; flex-direction: column; gap: 2px; }
-.craft b { font-family: var(--f-mono); font-size: 1.8rem; color: var(--sulfur); font-variant-numeric: tabular-nums; line-height: 1.1; }
+/* Hedef kutuları */
+.tiles { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.tile {
+  position: relative; background: var(--panel); border: 1.5px solid var(--line); border-radius: 16px;
+  padding: 12px; display: flex; flex-direction: column; gap: 8px; min-width: 0;
+  transition: border-color .15s, background .15s;
+}
+.tile.on { border-color: var(--sulfur-dim); background: var(--panel-2); }
+.tile .art { display: flex; align-items: flex-start; justify-content: space-between; }
+.tile .art svg { width: 52px; height: 52px; }
+.badge { font-family: var(--f-mono); font-weight: 700; font-size: .95rem; background: var(--sulfur); color: var(--sulfur-ink); border-radius: 999px; padding: 2px 9px; min-width: 32px; text-align: center; }
+.tile:not(.on) .badge { visibility: hidden; }
+.tname { font-weight: 600; font-size: .95rem; line-height: 1.2; }
+.need { display: flex; align-items: center; gap: 5px; font-family: var(--f-mono); font-size: .78rem; color: var(--muted); }
+.need svg { width: 18px; height: 18px; }
+.need b { color: var(--fg); }
+.step { display: grid; grid-template-columns: 44px 1fr 44px; align-items: center; background: var(--bg); border: 1px solid var(--line); border-radius: 11px; overflow: hidden; }
+.step button { height: 40px; font-size: 1.35rem; line-height: 1; color: var(--fg); }
+.step button:active { background: var(--raised); }
+.step output { text-align: center; font-family: var(--f-mono); font-weight: 700; font-size: 1.05rem; font-variant-numeric: tabular-nums; }
+.tile.on .step output { color: var(--sulfur); }
+
+/* Alt dok: özet şeridi + sekmeler */
+.dock {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 25;
+  background: rgba(20,18,13,.94); -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px);
+  border-top: 1px solid var(--line);
+  padding-left: var(--gutter-l); padding-right: var(--gutter-r);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+.dock-in { max-width: 560px; margin: 0 auto; }
+.strip {
+  margin-top: 10px; width: 100%; display: flex; align-items: center; gap: 12px;
+  background: var(--sulfur); color: var(--sulfur-ink); border-radius: 14px; padding: 9px 12px; text-align: left;
+}
+.strip svg.big { width: 38px; height: 38px; background: rgba(29,26,12,.14); border-radius: 10px; padding: 3px; }
+.strip .txt { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+.strip .q { font-family: var(--f-display); font-weight: 800; font-size: 1.2rem; text-transform: uppercase; letter-spacing: .02em; line-height: 1.1; }
+.strip .s { font-family: var(--f-mono); font-weight: 700; font-size: .85rem; }
+.strip .go { font-family: var(--f-display); font-weight: 700; text-transform: uppercase; letter-spacing: .06em; font-size: .85rem; white-space: nowrap; }
+.strip[disabled] { background: var(--panel-2); color: var(--muted); }
+.strip[disabled] svg.big { background: var(--bg); }
+.tabs { display: grid; grid-template-columns: repeat(4, 1fr); padding-block: 6px 4px; }
+.tab { display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 6px 0; color: var(--muted); font-size: .7rem; font-weight: 600; letter-spacing: .02em; }
+.tab svg { width: 24px; height: 24px; }
+.tab[aria-selected="true"] { color: var(--sulfur); }
+
+/* Malzeme listesi */
+.hero-need { display: flex; align-items: center; gap: 14px; background: var(--panel); border: 1.5px solid var(--sulfur-dim); border-radius: 18px; padding: 16px; }
+.hero-need svg { width: 64px; height: 64px; }
+.hero-need .n { font-family: var(--f-display); font-weight: 800; font-size: 2rem; line-height: 1; text-transform: uppercase; }
+.hero-need .n span { color: var(--sulfur); }
+.hero-need .sub { color: var(--muted); font-size: .85rem; margin-top: 4px; }
+.mats { display: flex; flex-direction: column; background: var(--panel); border: 1px solid var(--line); border-radius: 16px; overflow: hidden; }
+.mat { display: flex; align-items: center; gap: 12px; padding: 10px 14px; border-bottom: 1px solid var(--line); }
+.mat:last-child { border-bottom: 0; }
+.mat svg { width: 36px; height: 36px; background: var(--bg); border-radius: 9px; padding: 3px; }
+.mat .nm { flex: 1; min-width: 0; font-weight: 500; }
+.mat .nm small { display: block; color: var(--muted); font-size: .74rem; font-weight: 400; }
+.mat .v { font-family: var(--f-mono); font-weight: 700; font-size: 1.05rem; font-variant-numeric: tabular-nums; }
+.mat.key .v { color: var(--sulfur); }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chip { display: flex; align-items: center; gap: 6px; background: var(--panel); border: 1px solid var(--line); border-radius: 999px; padding: 4px 10px 4px 4px; font-size: .84rem; }
+.chip svg { width: 26px; height: 26px; }
+.chip b { font-family: var(--f-mono); color: var(--sulfur); }
+.empty { text-align: center; padding: 40px 20px; display: flex; flex-direction: column; align-items: center; gap: 10px; color: var(--muted); }
+.empty svg { width: 72px; height: 72px; opacity: .55; }
+.btn { background: var(--sulfur); color: var(--sulfur-ink); font-family: var(--f-display); font-weight: 700; text-transform: uppercase; letter-spacing: .06em; padding: 10px 18px; border-radius: 12px; }
+
+/* Sülfür */
+.field { display: flex; align-items: center; gap: 12px; background: var(--panel); border: 1.5px solid var(--line); border-radius: 16px; padding: 10px 14px; }
+.field svg { width: 44px; height: 44px; }
+.field label { display: block; font-size: .75rem; color: var(--muted); text-transform: uppercase; letter-spacing: .08em; font-family: var(--f-display); font-weight: 600; }
+.field input { width: 100%; font-family: var(--f-mono); font-size: 1.7rem; font-weight: 700; background: none; border: 0; color: var(--fg); padding: 0; outline: none; }
+.field:focus-within { border-color: var(--sulfur); }
+.quick { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 2px; scrollbar-width: none; }
+.quick button { flex: none; background: var(--panel); border: 1px solid var(--line); border-radius: 999px; padding: 7px 13px; font-family: var(--f-mono); font-size: .82rem; }
+.craft { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.craft div { background: var(--panel); border: 1px solid var(--line); border-radius: 16px; padding: 12px; display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.craft svg { width: 46px; height: 46px; }
+.craft b { font-family: var(--f-mono); font-size: 1.9rem; color: var(--sulfur); font-variant-numeric: tabular-nums; line-height: 1; }
 .craft span { font-weight: 600; }
 .craft small { font-size: .74rem; color: var(--muted); }
-table { width: 100%; border-collapse: collapse; font-size: .85rem; }
-th, td { text-align: right; padding: 7px 6px; border-bottom: 1px solid var(--line); font-variant-numeric: tabular-nums; }
-th:first-child, td:first-child { text-align: left; }
-th { font-family: var(--f-display); text-transform: uppercase; letter-spacing: .06em; font-size: .75rem; color: var(--muted); font-weight: 600; }
-td { font-family: var(--f-mono); }
-td:first-child { font-family: var(--f-body); }
-.tablewrap { overflow-x: auto; background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 4px 8px; }
-@media (max-width: 380px) { .seg button small { display: none; } .summary .num { font-size: 1.8rem; } }
-@media (prefers-reduced-motion: no-preference) { .summary .num { transition: color .2s; } }
+
+/* Tarifler */
+.recipe { background: var(--panel); border: 1px solid var(--line); border-radius: 16px; padding: 14px; display: flex; flex-direction: column; gap: 10px; }
+.recipe-h { display: flex; align-items: center; gap: 12px; }
+.recipe-h svg { width: 48px; height: 48px; }
+.recipe-h b { font-family: var(--f-display); font-weight: 700; font-size: 1.2rem; text-transform: uppercase; letter-spacing: .02em; display: block; line-height: 1.1; }
+.recipe-h small { color: var(--muted); font-size: .78rem; }
+.eq { font-family: var(--f-display); color: var(--muted); font-weight: 700; }
+
+@media (max-width: 370px) { .pick small { display: none; } .tile .art svg { width: 44px; height: 44px; } }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
 </style>
 
-<div class="wrap">
-  <header>
-    <h1>Raid <span>Hesap</span></h1>
-    <span class="label">Rust araç kiti</span>
-  </header>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <!-- Patlayıcılar -->
+    <symbol id="i-c4" viewBox="0 0 48 48">
+      <path d="M15 15 C12 6 22 5 20 14" stroke="#3d7fd9" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+      <path d="M31 15 C30 5 41 6 37 14" stroke="#d94f3d" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+      <rect x="5" y="14" width="38" height="26" rx="4" fill="#5f5b42"/>
+      <rect x="5" y="14" width="38" height="7" rx="3" fill="#7d7756"/>
+      <rect x="10" y="24" width="18" height="11" rx="2" fill="#141510"/>
+      <rect x="12.5" y="27" width="4" height="5" rx="1" fill="#e5533f"/>
+      <rect x="18" y="27" width="4" height="5" rx="1" fill="#e5533f"/>
+      <rect x="23.5" y="27" width="2.5" height="5" rx="1" fill="#e5533f" opacity=".5"/>
+      <circle cx="35.5" cy="29.5" r="4" fill="#c9c2a0"/><circle cx="35.5" cy="29.5" r="1.6" fill="#5f5b42"/>
+    </symbol>
+    <symbol id="i-rocket" viewBox="0 0 48 48">
+      <g transform="rotate(45 24 24)">
+        <path d="M20.5 38 L24 47 L27.5 38Z" fill="#f0a63c"/>
+        <path d="M19 30 L12 41 L19 37Z" fill="#4d5741"/><path d="M29 30 L36 41 L29 37Z" fill="#4d5741"/>
+        <rect x="19" y="11" width="10" height="27" rx="1.5" fill="#71805e"/>
+        <rect x="19" y="11" width="3.5" height="27" fill="#8a9a74"/>
+        <rect x="19" y="18" width="10" height="3" fill="#e8c547"/>
+        <path d="M19 11.5 L24 1 L29 11.5Z" fill="#c9503c"/>
+      </g>
+    </symbol>
+    <symbol id="i-satchel" viewBox="0 0 48 48">
+      <path d="M14 19 C14 8 32 8 32 19" stroke="#5c4526" stroke-width="3.2" fill="none"/>
+      <path d="M36 20 q3 -8 8 -6" stroke="#c9c2a0" stroke-width="1.8" fill="none"/>
+      <circle cx="44" cy="14" r="3" fill="#f0a63c"/><circle cx="44" cy="14" r="1.3" fill="#fff3c4"/>
+      <path d="M7 19 h32 v19 a4 4 0 0 1-4 4 H11 a4 4 0 0 1-4-4Z" fill="#82643a"/>
+      <path d="M7 19 h32 v10 q-16 4 -32 0Z" fill="#a07c48"/>
+      <rect x="20" y="26" width="6" height="7" rx="1.5" fill="#3a2c18"/>
+    </symbol>
+    <symbol id="i-ammo" viewBox="0 0 48 48">
+      <g><rect x="9" y="22" width="8" height="20" rx="1.2" fill="#c9a54a"/><rect x="9" y="38" width="8" height="4" fill="#a7862f"/><path d="M9 22 Q13 9 17 22Z" fill="#d94f3d"/></g>
+      <g><rect x="20" y="18" width="8" height="24" rx="1.2" fill="#d6b257"/><rect x="20" y="38" width="8" height="4" fill="#a7862f"/><path d="M20 18 Q24 5 28 18Z" fill="#e5533f"/></g>
+      <g><rect x="31" y="22" width="8" height="20" rx="1.2" fill="#c9a54a"/><rect x="31" y="38" width="8" height="4" fill="#a7862f"/><path d="M31 22 Q35 9 39 22Z" fill="#d94f3d"/></g>
+    </symbol>
+    <!-- Ara ürünler -->
+    <symbol id="i-explosives" viewBox="0 0 48 48">
+      <path d="M24 12 q2 -7 8 -7" stroke="#c9c2a0" stroke-width="1.8" fill="none"/><circle cx="32" cy="5" r="2.5" fill="#f0a63c"/>
+      <rect x="10" y="13" width="9" height="29" rx="2.5" fill="#a93a2a"/>
+      <rect x="19.5" y="11" width="9" height="31" rx="2.5" fill="#c4442f"/>
+      <rect x="29" y="13" width="9" height="29" rx="2.5" fill="#a93a2a"/>
+      <rect x="8" y="25" width="32" height="5" rx="1" fill="#2a2724"/>
+    </symbol>
+    <symbol id="i-beancan" viewBox="0 0 48 48">
+      <path d="M24 15 q2 -8 9 -7" stroke="#c9c2a0" stroke-width="1.8" fill="none"/><circle cx="33" cy="8" r="2.5" fill="#f0a63c"/>
+      <rect x="13" y="15" width="22" height="28" rx="3.5" fill="#6f7e44"/>
+      <rect x="13" y="22" width="22" height="11" fill="#d4bd70"/>
+      <ellipse cx="24" cy="27.5" rx="5" ry="3" fill="#8a5a2b"/>
+      <rect x="13" y="15" width="22" height="3" rx="1.5" fill="#8a9a5a"/>
+    </symbol>
+    <symbol id="i-gp" viewBox="0 0 48 48">
+      <path d="M4 42 Q24 8 44 42Z" fill="#34322f"/>
+      <path d="M12 42 Q24 20 36 42Z" fill="#45423e"/>
+      <circle cx="18" cy="34" r="1.3" fill="#77726a"/><circle cx="26" cy="29" r="1.3" fill="#77726a"/><circle cx="30" cy="37" r="1.3" fill="#77726a"/><circle cx="22" cy="39" r="1.3" fill="#77726a"/><circle cx="34" cy="31" r="1" fill="#77726a"/>
+      <path d="M36 10 l1.6 4 4 1.6 -4 1.6 -1.6 4 -1.6-4 -4-1.6 4-1.6Z" fill="#f0a63c"/>
+    </symbol>
+    <!-- Ham madde -->
+    <symbol id="i-sulfur" viewBox="0 0 48 48">
+      <path d="M6 41 L14 24 L22 41Z" fill="#d9b63c"/>
+      <path d="M16 41 L27 10 L38 41Z" fill="#f2d66a"/>
+      <path d="M27 10 L33 25 L38 41 L27 41Z" fill="#c9a52f"/>
+      <path d="M30 41 L37 27 L44 41Z" fill="#e8c547"/>
+      <path d="M37 27 L44 41 L37 41Z" fill="#b8962a"/>
+      <rect x="4" y="40" width="40" height="3.5" rx="1.75" fill="#5a4e2a"/>
+    </symbol>
+    <symbol id="i-char" viewBox="0 0 48 48">
+      <path d="M6 38 L10 26 L20 22 L24 32 L18 40Z" fill="#2c2926"/>
+      <path d="M10 26 L20 22 L17 28Z" fill="#4c4741"/>
+      <path d="M20 40 L24 26 L34 20 L42 30 L38 41Z" fill="#23211f"/>
+      <path d="M24 26 L34 20 L32 27Z" fill="#514b44"/>
+      <path d="M22 18 L28 10 L35 14 L31 20Z" fill="#33302c"/>
+      <path d="M28 10 L35 14 L30 15Z" fill="#5a544c"/>
+    </symbol>
+    <symbol id="i-frag" viewBox="0 0 48 48">
+      <path d="M5 34 L15 22 L22 30 L14 42Z" fill="#8e969c"/>
+      <path d="M15 22 L22 30 L18 26Z" fill="#c3c9cd"/>
+      <path d="M20 16 L32 8 L36 22 L24 26Z" fill="#a4abb0"/>
+      <path d="M20 16 L32 8 L28 15Z" fill="#d3d8db"/>
+      <path d="M26 34 L38 26 L44 38 L30 42Z" fill="#7b8287"/>
+      <path d="M38 26 L44 38 L40 33Z" fill="#b5bcc1"/>
+    </symbol>
+    <symbol id="i-lgf" viewBox="0 0 48 48">
+      <rect x="17" y="5" width="13" height="7" rx="2" fill="#7e2b1f"/>
+      <rect x="11" y="10" width="26" height="33" rx="4" fill="#b8402f"/>
+      <rect x="15" y="16" width="18" height="22" rx="2" fill="#a23626"/>
+      <path d="M17 18 L31 36 M31 18 L17 36" stroke="#7e2b1f" stroke-width="2.4" stroke-linecap="round"/>
+      <rect x="32" y="4" width="5" height="9" rx="1.5" fill="#d9a33c"/>
+    </symbol>
+    <symbol id="i-cloth" viewBox="0 0 48 48">
+      <rect x="6" y="15" width="36" height="22" rx="4" fill="#c4b28c"/>
+      <path d="M6 23 h36 M6 30 h36" stroke="#a08f6a" stroke-width="1.6"/>
+      <path d="M34 15 v22" stroke="#a08f6a" stroke-width="1.6" stroke-dasharray="2 2"/>
+    </symbol>
+    <symbol id="i-tech" viewBox="0 0 48 48">
+      <rect x="6" y="10" width="36" height="28" rx="3" fill="#2f6a46"/>
+      <path d="M10 16 h6 v6 M38 16 h-6 v6 M10 32 h6 v-5 M38 32 h-6 v-5" stroke="#d9b63c" stroke-width="1.6" fill="none"/>
+      <rect x="18" y="17" width="12" height="13" rx="1.5" fill="#151515"/>
+      <circle cx="10" cy="14" r="1.4" fill="#d9b63c"/><circle cx="38" cy="34" r="1.4" fill="#d9b63c"/>
+    </symbol>
+    <symbol id="i-pipe" viewBox="0 0 48 48">
+      <g transform="rotate(-35 24 24)">
+        <rect x="4" y="18" width="40" height="12" rx="2" fill="#8e969c"/>
+        <rect x="4" y="18" width="40" height="3.5" fill="#bcc3c7"/>
+        <rect x="4" y="16" width="5" height="16" rx="1" fill="#6d7378"/>
+        <rect x="39" y="16" width="5" height="16" rx="1" fill="#6d7378"/>
+      </g>
+    </symbol>
+    <symbol id="i-rope" viewBox="0 0 48 48">
+      <circle cx="24" cy="25" r="15" stroke="#b9925a" stroke-width="5" fill="none"/>
+      <circle cx="24" cy="25" r="8" stroke="#a07a45" stroke-width="5" fill="none"/>
+      <path d="M38 30 q6 6 4 12" stroke="#b9925a" stroke-width="4" fill="none" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="i-stash" viewBox="0 0 48 48">
+      <rect x="9" y="19" width="30" height="21" rx="2.5" fill="#6b5232"/>
+      <rect x="7" y="14" width="34" height="8" rx="2.5" fill="#8a6a40"/>
+      <rect x="21" y="19" width="6" height="6" rx="1" fill="#c9a54a"/>
+      <path d="M9 30 h30" stroke="#57422a" stroke-width="1.5"/>
+    </symbol>
+    <!-- Hedefler: --t1 ana renk, --t2 detay -->
+    <symbol id="i-door" viewBox="0 0 48 48">
+      <rect x="10" y="4" width="28" height="41" rx="2" fill="#2a2621"/>
+      <rect x="12.5" y="6.5" width="23" height="37" rx="1" fill="var(--t1)"/>
+      <rect x="15.5" y="10" width="17" height="13" rx="1" fill="var(--t2)"/>
+      <rect x="15.5" y="26" width="17" height="14" rx="1" fill="var(--t2)"/>
+      <circle cx="31" cy="25" r="2" fill="#e8c547"/>
+    </symbol>
+    <symbol id="i-garage" viewBox="0 0 48 48">
+      <rect x="4" y="6" width="40" height="38" rx="2" fill="#2a2621"/>
+      <rect x="7" y="9" width="34" height="35" fill="var(--t1)"/>
+      <path d="M7 15.5h34 M7 22h34 M7 28.5h34 M7 35h34" stroke="var(--t2)" stroke-width="2.4"/>
+      <rect x="20" y="38" width="8" height="2.5" rx="1" fill="#e8c547"/>
+    </symbol>
+    <symbol id="i-hatch" viewBox="0 0 48 48">
+      <rect x="5" y="5" width="38" height="38" rx="3" fill="var(--t1)"/>
+      <rect x="9" y="9" width="30" height="30" rx="2" fill="none" stroke="var(--t2)" stroke-width="2"/>
+      <path d="M18 9 v30 M30 9 v30 M18 15h12 M18 21h12 M18 27h12 M18 33h12" stroke="var(--t2)" stroke-width="2.4"/>
+      <rect x="21" y="39" width="6" height="3" rx="1" fill="#e8c547"/>
+    </symbol>
+    <symbol id="i-wall" viewBox="0 0 48 48">
+      <rect x="4" y="6" width="40" height="38" rx="2" fill="var(--t1)"/>
+      <path d="M4 15.5h40 M4 25h40 M4 34.5h40 M16 6v9.5 M32 6v9.5 M10 15.5v9.5 M24 15.5v9.5 M38 15.5v9.5 M16 25v9.5 M32 25v9.5 M10 34.5v9.5 M24 34.5v9.5 M38 34.5v9.5" stroke="var(--t2)" stroke-width="2"/>
+    </symbol>
+    <symbol id="i-hes" viewBox="0 0 48 48">
+      <path d="M4 45 V12 L8.5 4 L13 12 V45Z M14 45 V12 L18.5 4 L23 12 V45Z M24 45 V12 L28.5 4 L33 12 V45Z M34 45 V12 L38.5 4 L43 12 V45Z" fill="var(--t1)"/>
+      <path d="M4 22h39 M4 34h39" stroke="var(--t2)" stroke-width="2.4"/>
+    </symbol>
+    <!-- Sekme ikonları -->
+    <symbol id="t-raid" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M1 12h4M19 12h4"/></g></symbol>
+    <symbol id="t-mat" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M12 3 2 8l10 5 10-5Z"/><path d="m2 13 10 5 10-5"/><path d="m2 18 10 5 10-5" opacity=".5"/></g></symbol>
+    <symbol id="t-sulfur" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M3 21 8 11l4 10Z"/><path d="M9 21 15 4l6 17Z"/></g></symbol>
+    <symbol id="t-book" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M4 4h7a3 3 0 0 1 3 3v14a2 2 0 0 0-2-2H4Z"/><path d="M20 4h-4a2 2 0 0 0-2 2"/><path d="M14 19h6V4"/></g></symbol>
+  </defs>
+</svg>
 
-  <div class="tabs" role="tablist">
-    <button class="tab" role="tab" id="tab-raid" aria-selected="true">Raid maliyeti</button>
-    <button class="tab" role="tab" id="tab-sulfur" aria-selected="false">Elimdeki sülfür</button>
+<header class="top">
+  <div class="top-in">
+    <div class="brand"><svg class="i"><use href="#i-c4"/></svg><h1>Raid <span>Hesap</span></h1></div>
+    <small id="top-sub">Rust araç kiti</small>
   </div>
+</header>
 
-  <section id="view-raid" class="group" style="gap:14px">
-    <div class="summary" aria-live="polite">
-      <div class="big">
-        <div><span class="num" id="s-sulfur">0</span> <span class="unit">sülfür</span></div>
-        <div class="items" id="s-items">Hedef seç</div>
-      </div>
-      <div class="grid">
-        <div><b id="s-gp">0</b><small>Barut</small></div>
-        <div><b id="s-char">0</b><small>Kömür</small></div>
-        <div><b id="s-frag">0</b><small>Metal parça</small></div>
-      </div>
-      <div class="extra" id="s-extra"></div>
+<main>
+  <!-- RAID -->
+  <section class="view" id="view-raid">
+    <div class="sec">
+      <h2>Patlayıcını seç</h2>
+      <div class="picker" id="picker"></div>
     </div>
-
-    <div class="group">
-      <span class="label">Patlayıcı</span>
-      <div class="seg" id="seg"></div>
-    </div>
-
-    <div class="group">
-      <div class="actions">
-        <span class="label">Hedefler</span>
-        <span><span class="tag" id="example-tag">örnek seçim</span> <button class="ghost" id="reset">Sıfırla</button></span>
+    <div class="sec">
+      <div class="sec-h">
+        <h2>Ne patlatacaksın?</h2>
+        <span style="display:flex;gap:10px;align-items:center"><span class="tag" id="example-tag">örnek</span><button class="link" id="reset">Sıfırla</button></span>
       </div>
-      <div class="group" id="list"></div>
+      <div class="tiles" id="tiles"></div>
     </div>
-
-    <p class="note">Sayılar oyunun güncel raid tablolarına göre yaklaşık değerlerdir; Facepunch güncellemelerinde değişebilir. "En ucuz" her hedef için en az sülfür harcayan patlayıcıyı seçer.</p>
+    <p class="note">Değerler yaklaşıktır, oyun güncellemeleriyle değişebilir.</p>
   </section>
 
-  <section id="view-sulfur" class="group" style="gap:14px" hidden>
-    <div class="field">
-      <label class="label" for="sulfur-in">Elimdeki sülfür</label>
-      <input id="sulfur-in" type="number" inputmode="numeric" min="0" step="100" value="10000">
+  <!-- MALZEME -->
+  <section class="view" id="view-mat" hidden></section>
+
+  <!-- SÜLFÜR -->
+  <section class="view" id="view-sulfur" hidden>
+    <div class="sec">
+      <h2>Elindeki sülfür</h2>
+      <div class="field">
+        <svg class="i"><use href="#i-sulfur"/></svg>
+        <div style="flex:1;min-width:0"><label for="sulfur-in">Miktar</label><input id="sulfur-in" type="number" inputmode="numeric" min="0" step="100" value="10000"></div>
+      </div>
       <div class="quick" id="quick"></div>
     </div>
-    <div class="craft" id="craft"></div>
-    <span class="label">Tek parça maliyeti</span>
-    <div class="tablewrap">
-      <table>
-        <thead><tr><th>Patlayıcı</th><th>Sülfür</th><th>Barut</th><th>Kömür</th><th>Metal</th></tr></thead>
-        <tbody id="cost-table"></tbody>
-      </table>
+    <div class="sec">
+      <h2>Bununla yapabileceğin</h2>
+      <div class="craft" id="craft"></div>
     </div>
-    <p class="note">Barut tarifi: 10 barut = 20 sülfür + 30 kömür. Patlayıcı (explosives): 50 barut + 10 sülfür + 10 metal parça + 3 düşük kalite yakıt.</p>
   </section>
-</div>
+
+  <!-- TARİFLER -->
+  <section class="view" id="view-book" hidden>
+    <div class="sec" id="recipes"><h2>Ne neyle yapılır?</h2></div>
+    <p class="note">Tarifler ve raid sayıları yaklaşıktır; Facepunch güncellemelerinde değişebilir.</p>
+  </section>
+</main>
+
+<nav class="dock">
+  <div class="dock-in">
+    <button class="strip" id="strip"></button>
+    <div class="tabs" role="tablist">
+      <button class="tab" role="tab" data-tab="raid"><svg class="i"><use href="#t-raid"/></svg>Raid</button>
+      <button class="tab" role="tab" data-tab="mat"><svg class="i"><use href="#t-mat"/></svg>Malzeme</button>
+      <button class="tab" role="tab" data-tab="sulfur"><svg class="i"><use href="#t-sulfur"/></svg>Sülfür</button>
+      <button class="tab" role="tab" data-tab="book"><svg class="i"><use href="#t-book"/></svg>Tarifler</button>
+    </div>
+  </div>
+</nav>
 
 <script>
+const ico = (id, cls = "i", style = "") => `<svg class="${cls}"${style ? ` style="${style}"` : ""}><use href="#i-${id}"/></svg>`;
+const fmt = n => Math.round(n).toLocaleString("tr-TR");
+
+const MAT = {
+  sulfur:     { name: "Sülfür",              icon: "sulfur" },
+  gp:         { name: "Barut",               icon: "gp" },
+  char:       { name: "Kömür",               icon: "char" },
+  frag:       { name: "Metal parça",         icon: "frag" },
+  lgf:        { name: "Düşük kalite yakıt",  icon: "lgf" },
+  explosives: { name: "Patlayıcı",           icon: "explosives" },
+  beancan:    { name: "Beancan bombası",     icon: "beancan" },
+  cloth:      { name: "Bez",                 icon: "cloth" },
+  tech:       { name: "Tech trash",          icon: "tech" },
+  pipe:       { name: "Metal boru",          icon: "pipe" },
+  rope:       { name: "İp",                  icon: "rope" },
+  stash:      { name: "Küçük sandık",        icon: "stash" },
+};
+// Doğrudan tarif (1 adet için)
 const EXP = {
-  c4:     { name: "C4",      long: "C4 (Timed Explosive)", sulfur: 2200, gp: 1000, char: 3000, frag: 200, extra: { "Bez": 5, "Tech trash": 2, "Düşük kalite yakıt": 60 } },
-  rocket: { name: "Roket",   long: "Roket",                sulfur: 1400, gp: 650,  char: 1950, frag: 100, extra: { "Metal boru": 2, "Düşük kalite yakıt": 30 } },
-  satchel:{ name: "Çanta",   long: "Satchel Charge",       sulfur: 480,  gp: 240,  char: 720,  frag: 80,  extra: { "İp": 1, "Küçük sandık": 1 } },
-  ammo:   { name: "Mermi",   long: "Patlayıcı 5.56",       sulfur: 25,   gp: 10,   char: 30,   frag: 5,   extra: {} },
+  c4:      { name: "C4",     long: "C4 (Timed Explosive)", icon: "c4",      ins: { explosives: 20, cloth: 5, tech: 2 } },
+  rocket:  { name: "Roket",  long: "Roket",                icon: "rocket",  ins: { explosives: 10, gp: 150, pipe: 2 } },
+  satchel: { name: "Çanta",  long: "Satchel Charge",       icon: "satchel", ins: { beancan: 4, stash: 1, rope: 1 } },
+  ammo:    { name: "Mermi",  long: "Patlayıcı 5.56 mermi", icon: "ammo",    ins: { gp: 10, sulfur: 5, frag: 5 } },
+};
+const SUB = [
+  { icon: "explosives", name: "Patlayıcı", out: 1, ins: { gp: 50, sulfur: 10, frag: 10, lgf: 3 } },
+  { icon: "beancan", name: "Beancan bombası", out: 1, ins: { gp: 60, frag: 20 } },
+  { icon: "gp", name: "Barut", out: 10, ins: { sulfur: 20, char: 30 } },
+];
+const T = {
+  wood:  "--t1:#8a6338;--t2:#6b4a27",
+  sheet: "--t1:#8d9499;--t2:#666d72",
+  armor: "--t1:#4d5358;--t2:#2f3438",
+  stone: "--t1:#9a958a;--t2:#6f6b63",
 };
 const TARGETS = [
-  { id: "wdoor",  name: "Ahşap kapı",          c4: 1, rocket: 2,  satchel: 2,  ammo: 19 },
-  { id: "sdoor",  name: "Sac metal kapı",      c4: 1, rocket: 2,  satchel: 4,  ammo: 63 },
-  { id: "hatch",  name: "Merdivenli kapak",    c4: 1, rocket: 2,  satchel: 4,  ammo: 63 },
-  { id: "gdoor",  name: "Garaj kapısı",        c4: 2, rocket: 3,  satchel: 9,  ammo: 150 },
-  { id: "adoor",  name: "Zırhlı kapı",         c4: 2, rocket: 4,  satchel: 12, ammo: 200 },
-  { id: "wwall",  name: "Ahşap duvar",         c4: 1, rocket: 2,  satchel: 3,  ammo: 49 },
-  { id: "stwall", name: "Taş duvar",           c4: 4, rocket: 10, satchel: 10, ammo: 185 },
-  { id: "smwall", name: "Sac metal duvar",     c4: 4, rocket: 8,  satchel: 23, ammo: 400 },
-  { id: "awall",  name: "Zırhlı duvar",        c4: 8, rocket: 15, satchel: 46, ammo: 799 },
-  { id: "hes",    name: "Yüksek taş sur",      c4: 4, rocket: 10, satchel: 10, ammo: 185 },
+  { id: "wdoor",  name: "Ahşap kapı",       icon: "door",   tier: "wood",  c4: 1, rocket: 2,  satchel: 2,  ammo: 19 },
+  { id: "sdoor",  name: "Sac metal kapı",   icon: "door",   tier: "sheet", c4: 1, rocket: 2,  satchel: 4,  ammo: 63 },
+  { id: "gdoor",  name: "Garaj kapısı",     icon: "garage", tier: "sheet", c4: 2, rocket: 3,  satchel: 9,  ammo: 150 },
+  { id: "adoor",  name: "Zırhlı kapı",      icon: "door",   tier: "armor", c4: 2, rocket: 4,  satchel: 12, ammo: 200 },
+  { id: "hatch",  name: "Merdivenli kapak", icon: "hatch",  tier: "sheet", c4: 1, rocket: 2,  satchel: 4,  ammo: 63 },
+  { id: "wwall",  name: "Ahşap duvar",      icon: "wall",   tier: "wood",  c4: 1, rocket: 2,  satchel: 3,  ammo: 49 },
+  { id: "stwall", name: "Taş duvar",        icon: "wall",   tier: "stone", c4: 4, rocket: 10, satchel: 10, ammo: 185 },
+  { id: "smwall", name: "Sac metal duvar",  icon: "wall",   tier: "sheet", c4: 4, rocket: 8,  satchel: 23, ammo: 400 },
+  { id: "awall",  name: "Zırhlı duvar",     icon: "wall",   tier: "armor", c4: 8, rocket: 15, satchel: 46, ammo: 799 },
+  { id: "hes",    name: "Yüksek taş sur",   icon: "hes",    tier: "stone", c4: 4, rocket: 10, satchel: 10, ammo: 185 },
 ];
-const MODES = ["cheap", "c4", "rocket", "satchel", "ammo"];
+
+// E adet patlayıcı için tüm malzeme dökümü
+function breakdown(k, E) {
+  const r = Object.fromEntries(Object.keys(MAT).map(m => [m, 0]));
+  for (const m in EXP[k].ins) r[m] += EXP[k].ins[m] * E;
+  const direct = { gp: r.gp, sulfur: r.sulfur, frag: r.frag };
+  r.gp = direct.gp + r.explosives * 50 + r.beancan * 60;
+  r.sulfur = direct.sulfur + r.explosives * 10 + r.gp * 2;
+  r.char = r.gp * 3;
+  r.frag = direct.frag + r.explosives * 10 + r.beancan * 20;
+  r.lgf = r.explosives * 3;
+  return r;
+}
+const unitSulfur = k => breakdown(k, 1).sulfur;
+
 const EXAMPLE = { adoor: 1, stwall: 2 };
-const fmt = n => n.toLocaleString("tr-TR");
+let state = { exp: "c4", counts: { ...EXAMPLE }, example: true, tab: "raid", sulfur: 10000 };
+try { const s = JSON.parse(localStorage.getItem("raidhesap2")); if (s && s.counts && EXP[s.exp]) state = { ...state, ...s }; } catch (e) {}
+const save = () => { try { localStorage.setItem("raidhesap2", JSON.stringify(state)); } catch (e) {} };
+const $ = id => document.getElementById(id);
 
-let state = { mode: "cheap", counts: { ...EXAMPLE }, example: true, tab: "raid", sulfur: 10000 };
-try { const s = JSON.parse(localStorage.getItem("raidhesap")); if (s && s.counts) state = { ...state, ...s }; } catch (e) {}
-const save = () => { try { localStorage.setItem("raidhesap", JSON.stringify(state)); } catch (e) {} };
+// Patlayıcı seçici
+$("picker").innerHTML = Object.keys(EXP).map(k =>
+  `<button class="pick" data-exp="${k}">${ico(EXP[k].icon)}<b>${EXP[k].name}</b><small>${fmt(unitSulfur(k))} S</small></button>`).join("");
+$("picker").querySelectorAll(".pick").forEach(b => b.onclick = () => { state.exp = b.dataset.exp; render(); });
 
-function pick(t, mode) {
-  if (mode !== "cheap") return mode;
-  return ["c4", "rocket", "satchel", "ammo"].reduce((best, k) => t[k] * EXP[k].sulfur < t[best] * EXP[best].sulfur ? k : best, "c4");
-}
-
-const seg = document.getElementById("seg");
-MODES.forEach(m => {
-  const b = document.createElement("button");
-  b.dataset.mode = m;
-  b.innerHTML = m === "cheap" ? "<b>En ucuz</b><small>otomatik</small>" : `<b>${EXP[m].name}</b><small>${fmt(EXP[m].sulfur)}</small>`;
-  b.onclick = () => { state.mode = m; render(); };
-  seg.appendChild(b);
-});
-
-const list = document.getElementById("list");
-TARGETS.forEach(t => {
-  const row = document.createElement("div");
-  row.className = "row";
-  row.innerHTML = `<div><div class="name">${t.name}</div><div class="meta"></div></div>
-    <div class="step"><button aria-label="${t.name} azalt">−</button><output>0</output><button aria-label="${t.name} artır">+</button></div>`;
-  const [minus, plus] = row.querySelectorAll("button");
-  const change = d => { state.counts[t.id] = Math.max(0, (state.counts[t.id] || 0) + d); state.example = false; render(); };
-  minus.onclick = () => change(-1);
-  plus.onclick = () => change(1);
-  t.el = row;
-  list.appendChild(row);
-});
-
-document.getElementById("reset").onclick = () => { state.counts = {}; state.example = false; render(); };
-
-function render() {
-  seg.querySelectorAll("button").forEach(b => b.setAttribute("aria-pressed", b.dataset.mode === state.mode));
-  const tot = { sulfur: 0, gp: 0, char: 0, frag: 0 }, used = {}, extra = {};
-  TARGETS.forEach(t => {
-    const n = state.counts[t.id] || 0, k = pick(t, state.mode), q = t[k];
-    t.el.classList.toggle("on", n > 0);
-    t.el.querySelector("output").textContent = n;
-    t.el.querySelector(".meta").innerHTML = `${q} ${EXP[k].name} · <em>${fmt(q * EXP[k].sulfur)}</em> sülfür`;
-    if (!n) return;
-    const c = q * n;
-    used[k] = (used[k] || 0) + c;
-    for (const f in tot) tot[f] += EXP[k][f] * c;
-    for (const e in EXP[k].extra) extra[e] = (extra[e] || 0) + EXP[k].extra[e] * c;
+// Hedef kutuları
+$("tiles").innerHTML = TARGETS.map(t => `
+  <div class="tile" data-id="${t.id}">
+    <div class="art">${ico(t.icon, "i", T[t.tier])}<span class="badge"></span></div>
+    <div class="tname">${t.name}</div>
+    <div class="need"></div>
+    <div class="step"><button aria-label="${t.name} azalt" data-d="-1">−</button><output>0</output><button aria-label="${t.name} artır" data-d="1">+</button></div>
+  </div>`).join("");
+$("tiles").querySelectorAll(".tile").forEach(el => {
+  el.querySelectorAll("button").forEach(b => b.onclick = () => {
+    const id = el.dataset.id;
+    state.counts[id] = Math.max(0, (state.counts[id] || 0) + Number(b.dataset.d));
+    state.example = false; render();
   });
-  document.getElementById("s-sulfur").textContent = fmt(tot.sulfur);
-  document.getElementById("s-gp").textContent = fmt(tot.gp);
-  document.getElementById("s-char").textContent = fmt(tot.char);
-  document.getElementById("s-frag").textContent = fmt(tot.frag);
-  const parts = Object.keys(used).map(k => `${used[k]} ${EXP[k].name}`);
-  document.getElementById("s-items").textContent = parts.length ? parts.join(" + ") : "Hedef seç";
-  const ex = Object.keys(extra).map(e => `${fmt(extra[e])} ${e}`);
-  document.getElementById("s-extra").textContent = ex.length ? "Ayrıca: " + ex.join(", ") : "";
-  document.getElementById("example-tag").hidden = !state.example;
+});
+$("reset").onclick = () => { state.counts = {}; state.example = false; render(); };
 
-  ["raid", "sulfur"].forEach(v => {
-    document.getElementById("tab-" + v).setAttribute("aria-selected", state.tab === v);
-    document.getElementById("view-" + v).hidden = state.tab !== v;
-  });
+// Sekmeler
+document.querySelectorAll(".tab").forEach(b => b.onclick = () => { state.tab = b.dataset.tab; render(); window.scrollTo(0, 0); });
+$("strip").onclick = () => { state.tab = state.tab === "mat" ? "raid" : "mat"; render(); window.scrollTo(0, 0); };
 
-  const s = Math.max(0, Number(state.sulfur) || 0);
-  document.getElementById("craft").innerHTML = ["c4", "rocket", "satchel", "ammo"].map(k =>
-    `<div><b>${fmt(Math.floor(s / EXP[k].sulfur))}</b><span>${EXP[k].long}</span><small>${fmt(EXP[k].sulfur)} sülfür / adet</small></div>`).join("");
-  save();
-}
-
-document.getElementById("cost-table").innerHTML = ["c4", "rocket", "satchel", "ammo"].map(k =>
-  `<tr><td>${EXP[k].long}</td><td>${fmt(EXP[k].sulfur)}</td><td>${fmt(EXP[k].gp)}</td><td>${fmt(EXP[k].char)}</td><td>${fmt(EXP[k].frag)}</td></tr>`).join("");
-
-const input = document.getElementById("sulfur-in");
+// Sülfür
+const input = $("sulfur-in");
 input.value = state.sulfur;
 input.oninput = () => { state.sulfur = input.value; render(); };
-document.getElementById("quick").innerHTML = [2200, 5000, 10000, 20000, 50000].map(v => `<button data-v="${v}">${fmt(v)}</button>`).join("");
-document.querySelectorAll("#quick button").forEach(b => b.onclick = () => { input.value = b.dataset.v; state.sulfur = b.dataset.v; render(); });
-document.getElementById("tab-raid").onclick = () => { state.tab = "raid"; render(); };
-document.getElementById("tab-sulfur").onclick = () => { state.tab = "sulfur"; render(); };
+$("quick").innerHTML = [2200, 5000, 10000, 20000, 50000, 100000].map(v => `<button data-v="${v}">${fmt(v)}</button>`).join("");
+$("quick").querySelectorAll("button").forEach(b => b.onclick = () => { input.value = b.dataset.v; state.sulfur = b.dataset.v; render(); });
+
+// Tarifler (sabit)
+const chip = (m, q) => `<span class="chip">${ico(MAT[m].icon)}<b>${fmt(q)}</b> ${MAT[m].name}</span>`;
+$("recipes").insertAdjacentHTML("beforeend",
+  Object.keys(EXP).map(k => `
+    <div class="recipe">
+      <div class="recipe-h">${ico(EXP[k].icon)}<div><b>${EXP[k].long}</b><small>Toplam ${fmt(unitSulfur(k))} sülfür</small></div></div>
+      <div class="chips">${Object.entries(EXP[k].ins).map(([m, q]) => chip(m, q)).join("")}</div>
+    </div>`).join("") +
+  `<h2 style="margin-top:8px">Ara ürünler</h2>` +
+  SUB.map(s => `
+    <div class="recipe">
+      <div class="recipe-h">${ico(s.icon)}<div><b>${s.out > 1 ? s.out + " × " : ""}${s.name}</b><small>Çalışma tezgâhında</small></div></div>
+      <div class="chips">${Object.entries(s.ins).map(([m, q]) => chip(m, q)).join("")}</div>
+    </div>`).join(""));
+
+function render() {
+  const k = state.exp, e = EXP[k];
+  $("picker").querySelectorAll(".pick").forEach(b => b.setAttribute("aria-pressed", b.dataset.exp === k));
+
+  let E = 0, targets = 0;
+  TARGETS.forEach(t => {
+    const n = state.counts[t.id] || 0, el = $("tiles").querySelector(`[data-id="${t.id}"]`);
+    el.classList.toggle("on", n > 0);
+    el.querySelector("output").textContent = n;
+    el.querySelector(".badge").textContent = n ? `${t[k] * n}` : "";
+    el.querySelector(".need").innerHTML = `${ico(e.icon)}<b>${t[k]}</b> ${e.name} / adet`;
+    E += t[k] * n; targets += n;
+  });
+  $("example-tag").hidden = !state.example;
+  const B = breakdown(k, E);
+
+  // Özet şeridi
+  const strip = $("strip");
+  strip.disabled = E === 0;
+  strip.innerHTML = E
+    ? `${ico(e.icon, "i big")}<span class="txt"><span class="q">${fmt(E)} × ${e.name}</span><span class="s">${fmt(B.sulfur)} sülfür</span></span><span class="go">${state.tab === "mat" ? "‹ Raid" : "Malzeme ›"}</span>`
+    : `${ico(e.icon, "i big")}<span class="txt"><span class="q">Hedef seç</span><span class="s">Kapı ya da duvar ekle</span></span>`;
+
+  // Malzeme ekranı
+  const row = (m, v, key, sub) => `<div class="mat${key ? " key" : ""}">${ico(MAT[m].icon)}<span class="nm">${MAT[m].name}${sub ? `<small>${sub}</small>` : ""}</span><span class="v">${fmt(v)}</span></div>`;
+  const list = (ms, opts = {}) => ms.filter(m => B[m] > 0).map(m => row(m, B[m], opts.key === m, opts.sub && opts.sub[m])).join("");
+  $("view-mat").innerHTML = E ? `
+    <div class="hero-need">${ico(e.icon)}<div><div class="n"><span>${fmt(E)}</span> × ${e.name}</div><div class="sub">${targets} hedef için gereken toplam</div></div></div>
+    <div class="sec"><h2>Bunu yapmak için</h2><div class="mats">${Object.keys(e.ins).map(m => row(m, e.ins[m] * E, false, `${e.ins[m]} × ${fmt(E)} ${e.name}`)).join("")}</div></div>
+    <div class="sec"><h2>Toplanacak ham madde</h2><div class="mats">${list(["sulfur", "char", "frag", "lgf", "cloth", "tech", "pipe", "rope", "stash"].filter(m => !(m in e.ins) || ["sulfur","frag"].includes(m)), { key: "sulfur", sub: { char: "Odun yakarak elde edilir", sulfur: "Barut dahil toplam" } })}</div></div>
+    <div class="sec"><h2>Ara ürün</h2><div class="mats">${list(["explosives", "beancan", "gp"].filter(m => !(m in e.ins)), { sub: { gp: "Kendin üretirsen gereken" } })}</div></div>`
+    : `<div class="empty">${ico("c4")}<div>Henüz hedef seçmedin.<br>Raid sekmesinden kapı ya da duvar ekle.</div><button class="btn" id="go-raid">Hedef seç</button></div>`;
+  const gr = $("go-raid"); if (gr) gr.onclick = () => { state.tab = "raid"; render(); };
+  // Boş "Ara ürün" bölümünü gizle
+  $("view-mat").querySelectorAll(".mats").forEach(m => { if (!m.children.length) m.parentElement.hidden = true; });
+
+  // Sülfür ekranı
+  const s = Math.max(0, Number(state.sulfur) || 0);
+  $("craft").innerHTML = Object.keys(EXP).map(x =>
+    `<div>${ico(EXP[x].icon)}<b>${fmt(Math.floor(s / unitSulfur(x)))}</b><span>${EXP[x].long}</span><small>${fmt(unitSulfur(x))} sülfür / adet</small></div>`).join("");
+
+  // Sekmeler
+  ["raid", "mat", "sulfur", "book"].forEach(v => $("view-" + v).hidden = state.tab !== v);
+  document.querySelectorAll(".tab").forEach(b => b.setAttribute("aria-selected", b.dataset.tab === state.tab));
+  strip.hidden = !(state.tab === "raid" || state.tab === "mat");
+  $("top-sub").textContent = { raid: "Raid planla", mat: "Malzeme listesi", sulfur: "Ne kadar yaparım?", book: "Tarifler" }[state.tab];
+  save();
+}
 render();
 </script>
