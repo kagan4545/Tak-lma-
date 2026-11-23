@@ -636,7 +636,7 @@ const T = {
   armor: "--t1:#4d5358;--t2:#2f3438",
   stone: "--t1:#9a958a;--t2:#6f6b63",
 };
-const GROUPS = { door: "Kapılar", hatch: "Kapaklar", wall: "Duvarlar", window: "Pencere ve açıklıklar", ext: "Dış surlar", dep: "Eşyalar" };
+const GROUPS = { turret: "Taretler", door: "Kapılar", hatch: "Kapaklar", wall: "Duvarlar", window: "Pencere ve açıklıklar", ext: "Dış surlar", dep: "Eşyalar" };
 const TARGETS = [
   { id: "wdoor",   g: "door",   name: "Wooden Door",              icon: "door",     tier: "wood",  hp: 200,  prot: "wdoor", shell: true },
   { id: "wddoor",  g: "door",   name: "Wood Double Door",         icon: "ddoor",    tier: "wood",  hp: 200,  prot: "wdoor", shell: true },
@@ -671,8 +671,8 @@ const TARGETS = [
   { id: "wb2",     g: "dep",    name: "Workbench Level 2",        icon: "wb",       tier: "sheet", hp: 500,  prot: "deploy", shell: false },
   { id: "wb3",     g: "dep",    name: "Workbench Level 3",        icon: "wb",       tier: "armor", hp: 750,  prot: "deploy", shell: false },
   { id: "box",     g: "dep",    name: "Large Wood Box",           icon: "box",      tier: "wood",  hp: 300,  prot: "soft",  shell: false },
-  { id: "turret",  g: "dep",    name: "Auto Turret",              icon: "turret",   tier: "armor", hp: 1000, prot: "turret", shell: false },
-  { id: "sam",     g: "dep",    name: "SAM Site",                 icon: "sam",      tier: "armor", hp: 1000, prot: "sam",   shell: false },
+  { id: "turret",  g: "turret",    name: "Auto Turret",              icon: "turret",   tier: "armor", hp: 1000, prot: "turret", shell: false },
+  { id: "sam",     g: "turret",    name: "SAM Site",                 icon: "sam",      tier: "armor", hp: 1000, prot: "sam",   shell: false },
 ];
 
 /* ───────── Sunucunun hasar hesabı (float32, birebir) ───────── */
