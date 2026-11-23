@@ -127,6 +127,19 @@ h2 { font-family: var(--f-display); font-weight: 700; text-transform: uppercase;
 .tname small, .plan-h b small { display: block; font-family: var(--f-mono); font-size: .68rem; font-weight: 500; color: var(--muted); }
 .tile.na .need b { color: var(--danger); }
 .note.warn { color: var(--danger); }
+.kitrow { display: flex; align-items: center; gap: 10px; padding: 9px 12px; border-bottom: 1px solid var(--line); }
+.kitrow:last-child { border-bottom: 0; }
+.kitrow > svg { width: 38px; height: 38px; background: var(--bg); border-radius: 9px; padding: 3px; flex: none; }
+.kitrow .nm { flex: 1; min-width: 0; font-weight: 600; font-size: .92rem; }
+.kitrow .nm small { display: block; font-weight: 400; font-size: .72rem; color: var(--muted); }
+.kitrow .nm small b { color: var(--sulfur); font-family: var(--f-mono); font-weight: 600; }
+.kitrow.on { background: var(--panel-2); }
+.kstep { display: grid; grid-template-columns: 34px 46px 34px; align-items: center; background: var(--bg); border: 1px solid var(--line); border-radius: 10px; overflow: hidden; flex: none; }
+.kstep button { height: 36px; font-size: 1.2rem; }
+.kstep button:active { background: var(--raised); }
+.kstep input { width: 100%; text-align: center; background: none; border: 0; color: var(--fg); font-family: var(--f-mono); font-weight: 700; font-size: .95rem; padding: 0; -moz-appearance: textfield; }
+.kstep input::-webkit-outer-spin-button, .kstep input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+.kitrow.on .kstep input { color: var(--sulfur); }
 .strip .q { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .step { display: grid; grid-template-columns: 44px 1fr 44px; align-items: center; background: var(--bg); border: 1px solid var(--line); border-radius: 11px; overflow: hidden; }
 .step button { height: 40px; font-size: 1.35rem; line-height: 1; color: var(--fg); }
@@ -160,7 +173,7 @@ h2 { font-family: var(--f-display); font-weight: 700; text-transform: uppercase;
 .strip .go { font-family: var(--f-display); font-weight: 700; text-transform: uppercase; letter-spacing: .06em; font-size: .85rem; white-space: nowrap; }
 .strip[disabled] { background: var(--panel-2); color: var(--muted); }
 .strip[disabled] svg.big { background: var(--bg); }
-.tabs { display: grid; grid-template-columns: repeat(4, 1fr); padding-block: 6px 4px; }
+.tabs { display: grid; grid-template-columns: repeat(5, 1fr); padding-block: 6px 4px; }
 .tab { display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 6px 0; color: var(--muted); font-size: .7rem; font-weight: 600; letter-spacing: .02em; }
 .tab svg { width: 24px; height: 24px; }
 .tab[aria-selected="true"] { color: var(--sulfur); }
@@ -483,6 +496,65 @@ h2 { font-family: var(--f-display); font-weight: 700; text-transform: uppercase;
     <symbol id="t-raid" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M1 12h4M19 12h4"/></g></symbol>
     <symbol id="t-mat" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M12 3 2 8l10 5 10-5Z"/><path d="m2 13 10 5 10-5"/><path d="m2 18 10 5 10-5" opacity=".5"/></g></symbol>
     <symbol id="t-sulfur" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M3 21 8 11l4 10Z"/><path d="M9 21 15 4l6 17Z"/></g></symbol>
+    <symbol id="t-kit" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M5 8h14v13H5Z"/><path d="M9 8V5a3 3 0 0 1 6 0v3"/><path d="M5 13h14"/><path d="M11 13v3h2v-3"/></g></symbol>
+    <symbol id="i-bullet" viewBox="0 0 48 48">
+      <g><rect x="11" y="20" width="8" height="22" rx="1.2" fill="var(--t2)"/><rect x="11" y="38" width="8" height="4" fill="#00000040"/><path d="M11 20 Q15 7 19 20Z" fill="var(--t1)"/></g>
+      <g><rect x="29" y="20" width="8" height="22" rx="1.2" fill="var(--t2)"/><rect x="29" y="38" width="8" height="4" fill="#00000040"/><path d="M29 20 Q33 7 37 20Z" fill="var(--t1)"/></g>
+    </symbol>
+    <symbol id="i-pbullet" viewBox="0 0 48 48">
+      <g><rect x="12" y="24" width="9" height="16" rx="1.2" fill="var(--t2)"/><path d="M12 24 Q16.5 13 21 24Z" fill="var(--t1)"/></g>
+      <g><rect x="27" y="24" width="9" height="16" rx="1.2" fill="var(--t2)"/><path d="M27 24 Q31.5 13 36 24Z" fill="var(--t1)"/></g>
+    </symbol>
+    <symbol id="i-shell" viewBox="0 0 48 48">
+      <rect x="15" y="8" width="18" height="26" rx="3" fill="var(--t1)"/>
+      <rect x="13" y="34" width="22" height="8" rx="1.5" fill="#c9a54a"/>
+      <path d="M15 14h18" stroke="#00000030" stroke-width="2"/>
+    </symbol>
+    <symbol id="i-f1" viewBox="0 0 48 48">
+      <ellipse cx="24" cy="29" rx="13" ry="15" fill="#5f6b45"/>
+      <path d="M11 24h26 M11 32h26 M18 15v28 M30 15v28" stroke="#4a5435" stroke-width="2"/>
+      <rect x="20" y="8" width="8" height="8" rx="1.5" fill="#8e969c"/>
+      <path d="M28 10 q8 0 8 8" stroke="#c9c2a0" stroke-width="2" fill="none"/>
+    </symbol>
+    <symbol id="i-smoke" viewBox="0 0 48 48">
+      <circle cx="14" cy="12" r="6" fill="#c9cdd0" opacity=".8"/><circle cx="22" cy="8" r="5" fill="#dfe2e4" opacity=".8"/>
+      <rect x="15" y="16" width="18" height="27" rx="3" fill="#6c7378"/>
+      <rect x="15" y="24" width="18" height="6" fill="#e8c547"/>
+      <rect x="19" y="12" width="10" height="5" rx="1" fill="#8e969c"/>
+    </symbol>
+    <symbol id="i-flash" viewBox="0 0 48 48">
+      <rect x="15" y="14" width="18" height="29" rx="3" fill="#4d5358"/>
+      <rect x="15" y="20" width="18" height="3" fill="#8e969c"/><rect x="15" y="34" width="18" height="3" fill="#8e969c"/>
+      <path d="M36 6 l2 5 5 2 -5 2 -2 5 -2-5 -5-2 5-2Z" fill="#fff3c4"/>
+      <rect x="19" y="9" width="10" height="5" rx="1" fill="#8e969c"/>
+    </symbol>
+    <symbol id="i-molotov" viewBox="0 0 48 48">
+      <path d="M19 18 h10 v4 q6 4 6 12 v6 a3 3 0 0 1-3 3 H16 a3 3 0 0 1-3-3 v-6 q0-8 6-12Z" fill="#6f8a5a"/>
+      <rect x="13" y="30" width="22" height="7" fill="#c9b36a"/>
+      <path d="M21 18 q-2-6 3-12 q5 6 3 12Z" fill="#f0a63c"/><path d="M23 17 q-1-4 1-7 q2 3 1 7Z" fill="#ffe08a"/>
+    </symbol>
+    <symbol id="i-syringe" viewBox="0 0 48 48">
+      <g transform="rotate(45 24 24)">
+        <rect x="19" y="10" width="10" height="24" rx="2" fill="#dfe2e4"/>
+        <rect x="19" y="18" width="10" height="12" fill="#d94f3d"/>
+        <rect x="16" y="34" width="16" height="3" rx="1" fill="#8e969c"/>
+        <rect x="23" y="37" width="2" height="8" fill="#8e969c"/>
+        <rect x="22" y="3" width="4" height="7" fill="#8e969c"/><rect x="17" y="2" width="14" height="3" rx="1" fill="#8e969c"/>
+      </g>
+    </symbol>
+    <symbol id="i-medkit" viewBox="0 0 48 48">
+      <rect x="6" y="14" width="36" height="26" rx="3" fill="#dfe2e4"/>
+      <rect x="18" y="9" width="12" height="6" rx="2" fill="none" stroke="#8e969c" stroke-width="2.5"/>
+      <path d="M24 19v16 M16 27h16" stroke="#d94f3d" stroke-width="5"/>
+    </symbol>
+    <symbol id="i-bandage" viewBox="0 0 48 48">
+      <g transform="rotate(-30 24 24)"><rect x="6" y="17" width="36" height="14" rx="7" fill="#e7dcc4"/>
+      <rect x="18" y="17" width="12" height="14" fill="#c4b28c"/>
+      <circle cx="21" cy="21" r="1" fill="#a08f6a"/><circle cx="27" cy="21" r="1" fill="#a08f6a"/><circle cx="21" cy="27" r="1" fill="#a08f6a"/><circle cx="27" cy="27" r="1" fill="#a08f6a"/></g>
+    </symbol>
+    <symbol id="i-stones" viewBox="0 0 48 48">
+      <path d="M5 40 L9 28 L19 24 L24 34 L18 42Z" fill="#8a857a"/><path d="M20 42 L24 28 L34 22 L43 32 L38 43Z" fill="#9a958a"/><path d="M15 22 L21 12 L30 15 L27 22Z" fill="#7a7468"/>
+    </symbol>
     <symbol id="t-book" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M4 4h7a3 3 0 0 1 3 3v14a2 2 0 0 0-2-2H4Z"/><path d="M20 4h-4a2 2 0 0 0-2 2"/><path d="M14 19h6V4"/></g></symbol>
   </defs>
 </svg>
@@ -515,6 +587,16 @@ h2 { font-family: var(--f-display); font-weight: 700; text-transform: uppercase;
 
   <!-- MALZEME -->
   <section class="view" id="view-mat" hidden></section>
+
+  <!-- KİT -->
+  <section class="view" id="view-kit" hidden>
+    <div class="sec">
+      <div class="sec-h"><h2>Raid kiti</h2><button class="link" id="kit-reset">Kiti temizle</button></div>
+      <p class="note">Raid için yanına alacaklarını seç. Patlayıcılar Raid ekranından gelir; burada mermi, bomba, smoke, sağlık ve yedek patlayıcı eklersin. Hepsi plana ve toplama hesabına eklenir.</p>
+    </div>
+    <div id="kit-list" class="sec"></div>
+    <div class="sec"><h2>Kitin maliyeti</h2><div class="mats" id="kit-total"></div></div>
+  </section>
 
   <!-- SÜLFÜR -->
   <section class="view" id="view-sulfur" hidden>
@@ -562,7 +644,8 @@ h2 { font-family: var(--f-display); font-weight: 700; text-transform: uppercase;
     <button class="strip" id="strip"></button>
     <div class="tabs" role="tablist">
       <button class="tab" role="tab" data-tab="raid"><svg class="i"><use href="#t-raid"/></svg>Raid</button>
-      <button class="tab" role="tab" data-tab="mat"><svg class="i"><use href="#t-mat"/></svg>Malzeme</button>
+      <button class="tab" role="tab" data-tab="mat"><svg class="i"><use href="#t-mat"/></svg>Plan</button>
+      <button class="tab" role="tab" data-tab="kit"><svg class="i"><use href="#t-kit"/></svg>Kit</button>
       <button class="tab" role="tab" data-tab="sulfur"><svg class="i"><use href="#t-sulfur"/></svg>Toplama</button>
       <button class="tab" role="tab" data-tab="book"><svg class="i"><use href="#t-book"/></svg>Tarifler</button>
     </div>
@@ -593,15 +676,40 @@ const MAT = {
   pipe:       { name: "Metal Pipe",      icon: "pipe" },
   rope:       { name: "Rope",            icon: "rope" },
   stash:      { name: "Small Stash",     icon: "stash" },
+  stones:     { name: "Stones",          icon: "stones" },
+  syringe:    { name: "Medical Syringe", icon: "syringe" },
 };
-const RAW = ["sulfur", "char", "frag", "lgf", "cloth", "tech", "pipe", "rope", "stash"];
+const RAW = ["sulfur", "char", "frag", "lgf", "cloth", "tech", "pipe", "rope", "stash", "stones"];
 const INTER = ["explosives", "beancan", "gp"];
 // Tarifler (bir üretimde çıkan adet: out)
 const RECIPE = {
   gp:         { out: 10, ins: { char: 30, sulfur: 20 } },
   explosives: { out: 1,  ins: { gp: 50, lgf: 3, frag: 10, sulfur: 10 } },
   beancan:    { out: 1,  ins: { gp: 60, frag: 20 } },
+  syringe:    { out: 1,  ins: { cloth: 15, lgf: 10, frag: 10 } },
 };
+// Raid kiti (Facepunch wiki tarifleri; out = bir üretimde çıkan adet, wb = gereken çalışma tezgâhı, step = +/− adımı)
+const BUL = (a, b) => `--t1:${a};--t2:${b}`;
+const KIT_GROUPS = { ammo: "Mermiler", throw: "Bombalar ve smoke", med: "Sağlık", exp: "Yedek patlayıcılar" };
+const KIT = [
+  { id: "r556",   g: "ammo",  name: "5.56 Rifle Ammo",            icon: "bullet",  st: BUL("#c9a54a", "#d6b257"), out: 3, wb: 2, step: 30, ins: { gp: 5, frag: 10 } },
+  { id: "r556hv", g: "ammo",  name: "HV 5.56 Rifle Ammo",         icon: "bullet",  st: BUL("#5f87a3", "#d6b257"), out: 3, wb: 3, step: 30, ins: { gp: 10, frag: 10 } },
+  { id: "r556in", g: "ammo",  name: "Incendiary 5.56 Rifle Ammo", icon: "bullet",  st: BUL("#e0674a", "#d6b257"), out: 2, wb: 3, step: 30, ins: { gp: 10, frag: 10, sulfur: 5 } },
+  { id: "pist",   g: "ammo",  name: "Pistol Bullet",              icon: "pbullet", st: BUL("#c9a54a", "#d6b257"), out: 4, wb: 1, step: 20, ins: { gp: 5, frag: 10 } },
+  { id: "pisthv", g: "ammo",  name: "HV Pistol Ammo",             icon: "pbullet", st: BUL("#5f87a3", "#d6b257"), out: 4, wb: 2, step: 20, ins: { gp: 10, frag: 10 } },
+  { id: "pistin", g: "ammo",  name: "Incendiary Pistol Bullet",   icon: "pbullet", st: BUL("#e0674a", "#d6b257"), out: 3, wb: 2, step: 20, ins: { gp: 10, frag: 10, sulfur: 5 } },
+  { id: "buck",   g: "ammo",  name: "12 Gauge Buckshot",          icon: "shell",   st: BUL("#b8402f", ""), out: 2, wb: 2, step: 10, ins: { gp: 10, frag: 5 } },
+  { id: "slug",   g: "ammo",  name: "12 Gauge Slug",              icon: "shell",   st: BUL("#3e5f78", ""), out: 2, wb: 2, step: 10, ins: { gp: 10, frag: 5 } },
+  { id: "shin",   g: "ammo",  name: "12 Gauge Incendiary Shell",  icon: "shell",   st: BUL("#e0674a", ""), out: 2, wb: 2, step: 10, ins: { sulfur: 20, gp: 10, frag: 5 } },
+  { id: "hshell", g: "ammo",  name: "Handmade Shell",             icon: "shell",   st: BUL("#8a6338", ""), out: 2, wb: 0, step: 10, ins: { gp: 5, stones: 5 } },
+  { id: "f1",     g: "throw", name: "F1 Grenade",                 icon: "f1",      out: 1, wb: 2, step: 1, ins: { gp: 30, frag: 25 } },
+  { id: "smoke",  g: "throw", name: "Smoke Grenade",              icon: "smoke",   out: 1, wb: 2, step: 1, ins: { gp: 35, frag: 50 } },
+  { id: "flash",  g: "throw", name: "Flashbang",                  icon: "flash",   out: 1, wb: 2, step: 1, ins: { gp: 25, frag: 50 } },
+  { id: "molo",   g: "throw", name: "Molotov Cocktail",           icon: "molotov", out: 1, wb: 2, step: 1, ins: { lgf: 50, cloth: 10 } },
+  { id: "syr",    g: "med",   name: "Medical Syringe",            icon: "syringe", out: 1, wb: 2, step: 1, ins: { cloth: 15, lgf: 10, frag: 10 } },
+  { id: "medkit", g: "med",   name: "Large Medkit",               icon: "medkit",  out: 1, wb: 2, step: 1, ins: { lgf: 10, syringe: 2 } },
+  { id: "band",   g: "med",   name: "Bandage",                    icon: "bandage", out: 1, wb: 0, step: 1, ins: { cloth: 4 } },
+];
 // Patlayıcılar: hasar türleri (Explosion, Blunt, Stab, Bullet, AntiVehicle) ve atış şekli
 const EXP = {
   c4:      { name: "C4",      long: "Timed Explosive Charge",    icon: "c4",      out: 1, ins: { explosives: 20, cloth: 5, tech: 2 },      delivery: "stuck",  dmg: { Explosion: 550 } },
@@ -708,7 +816,8 @@ function shots(hp, hs, start = hp) {
 }
 
 /* ───────── Üretim ve sülfür ───────── */
-function breakdown(k, qty) {
+// Bir tarifin (ins, out) qty adedi için tüm malzeme dökümü; crafts=true ise üretim sayısı yukarı yuvarlanır
+function expand(ins, out, qty, crafts) {
   const r = Object.fromEntries(Object.keys(MAT).map(m => [m, 0]));
   const add = (item, q) => {
     if (RAW.includes(item)) { r[item] += q; return; }
@@ -716,17 +825,19 @@ function breakdown(k, qty) {
     const rc = RECIPE[item];
     for (const [m, v] of Object.entries(rc.ins)) add(m, v * q / rc.out);
   };
-  for (const [m, v] of Object.entries(EXP[k].ins)) add(m, v * qty / EXP[k].out);
+  const n = crafts ? Math.ceil(qty / out) : qty / out;
+  for (const [m, v] of Object.entries(ins)) add(m, v * n);
   return r;
 }
+const breakdown = (k, qty) => expand(EXP[k].ins, EXP[k].out, qty, false);
 const UNIT = Object.fromEntries(ORDER.map(k => [k, breakdown(k, 1).sulfur]));
 const unitSulfur = k => UNIT[k];
 
 /* ───────── Durum ───────── */
 const EXAMPLE = { gdoor: 1, stwall: 2 };
-let state = { counts: { ...EXAMPLE }, choice: {}, example: true, tab: "raid", sulfur: 10000, side: "hard",
+let state = { counts: { ...EXAMPLE }, choice: {}, kit: {}, example: true, tab: "raid", sulfur: 10000, side: "hard",
   enabled: { c4: true, rocket: true, satchel: true, ammo: true, beancan: true, hv: false, he: false } };
-try { const s = JSON.parse(localStorage.getItem("raidhesap4")); if (s && s.counts) state = { ...state, ...s, choice: s.choice || {}, enabled: { ...state.enabled, ...(s.enabled || {}) } }; } catch (e) {}
+try { const s = JSON.parse(localStorage.getItem("raidhesap4")); if (s && s.counts) state = { ...state, ...s, choice: s.choice || {}, kit: s.kit || {}, enabled: { ...state.enabled, ...(s.enabled || {}) } }; } catch (e) {}
 const save = () => { try { localStorage.setItem("raidhesap4", JSON.stringify(state)); } catch (e) {} };
 
 /* ───────── Bir hedefi kırmanın yolları ───────── */
@@ -800,7 +911,7 @@ $("reset").onclick = () => { state.counts = {}; state.choice = {}; state.example
 
 // Sekmeler ve sarı şerit akışı
 document.querySelectorAll(".tab").forEach(b => b.onclick = () => { state.tab = b.dataset.tab; render(); window.scrollTo(0, 0); });
-const FLOW = { raid: "mat", mat: "sulfur", sulfur: "raid" };
+const FLOW = { raid: "mat", mat: "kit", kit: "sulfur", sulfur: "raid" };
 $("strip").onclick = () => { const next = FLOW[state.tab] || "mat"; if (next === "sulfur") state.linked = true; state.tab = next; render(); window.scrollTo(0, 0); };
 
 /* ───────── Toplama hesabı verileri ───────── */
@@ -854,6 +965,35 @@ $("recipes").insertAdjacentHTML("beforeend",
       <div class="chips">${Object.entries(RECIPE[m].ins).map(([x, q]) => chip(x, q)).join("")}</div>
     </div>`).join(""));
 
+/* ───────── Kit kurulum ───────── */
+ORDER.forEach(k => KIT.push({ id: "x" + k, g: "exp", name: EXP[k].long, icon: EXP[k].icon, out: EXP[k].out, step: 1, ins: EXP[k].ins, exp: k }));
+const kitRecipe = it => Object.entries(it.ins).map(([m, v]) => `${v} ${MAT[m].name}`).join(" + ");
+$("kit-list").innerHTML = Object.keys(KIT_GROUPS).map(g => `<div class="grp"><h3>${KIT_GROUPS[g]}</h3><div class="mats">` + KIT.filter(it => it.g === g).map(it => `
+  <div class="kitrow" data-k="${it.id}">${ico(it.icon, "i", it.st || "")}
+    <span class="nm">${it.name}<small>${it.exp ? `${fmt(UNIT[it.exp])} sülfür / adet${NEEDS[it.exp] ? " · " + NEEDS[it.exp] : ""}` : `${it.out > 1 ? it.out + "'li üretilir · " : ""}${kitRecipe(it)}${it.wb ? " · WB" + it.wb : ""}`}<br><b class="ks"></b></small></span>
+    <div class="kstep"><button aria-label="${it.name} azalt" data-d="-1">−</button><input type="number" inputmode="numeric" min="0" aria-label="${it.name} adedi" id="kit-${it.id}"><button aria-label="${it.name} artır" data-d="1">+</button></div>
+  </div>`).join("") + `</div></div>`).join("");
+$("kit-list").querySelectorAll(".kitrow").forEach(el => {
+  const it = KIT.find(x => x.id === el.dataset.k), inp = el.querySelector("input");
+  el.querySelectorAll("button").forEach(b => b.onclick = () => {
+    const cur = state.kit[it.id] || 0, d = Number(b.dataset.d) * it.step;
+    state.kit[it.id] = Math.max(0, d > 0 ? Math.floor(cur / it.step) * it.step + it.step : Math.ceil(cur / it.step) * it.step - it.step);
+    render();
+  });
+  inp.oninput = () => { state.kit[it.id] = Math.max(0, Math.floor(Number(inp.value) || 0)); render(); };
+});
+$("kit-reset").onclick = () => { state.kit = {}; render(); };
+function kitTotals() {
+  const B = Object.fromEntries(Object.keys(MAT).map(m => [m, 0])), items = [];
+  KIT.forEach(it => {
+    const q = state.kit[it.id] || 0; if (!q) return;
+    const r = expand(it.ins, it.out, q, !it.exp);
+    for (const m in B) B[m] += r[m];
+    items.push({ it, q, made: it.exp ? q : Math.ceil(q / it.out) * it.out, sulfur: r.sulfur });
+  });
+  return { B, items };
+}
+
 /* ───────── Çizim ───────── */
 function render() {
   $("side").querySelectorAll("button").forEach(b => b.setAttribute("aria-pressed", b.dataset.v === state.side));
@@ -885,14 +1025,31 @@ function render() {
 
   const B = Object.fromEntries(Object.keys(MAT).map(m => [m, 0]));
   for (const k in tot) { const b = breakdown(k, tot[k]); for (const m in B) B[m] += b[m]; }
-  const any = sel.length > 0, first = ORDER.find(k => tot[k]) || "c4";
+  const raidSulfur = B.sulfur;
+  const KT = kitTotals();
+  for (const m in B) B[m] += KT.B[m];
+  const kitAny = KT.items.length > 0;
+
+  // Kit ekranı
+  $("kit-list").querySelectorAll(".kitrow").forEach(el => {
+    const it = KIT.find(x => x.id === el.dataset.k), q = state.kit[it.id] || 0, inp = el.querySelector("input");
+    el.classList.toggle("on", q > 0);
+    if (document.activeElement !== inp) inp.value = q || "";
+    const x = KT.items.find(i => i.it === it);
+    el.querySelector(".ks").textContent = x ? `${x.sulfur ? fmt(x.sulfur) + " sülfür" : "Sülfür gerekmez"}${x.made !== q ? ` · ${fmt(x.made)} adet çıkar` : ""}` : "";
+  });
+  $("kit-total").innerHTML = kitAny
+    ? [`<div class="mat total"><span class="nm">Kit sülfürü</span><span class="v">${fmt(KT.B.sulfur)}</span></div>`,
+       ...RAW.concat(INTER).filter(m => m !== "sulfur" && KT.B[m] > 0).map(m => `<div class="mat">${ico(MAT[m].icon)}<span class="nm">${MAT[m].name}</span><span class="v">${fmt(KT.B[m])}</span></div>`)].join("")
+    : `<div class="mat"><span class="nm">Kit boş. Yukarıdan mermi, bomba ya da sağlık ekle.</span></div>`;
+  const any = sel.length > 0 || kitAny, first = ORDER.find(k => tot[k]) || "c4";
 
   // Sarı şerit
   const strip = $("strip");
   strip.disabled = !any && state.tab === "raid";
-  const go = `<span class="go">${{ raid: "Plan ›", mat: "Toplama ›", sulfur: "‹ Raid" }[state.tab] || ""}</span>`;
+  const go = `<span class="go">${{ raid: "Plan ›", mat: "Kit ›", kit: "Toplama ›", sulfur: "‹ Raid" }[state.tab] || ""}</span>`;
   strip.innerHTML = any
-    ? `${ico(EXP[first].icon, "i big")}<span class="txt"><span class="q">${label(tot)}</span><span class="s">${fmt(B.sulfur)} sülfür</span></span>${go}`
+    ? `${ico(sel.length ? EXP[first].icon : "bullet", "i big", sel.length ? "" : BUL("#c9a54a", "#d6b257"))}<span class="txt"><span class="q">${sel.length ? label(tot) : "Sadece kit"}${kitAny && sel.length ? " + kit" : ""}</span><span class="s">${fmt(B.sulfur)} sülfür</span></span>${go}`
     : `${ico("c4", "i big")}<span class="txt"><span class="q">Hedef seç</span><span class="s">Kapı, kapak ya da duvar ekle</span></span>${state.tab === "raid" ? "" : go}`;
 
   // Plan ekranı
@@ -902,10 +1059,11 @@ function render() {
   $("view-mat").innerHTML = any ? `
     <div class="sec"><h2>Patlayıcılar</h2><div class="mats">${ORDER.filter(k => tot[k]).map(k =>
       `<div class="mat key">${ico(EXP[k].icon)}<span class="nm">${EXP[k].long}<small>${fmt(UNIT[k])} sülfür / adet${NEEDS[k] ? " · " + NEEDS[k] : ""}</small></span><span class="v">${fmt(tot[k])}</span></div>`).join("")}
+      ${kitAny ? `<div class="mat"><span class="nm">Patlayıcıların sülfürü</span><span class="v">${fmt(raidSulfur)}</span></div><div class="mat"><span class="nm">Kitin sülfürü<small>${KT.items.map(x => `${fmt(x.q)} ${x.it.name}`).join(", ")}</small></span><span class="v">${fmt(KT.B.sulfur)}</span></div>` : ""}
       <div class="mat total"><span class="nm">Toplam sülfür</span><span class="v">${fmt(B.sulfur)}</span></div></div>
       ${duds ? `<p class="note warn">Yedek al: ${duds}.</p>` : ""}
       ${broken ? `<p class="note warn">${broken} hedef seçili patlayıcılarla kırılamıyor, toplama eklenmedi.</p>` : ""}</div>
-    <div class="sec"><h2>Hedef başına yollar (${state.side === "hard" ? "dıştan" : "içten"})</h2>${sel.map(t => {
+    ${sel.length ? "" : `<p class="note">Raid hedefi seçmedin; sadece kit hesaplanıyor.</p>`}<div class="sec"${sel.length ? "" : " hidden"}><h2>Hedef başına yollar (${state.side === "hard" ? "dıştan" : "içten"})</h2>${sel.map(t => {
       const n = state.counts[t.id], c = chosen(t);
       const far = state.enabled.ammo ? shots(t.hp, hits("ammo", t, state.side, true)) : null;
       return `<div class="plan" id="plan-${t.id}">
@@ -917,8 +1075,8 @@ function render() {
         ${far && c && c.parts.ammo ? `<p class="note">Explo sayısı 20 m içinden. 100 m ve üstünden tek başına ${fmt(far)} mermi gerekir.</p>` : ""}
       </div>`; }).join("")}
       <p class="note">Sayılar sunucunun hasar formülüyle hesaplandı: her patlayıcının hasar türleri, hedefin koruması ve dış yüz kuralı. Explo için Assault Rifle esas alındı; diğer tüfekler sayıyı biraz değiştirebilir. Sağdaki sayı o hedefin toplam sülfürüdür.</p></div>
-    <div class="sec"><h2>Toplanacak ham madde</h2><div class="mats">${list(RAW, { key: "sulfur", sub: { char: "Odun yakarak elde edilir", sulfur: "Barut dahil toplam", pipe: "Her biri 2 HQM + 20 scrap", tech: "Her biri 2 HQM + 50 scrap", rope: "Her biri 30 cloth", stash: "Her biri 10 cloth" } })}</div></div>
-    <div class="sec"><h2>Ara ürün</h2><div class="mats">${list(INTER, { sub: { gp: "Kendin üretirsen gereken" } })}</div></div>`
+    <div class="sec"><h2>Toplanacak ham madde${kitAny ? " (raid + kit)" : ""}</h2><div class="mats">${list(RAW, { key: "sulfur", sub: { char: "Odun yakarak elde edilir", sulfur: "Barut dahil toplam", pipe: "Her biri 2 HQM + 20 scrap", stones: "Handmade Shell için", lgf: "Her 4'ü 3 Animal Fat + 1 Cloth", tech: "Her biri 2 HQM + 50 scrap", rope: "Her biri 30 cloth", stash: "Her biri 10 cloth" } })}</div></div>
+    <div class="sec"><h2>Ara ürün</h2><div class="mats">${list(INTER.concat("syringe"), { sub: { gp: "Kendin üretirsen gereken", syringe: "Large Medkit için" } })}</div></div>`
     : `<div class="empty">${ico("c4")}<div>Henüz hedef seçmedin.<br>Raid sekmesinden kapı, kapak ya da duvar ekle.</div><button class="btn" id="go-raid">Hedef seç</button></div>`;
   const gr = $("go-raid"); if (gr) gr.onclick = () => { state.tab = "raid"; render(); };
   $("view-mat").querySelectorAll(".opt").forEach(b => b.onclick = () => { state.choice[b.dataset.t] = b.dataset.m; render(); });
@@ -961,7 +1119,7 @@ function render() {
     grow(ico("sulfur"), "Sulfur Ore", "Furnace'ta 1 ore = 1 sülfür", fmt(need)),
     grow(ico("furnace"), "Eritme süresi", `${state.fcount} × ${F.name} · ${F.note}`, dur(need * F.sec / state.fcount), "", true),
     grow(ico("wood"), "Eritirken yanan odun", F.wood ? `Ore başına ≈ ${String(F.wood).replace(".", ",")} odun` : "Odun yakmaz", fmt(burn)),
-    grow(ico("char"), "Charcoal (gereken)", fromPlan ? "Raid planındaki barut için" : "≈ hepsi barut olursa", fmt(char)),
+    grow(ico("char"), "Charcoal (gereken)", fromPlan ? "Raid planı ve kitteki barut için" : "≈ hepsi barut olursa", fmt(char)),
     grow(ico("char"), "Charcoal (eritmeden çıkan)", "Yanan odundan kendiliğinden çıkar", "≈ " + fmt(Math.min(byChar, char)), byChar > char ? `${fmt(byChar - char)} fazla` : ""),
     grow(ico("wood"), "Ek odun (kalan kömür için)", extraChar ? `${fmt(extraChar)} kömür daha lazım` : "Gerek yok, eritme yetiyor", "≈ " + fmt(extraWood)),
     grow(ico("wood"), "Toplam odun", `Eritme + ek kömür${state.mult > 1 ? ` · ${mx}x'te ağaçlardan daha hızlı toplarsın` : ""}`, "≈ " + fmt(wood), "", false),
@@ -974,10 +1132,10 @@ function render() {
     `<div>${ico(EXP[x].icon)}<b>${fmt(Math.floor(s / UNIT[x]))}</b><span>${EXP[x].long}</span><small>${fmt(UNIT[x])} sülfür / adet</small></div>`).join("");
 
   // Sekmeler
-  ["raid", "mat", "sulfur", "book"].forEach(v => $("view-" + v).hidden = state.tab !== v);
+  ["raid", "mat", "kit", "sulfur", "book"].forEach(v => $("view-" + v).hidden = state.tab !== v);
   document.querySelectorAll(".tab").forEach(b => b.setAttribute("aria-selected", b.dataset.tab === state.tab));
   strip.hidden = !(state.tab in FLOW);
-  $("top-sub").textContent = { raid: "Raid planla", mat: "Raid planı", sulfur: "Toplama ve eritme", book: "Tarifler" }[state.tab];
+  $("top-sub").textContent = { raid: "Raid planla", mat: "Raid planı", kit: "Raid kiti", sulfur: "Toplama ve eritme", book: "Tarifler" }[state.tab];
   save();
 }
 render();
