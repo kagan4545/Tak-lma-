@@ -511,10 +511,10 @@ const T = {
   armor: "--t1:#4d5358;--t2:#2f3438",
   stone: "--t1:#9a958a;--t2:#6f6b63",
 };
-// null = bu patlayıcı için güvenilir veri yok. est = değer benzer parçadan tahmin.
+// hp = can; c4/rocket/satchel/ammo = tek başına kırmak için gereken adet
 const GROUPS = { door: "Kapılar", hatch: "Kapaklar", wall: "Duvarlar" };
 const TARGETS = [
-  { id: "wdoor", hp: 200,   g: "door",  name: "Wooden Door",      icon: "door",     tier: "wood",  c4: 1, rocket: 2,  satchel: 2,  ammo: 18 },
+  { id: "wdoor", hp: 200,   g: "door",  name: "Wooden Door",      icon: "door",     tier: "wood",  c4: 1, rocket: 1,  satchel: 2,  ammo: 18 },
   { id: "sdoor", hp: 250,   g: "door",  name: "Metal Door",       icon: "door",     tier: "sheet", c4: 1, rocket: 2,  satchel: 4,  ammo: 63 },
   { id: "gdoor", hp: 600,   g: "door",  name: "Garage Door",      icon: "garage",   tier: "sheet", c4: 2, rocket: 3,  satchel: 9,  ammo: 150 },
   { id: "adoor", hp: 1000,   g: "door",  name: "HQ Door",          icon: "door",     tier: "armor", c4: 3, rocket: 5,  satchel: 15, ammo: 250 },
@@ -551,9 +551,7 @@ const save = () => { try { localStorage.setItem("raidhesap3", JSON.stringify(sta
 const $ = id => document.getElementById(id);
 const ORDER = ["c4", "rocket", "satchel", "ammo"];
 
-// Bir hedefi kırmanın tüm yolları, sülfüre göre sıralı.
-// Karışık yol: büyük patlayıcıdan 1 eksik at, kalan canı Explo ile bitir.
-// Hasar/atış = can / gereken adet varsayılır; bu yüzden Explo sayısı biraz fazla çıkabilir (güvenli taraf).
+// Bir hedefi kırmanın tüm yolları (tek patlayıcı + iki patlayıcı karışımı), sülfüre göre sıralı.
 // Tek atışın hasarı. C4 kapı ve kapaklara 440 vurur; diğerleri için can / gereken adet
 // (alt sınır, yani bitiriş sayısı güvenli tarafta kalır).
 const dmg = (t, k) => (k === "c4" && t.g !== "wall") ? Math.max(440, t.hp / t.c4) : t.hp / t[k];
@@ -640,9 +638,9 @@ const FURNACES = [
 const dur = s => { s = Math.ceil(s); const h = Math.floor(s / 3600), m = Math.floor(s % 3600 / 60), r = s % 60;
   return h ? `${h} sa ${m} dk` : m ? `${m} dk ${r ? r + " sn" : ""}`.trim() : `${r} sn`; };
 if (state.mult == null) state.mult = 1;
-if (!state.tool) state.tool = "pick";
+if (!TOOLS.some(x => x.id === state.tool)) state.tool = "pick";
 if (state.linked == null) state.linked = true;
-if (!state.furnace) state.furnace = "large";
+if (!FURNACES.some(f => f.id === state.furnace)) state.furnace = "large";
 if (state.fcount == null) state.fcount = 1;
 $("furn").innerHTML = FURNACES.map(f => `<button data-v="${f.id}">${f.name}</button>`).join("");
 $("furn").querySelectorAll("button").forEach(b => b.onclick = () => { state.furnace = b.dataset.v; render(); });
@@ -667,7 +665,7 @@ const chip = (m, q) => `<span class="chip">${ico(MAT[m].icon)}<b>${fmt(q)}</b> $
 $("recipes").insertAdjacentHTML("beforeend",
   Object.keys(EXP).map(k => `
     <div class="recipe">
-      <div class="recipe-h">${ico(EXP[k].icon)}<div><b>${EXP[k].long}</b><small>Toplam ${fmt(unitSulfur(k))} sülfür</small></div></div>
+      <div class="recipe-h">${ico(EXP[k].icon)}<div><b>${EXP[k].long}</b><small>Toplam ${fmt(unitSulfur(k))} sülfür${k === "ammo" ? " · tarif 1 mermi için, oyunda 2'şer yapılır" : ""}</small></div></div>
       <div class="chips">${Object.entries(EXP[k].ins).map(([m, q]) => chip(m, q)).join("")}</div>
     </div>`).join("") +
   `<h2 style="margin-top:8px">Ara ürünler</h2>` +
@@ -699,10 +697,10 @@ function render() {
 
   // Özet şeridi
   const strip = $("strip");
-  strip.disabled = !any;
+  strip.disabled = !any && state.tab === "raid";
   strip.innerHTML = any
     ? `${ico(EXP[first].icon, "i big")}<span class="txt"><span class="q">${label(tot)}</span><span class="s">${fmt(B.sulfur)} sülfür</span></span><span class="go">${{ raid: "Plan ›", mat: "Toplama ›", sulfur: "‹ Raid" }[state.tab] || "Plan ›"}</span>`
-    : `${ico("c4", "i big")}<span class="txt"><span class="q">Hedef seç</span><span class="s">Kapı, kapak ya da duvar ekle</span></span>`;
+    : `${ico("c4", "i big")}<span class="txt"><span class="q">Hedef seç</span><span class="s">Kapı, kapak ya da duvar ekle</span></span>${state.tab === "raid" ? "" : `<span class="go">${{ mat: "Toplama ›", sulfur: "‹ Raid" }[state.tab] || ""}</span>`}`;
 
   // Plan + malzeme ekranı
   const row = (m, v, key, sub) => `<div class="mat${key ? " key" : ""}">${ico(MAT[m].icon)}<span class="nm">${MAT[m].name}${sub ? `<small>${sub}</small>` : ""}</span><span class="v">${fmt(v)}</span></div>`;
@@ -753,7 +751,7 @@ function render() {
   const wood = burn + extraWood;
   const grow = (icon, name, sub, v, vsub, key) => `<div class="mat${key ? " key" : ""}">${icon}<span class="nm">${name}<small>${sub}</small></span><span class="v">${v}${vsub ? `<small>${vsub}</small>` : ""}</span></div>`;
   $("gather").innerHTML = need ? [
-    grow(ico("node"), "Sülfür taşı", `Taş başına ${fmt(perNode)} ore · ${tool.name} · ${state.mult}x`, fmt(nodes), "taş", true),
+    grow(ico("node"), "Sülfür taşı", `Taş başına ${fmt(perNode)} ore · ${tool.name} · ${String(state.mult).replace(".", ",")}x`, fmt(nodes), "taş", true),
     grow(ico("sulfur"), "Sulfur Ore", "Furnace'ta 1 ore = 1 sülfür", fmt(need)),
     grow(ico("furnace"), "Eritme süresi", `${state.fcount} × ${F.name} · ${F.note}`, dur(need * F.sec / state.fcount), "", true),
     grow(ico("wood"), "Eritirken yanan odun", F.wood ? `Ore başına ≈ ${String(F.wood).replace(".", ",")} odun` : "Odun yakmaz", fmt(burn)),
