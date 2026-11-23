@@ -435,6 +435,9 @@ h2 { font-family: var(--f-display); font-weight: 700; text-transform: uppercase;
       <div class="quick" id="mult"></div>
       <span class="mini">Alet</span>
       <div class="quick" id="tool"></div>
+      <span class="mini">Furnace</span>
+      <div class="quick" id="furn"></div>
+      <div class="quick" id="fcount"></div>
       <div class="mats" id="gather"></div>
       <p class="note" id="gather-note"></p>
     </div>
@@ -627,16 +630,23 @@ const TOOLS = [
   { id: "stone", name: "Stone Pickaxe", short: "Stone Pickaxe", ore: 257 },
 ];
 const CHAR_PER_WOOD = 0.75;
+// sec = 1 sülfür ore'un erime süresi (tüm furnace), wood = ore başına yanan odun
 const FURNACES = [
-  { name: "Furnace", sec: 1.7, sub: n => `≈ ${fmt(Math.ceil(n * 0.2))} odun yakar` },
-  { name: "Large Furnace", sec: 0.3, sub: () => "En hızlısı, yere kurulur" },
-  { name: "Electric Furnace", sec: 1, sub: () => "Elektrikle çalışır, odun yakmaz" },
+  { id: "large", name: "Large Furnace", sec: 1 / 3, wood: 0.17, note: "Dakikada 180 sülfür" },
+  { id: "small", name: "Furnace", sec: 1 / 0.6, wood: 0.83, note: "Dakikada 36 sülfür" },
+  { id: "electric", name: "Electric Furnace", sec: 1, wood: 0, note: "Dakikada 60 sülfür, elektrikle çalışır" },
 ];
 const dur = s => { s = Math.ceil(s); const h = Math.floor(s / 3600), m = Math.floor(s % 3600 / 60), r = s % 60;
   return h ? `${h} sa ${m} dk` : m ? `${m} dk ${r ? r + " sn" : ""}`.trim() : `${r} sn`; };
 if (state.mult == null) state.mult = 1;
 if (!state.tool) state.tool = "pick";
 if (state.linked == null) state.linked = true;
+if (!state.furnace) state.furnace = "large";
+if (state.fcount == null) state.fcount = 1;
+$("furn").innerHTML = FURNACES.map(f => `<button data-v="${f.id}">${f.name}</button>`).join("");
+$("furn").querySelectorAll("button").forEach(b => b.onclick = () => { state.furnace = b.dataset.v; render(); });
+$("fcount").innerHTML = [1, 2, 3, 4, 6].map(v => `<button data-v="${v}">${v} tane</button>`).join("");
+$("fcount").querySelectorAll("button").forEach(b => b.onclick = () => { state.fcount = Number(b.dataset.v); render(); });
 $("mult").innerHTML = [1, 1.5, 2, 3, 5, 10].map(v => `<button data-v="${v}">${String(v).replace(".", ",")}x</button>`).join("");
 $("mult").querySelectorAll("button").forEach(b => b.onclick = () => { state.mult = Number(b.dataset.v); render(); });
 $("tool").innerHTML = TOOLS.map(x => `<button data-v="${x.id}">${x.short}</button>`).join("");
@@ -732,16 +742,26 @@ function render() {
   const nodes = Math.ceil(need / perNode);
   const fromPlan = state.linked && planNeed > 0;
   const char = fromPlan ? B.char : need * 1.5;
-  const wood = Math.ceil(char / CHAR_PER_WOOD);
+  const F = FURNACES.find(f => f.id === state.furnace) || FURNACES[0];
+  $("furn").querySelectorAll("button").forEach(b => b.setAttribute("aria-pressed", b.dataset.v === F.id));
+  $("fcount").querySelectorAll("button").forEach(b => b.setAttribute("aria-pressed", Number(b.dataset.v) === state.fcount));
+  const burn = Math.ceil(need * F.wood);                 // eritirken yanan odun
+  const byChar = Math.floor(burn * CHAR_PER_WOOD);       // bu odundan çıkan kömür
+  const extraChar = Math.max(0, char - byChar);
+  const extraWood = Math.ceil(extraChar / CHAR_PER_WOOD); // kalan kömür için ayrıca yakılacak odun
+  const wood = burn + extraWood;
   const grow = (icon, name, sub, v, vsub, key) => `<div class="mat${key ? " key" : ""}">${icon}<span class="nm">${name}<small>${sub}</small></span><span class="v">${v}${vsub ? `<small>${vsub}</small>` : ""}</span></div>`;
   $("gather").innerHTML = need ? [
     grow(ico("node"), "Sülfür taşı", `Taş başına ${fmt(perNode)} ore · ${tool.name} · ${state.mult}x`, fmt(nodes), "taş", true),
     grow(ico("sulfur"), "Sulfur Ore", "Furnace'ta 1 ore = 1 sülfür", fmt(need)),
-    ...FURNACES.map(f => grow(ico("furnace"), f.name, f.sub(need), dur(need * f.sec), "1 tane ile")),
-    grow(ico("char"), "Charcoal", fromPlan ? "Raid planındaki barut için" : "≈ hepsi barut olursa", fmt(char)),
-    grow(ico("wood"), "Odun (kömür için)", state.mult > 1 ? `Yakınca ~%75'i kömüre döner · ${state.mult}x'te ağaç başına ${String(state.mult).replace(".", ",")} kat odun` : "Yakınca yaklaşık %75'i kömüre döner", "≈ " + fmt(wood), "", false),
+    grow(ico("furnace"), "Eritme süresi", `${state.fcount} × ${F.name} · ${F.note}`, dur(need * F.sec / state.fcount), "", true),
+    grow(ico("wood"), "Eritirken yanan odun", F.wood ? `Ore başına ≈ ${String(F.wood).replace(".", ",")} odun` : "Odun yakmaz", fmt(burn)),
+    grow(ico("char"), "Charcoal (gereken)", fromPlan ? "Raid planındaki barut için" : "≈ hepsi barut olursa", fmt(char)),
+    grow(ico("char"), "Charcoal (eritmeden çıkan)", "Yanan odundan kendiliğinden çıkar", "≈ " + fmt(Math.min(byChar, char)), byChar > char ? `${fmt(byChar - char)} fazla` : ""),
+    grow(ico("wood"), "Ek odun (kalan kömür için)", extraChar ? `${fmt(extraChar)} kömür daha lazım` : "Gerek yok, eritme yetiyor", "≈ " + fmt(extraWood)),
+    grow(ico("wood"), "Toplam odun", `Eritme + ek kömür${state.mult > 1 ? ` · ${String(state.mult).replace(".", ",")}x'te ağaçlardan daha hızlı toplarsın` : ""}`, "≈ " + fmt(wood), "", false),
   ].join("") : `<div class="mat"><span class="nm">Gereken sülfürü yaz ya da raid planından al.</span></div>`;
-  $("gather-note").textContent = "Çarpan, taştan ve ağaçtan topladığın miktarı artırır; eritme süresi değişmez. Furnace süreleri tek furnace içindir, iki furnace kullanırsan yarıya iner. Pure Ore Tea taştan çıkan ore'u %50 artırır.";
+  $("gather-note").textContent = "Çarpan, taştan ve ağaçtan topladığın miktarı artırır; eritme süresi ve gereken odun değişmez. Furnace hızları ve odun tüketimi Facepunch wiki ve furnace rehberlerinden alındı. Odunun kömüre dönme oranı (~%75) tahminidir. Pure Ore Tea taştan çıkan ore'u %50 artırır.";
 
   // Sülfür ekranı
   const s = Math.max(0, Number(state.sulfur) || 0);
