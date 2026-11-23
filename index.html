@@ -120,6 +120,13 @@ h2 { font-family: var(--f-display); font-weight: 700; text-transform: uppercase;
 .best-row small .ic { display: flex; }
 .best-row small .ic svg { width: 18px; height: 18px; background: none; padding: 0; }
 .best-row small .ic svg + svg { margin-left: -5px; }
+.quick.wrap { flex-wrap: wrap; overflow: visible; }
+.expchip { display: flex; align-items: center; gap: 6px; font-family: var(--f-body) !important; font-weight: 600; }
+.expchip svg { width: 20px; height: 20px; }
+.quick .expchip:not([aria-pressed="true"]) { opacity: .55; }
+.tname small, .plan-h b small { display: block; font-family: var(--f-mono); font-size: .68rem; font-weight: 500; color: var(--muted); }
+.tile.na .need b { color: var(--danger); }
+.note.warn { color: var(--danger); }
 .strip .q { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .step { display: grid; grid-template-columns: 44px 1fr 44px; align-items: center; background: var(--bg); border: 1px solid var(--line); border-radius: 11px; overflow: hidden; }
 .step button { height: 40px; font-size: 1.35rem; line-height: 1; color: var(--fg); }
@@ -392,14 +399,77 @@ h2 { font-family: var(--f-display); font-weight: 700; text-transform: uppercase;
       <rect x="21" y="32" width="6" height="4" rx="1" fill="#e8c547"/>
     </symbol>
     <symbol id="i-bars" viewBox="0 0 48 48">
-      <rect x="5" y="5" width="38" height="38" rx="2" fill="none" stroke="#5f6468" stroke-width="4"/>
-      <path d="M14 7v34 M24 7v34 M34 7v34 M7 18h34 M7 30h34" stroke="#8d9499" stroke-width="3"/>
+      <rect x="5" y="5" width="38" height="38" rx="2" fill="none" stroke="var(--t2)" stroke-width="4"/>
+      <path d="M14 7v34 M24 7v34 M34 7v34 M7 18h34 M7 30h34" stroke="var(--t1)" stroke-width="3"/>
     </symbol>
     <symbol id="i-glass" viewBox="0 0 48 48">
       <rect x="5" y="5" width="38" height="38" rx="2" fill="#5f6468"/>
       <rect x="9" y="9" width="30" height="30" rx="1" fill="#6f98a8"/>
       <path d="M13 22 L22 13 M13 30 L30 13" stroke="#b9d6e0" stroke-width="2" stroke-linecap="round"/>
       <path d="M24 39v-30 M9 24h30" stroke="#4d5358" stroke-width="2.4"/>
+    </symbol>
+    <symbol id="i-hv" viewBox="0 0 48 48">
+      <g transform="rotate(45 24 24)">
+        <path d="M21 38 L24 46 L27 38Z" fill="#7cc4f0"/>
+        <path d="M20 31 L14 40 L20 37Z" fill="#3e5f78"/><path d="M28 31 L34 40 L28 37Z" fill="#3e5f78"/>
+        <rect x="20" y="11" width="8" height="27" rx="1.5" fill="#5f87a3"/>
+        <rect x="20" y="11" width="3" height="27" fill="#7fa6c0"/>
+        <rect x="20" y="18" width="8" height="3" fill="#e8c547"/>
+        <path d="M20 11.5 L24 2 L28 11.5Z" fill="#c9d3da"/>
+      </g>
+    </symbol>
+    <symbol id="i-he" viewBox="0 0 48 48">
+      <rect x="15" y="22" width="18" height="20" rx="2" fill="#c9a54a"/>
+      <rect x="15" y="38" width="18" height="4" fill="#a7862f"/>
+      <path d="M15 22 Q15 8 24 7 Q33 8 33 22Z" fill="#5f6b45"/>
+      <rect x="15" y="20" width="18" height="3" fill="#e8c547"/>
+    </symbol>
+    <symbol id="i-emb" viewBox="0 0 48 48">
+      <rect x="5" y="5" width="38" height="38" rx="2" fill="var(--t1)"/>
+      <rect x="9" y="20" width="30" height="7" rx="1.5" fill="#1d1a14"/>
+      <path d="M5 13h38 M5 34h38" stroke="var(--t2)" stroke-width="2"/>
+    </symbol>
+    <symbol id="i-shutter" viewBox="0 0 48 48">
+      <rect x="5" y="6" width="18" height="36" rx="1.5" fill="var(--t1)"/><rect x="25" y="6" width="18" height="36" rx="1.5" fill="var(--t1)"/>
+      <path d="M7 13h14 M7 20h14 M7 27h14 M7 34h14 M27 13h14 M27 20h14 M27 27h14 M27 34h14" stroke="var(--t2)" stroke-width="2"/>
+    </symbol>
+    <symbol id="i-shop" viewBox="0 0 48 48">
+      <rect x="4" y="6" width="40" height="36" rx="2" fill="var(--t1)"/>
+      <rect x="8" y="10" width="32" height="14" rx="1" fill="#6f98a8"/>
+      <rect x="6" y="26" width="36" height="5" fill="var(--t2)"/>
+      <rect x="8" y="33" width="32" height="7" fill="#1d1a14"/>
+    </symbol>
+    <symbol id="i-grill" viewBox="0 0 48 48">
+      <rect x="5" y="5" width="38" height="38" rx="3" fill="#2a2621"/>
+      <path d="M10 10v28 M16 10v28 M22 10v28 M28 10v28 M34 10v28 M38 10v28 M8 16h32 M8 24h32 M8 32h32" stroke="var(--t1)" stroke-width="2.2"/>
+    </symbol>
+    <symbol id="i-gate" viewBox="0 0 48 48">
+      <path d="M4 45 V12 L8.5 4 L13 12 V45Z M35 45 V12 L39.5 4 L44 12 V45Z" fill="var(--t1)"/>
+      <rect x="14" y="12" width="20" height="33" fill="var(--t2)"/>
+      <path d="M24 12v33" stroke="var(--t1)" stroke-width="2"/>
+      <circle cx="21" cy="29" r="1.6" fill="#e8c547"/><circle cx="27" cy="29" r="1.6" fill="#e8c547"/>
+    </symbol>
+    <symbol id="i-wb" viewBox="0 0 48 48">
+      <rect x="4" y="16" width="40" height="7" rx="1.5" fill="var(--t1)"/>
+      <rect x="7" y="23" width="5" height="20" fill="var(--t2)"/><rect x="36" y="23" width="5" height="20" fill="var(--t2)"/>
+      <rect x="10" y="9" width="12" height="7" rx="1" fill="#8e969c"/><path d="M28 16 l6 -9 l3 2 l-5 7Z" fill="#c9a54a"/>
+    </symbol>
+    <symbol id="i-box" viewBox="0 0 48 48">
+      <rect x="4" y="14" width="40" height="28" rx="2" fill="#8a6338"/>
+      <rect x="4" y="14" width="40" height="8" rx="2" fill="#a07a45"/>
+      <path d="M4 32h40" stroke="#6b4a27" stroke-width="2"/>
+      <rect x="21" y="19" width="6" height="7" rx="1" fill="#c9a54a"/>
+    </symbol>
+    <symbol id="i-turret" viewBox="0 0 48 48">
+      <rect x="18" y="30" width="12" height="13" fill="#4d5358"/>
+      <rect x="10" y="16" width="24" height="15" rx="3" fill="#6c7378"/>
+      <rect x="32" y="20" width="13" height="4" rx="1" fill="#2f3438"/>
+      <circle cx="17" cy="23" r="3" fill="#d94f3d"/>
+    </symbol>
+    <symbol id="i-sam" viewBox="0 0 48 48">
+      <rect x="14" y="34" width="20" height="9" fill="#4d5358"/>
+      <g transform="rotate(-30 24 26)"><rect x="8" y="18" width="32" height="12" rx="2" fill="#6c7378"/>
+      <circle cx="13" cy="24" r="3" fill="#c9503c"/><circle cx="21" cy="24" r="3" fill="#c9503c"/><circle cx="29" cy="24" r="3" fill="#c9503c"/><circle cx="37" cy="24" r="3" fill="#c9503c"/></g>
     </symbol>
     <symbol id="i-wall" viewBox="0 0 48 48">
       <rect x="4" y="6" width="40" height="38" rx="2" fill="var(--t1)"/>
@@ -428,13 +498,19 @@ h2 { font-family: var(--f-display); font-weight: 700; text-transform: uppercase;
   <!-- RAID -->
   <section class="view" id="view-raid">
     <div class="sec">
+      <span class="mini">Hangi taraftan?</span>
+      <div class="quick wrap" id="side"></div>
+      <span class="mini">Kullanabileceğin patlayıcılar</span>
+      <div class="quick wrap" id="exps"></div>
+    </div>
+    <div class="sec">
       <div class="sec-h">
         <h2>Ne patlatacaksın?</h2>
         <span style="display:flex;gap:10px;align-items:center"><span class="tag" id="example-tag">örnek</span><button class="link" id="reset">Sıfırla</button></span>
       </div>
       <div class="sec" id="tiles"></div>
     </div>
-    <p class="note">Kasım 2026 raid tablolarına göre derlendi; kaynaklar arasında küçük farklar var. "Yeni" etiketli HQ kapaklar Nisan 2026'da eklendi. Explo sayıları 20 m içinden ateş içindir; uzaktan daha fazla gerekir.</p>
+    <p class="note" id="build-note"></p>
   </section>
 
   <!-- MALZEME -->
@@ -496,7 +572,14 @@ h2 { font-family: var(--f-display); font-weight: 700; text-transform: uppercase;
 <script>
 const ico = (id, cls = "i", style = "") => `<svg class="${cls}"${style ? ` style="${style}"` : ""}><use href="#i-${id}"/></svg>`;
 const fmt = n => Math.round(n).toLocaleString("tr-TR");
+const $ = id => document.getElementById(id);
 
+/* ───────── Oyun verisi ─────────
+   Kaynak: Rust sunucu dosyaları, public build 2633.288.1 (22 Eylül 2026, "Breach and Clear"),
+   GameServerKings'in sunucu dosyalarından çıkardığı tablo ve hesaplayıcı kodu. */
+const BUILD = { protocol: "2633.288.1", date: "22 Eylül 2026", update: "Breach and Clear" };
+
+// Ham madde ve ara ürünler
 const MAT = {
   sulfur:     { name: "Sulfur",          icon: "sulfur" },
   gp:         { name: "Gun Powder",      icon: "gp" },
@@ -511,138 +594,192 @@ const MAT = {
   rope:       { name: "Rope",            icon: "rope" },
   stash:      { name: "Small Stash",     icon: "stash" },
 };
-// Doğrudan tarif (1 adet için)
-const EXP = {
-  c4:      { name: "C4",      long: "Timed Explosive Charge", icon: "c4",      ins: { explosives: 20, cloth: 5, tech: 2 } },
-  rocket:  { name: "Rocket",  long: "Rocket",               icon: "rocket",  ins: { explosives: 10, gp: 150, pipe: 2 } },
-  satchel: { name: "Satchel", long: "Satchel Charge",       icon: "satchel", ins: { beancan: 4, stash: 1, rope: 1 } },
-  ammo:    { name: "Explo",   long: "Explosive 5.56 Rifle Ammo", icon: "ammo",    ins: { gp: 10, sulfur: 5, frag: 5 } },
+const RAW = ["sulfur", "char", "frag", "lgf", "cloth", "tech", "pipe", "rope", "stash"];
+const INTER = ["explosives", "beancan", "gp"];
+// Tarifler (bir üretimde çıkan adet: out)
+const RECIPE = {
+  gp:         { out: 10, ins: { char: 30, sulfur: 20 } },
+  explosives: { out: 1,  ins: { gp: 50, lgf: 3, frag: 10, sulfur: 10 } },
+  beancan:    { out: 1,  ins: { gp: 60, frag: 20 } },
 };
-const SUB = [
-  { icon: "explosives", name: "Explosives", out: 1, ins: { gp: 50, sulfur: 10, frag: 10, lgf: 3 } },
-  { icon: "beancan", name: "Beancan Grenade", out: 1, ins: { gp: 60, frag: 20 } },
-  { icon: "gp", name: "Gun Powder", out: 10, ins: { sulfur: 20, char: 30 } },
-];
+// Patlayıcılar: hasar türleri (Explosion, Blunt, Stab, Bullet, AntiVehicle) ve atış şekli
+const EXP = {
+  c4:      { name: "C4",      long: "Timed Explosive Charge",    icon: "c4",      out: 1, ins: { explosives: 20, cloth: 5, tech: 2 },      delivery: "stuck",  dmg: { Explosion: 550 } },
+  rocket:  { name: "Rocket",  long: "Rocket",                    icon: "rocket",  out: 1, ins: { explosives: 10, gp: 150, pipe: 2 },       delivery: "splash", dmg: { Blunt: 75, Explosion: 275 } },
+  satchel: { name: "Satchel", long: "Satchel Charge",            icon: "satchel", out: 1, ins: { beancan: 4, rope: 1, stash: 1 },          delivery: "stuck",  dmg: { Blunt: 200, Explosion: 75, Stab: 200 }, dud: 0.2 },
+  ammo:    { name: "Explo",   long: "Explosive 5.56 Rifle Ammo", icon: "ammo",    out: 2, ins: { gp: 20, frag: 10, sulfur: 10 },           delivery: "bullet" },
+  beancan: { name: "Beancan", long: "Beancan Grenade",           icon: "beancan", out: 1, ins: { gp: 60, frag: 20 },                       delivery: "splash", dmg: { Blunt: 50, Explosion: 15, Stab: 50 }, dud: 0.15 },
+  hv:      { name: "HV Rocket", long: "High Velocity Rocket",    icon: "hv",      out: 1, ins: { gp: 100, pipe: 1 },                       delivery: "splash", dmg: { AntiVehicle: 300, Bullet: 150, Explosion: 30 } },
+  he:      { name: "40mm HE", long: "40mm HE Grenade",           icon: "he",      out: 2, ins: { explosives: 1, gp: 30, pipe: 1 },         delivery: "splash", dmg: { Blunt: 55, Explosion: 35 } },
+};
+const ORDER = ["c4", "rocket", "satchel", "ammo", "beancan", "hv", "he"];
+const NEEDS = { ammo: "Tüfek gerekir", hv: "Rocket Launcher", he: "Grenade Launcher (MGL)", beancan: "%15 dud", satchel: "%20 dud" };
+// Explo 5.56: her mermi = mermi vuruşu (50 Bullet + 0,01 Explosion) + 1,5 m'lik küçük patlama (5 Explosion)
+const AMMO_BULLET = { Bullet: 50, Explosion: 0.01 }, AMMO_BLAST = { Explosion: 5 }, AMMO_FAR = 0.8;
+// Sert (dış) yüz: darbe ve delmenin %90'ını, mermi hasarının %50'sini ayrıca engeller. Yapışan patlayıcılar bunu atlar.
+const HARD_FACE = { AntiVehicle: 1, Blunt: 0.9, Bullet: 0.5, Stab: 0.9 };
+
+const P = { // koruma profilleri (oyun dosyasından)
+  wood:   { AntiVehicle: 1, Blunt: .98, Bullet: .97,   Explosion: .1, Heat: .9,  Stab: .9 },
+  stone:  { AntiVehicle: 1, Blunt: .98, Bullet: .99,   Explosion: .5, Heat: 1,   Stab: .95 },
+  metal:  { AntiVehicle: 1, Blunt: .99, Bullet: .9999, Explosion: .5, Heat: 1,   Stab: .98 },
+  mdoor:  { AntiVehicle: 1, Blunt: .95, Bullet: 1,     Explosion: .2, Heat: 1,   Stab: 1 },
+  wdoor:  { AntiVehicle: 1, Blunt: .95, Bullet: .95,   Explosion: -1, Heat: .8,  Stab: .95 },
+  deploy: { AntiVehicle: 1, Blunt: .99, Bullet: .99,   Explosion: .5, Heat: .95, Stab: .99 },
+  soft:   { AntiVehicle: .5, Blunt: .5, Bullet: .9,    Heat: .5,  Stab: .5 },
+  turret: { Blunt: .5, Bullet: .9, Heat: .8, Stab: .5 },
+  sam:    { AntiVehicle: 1, Blunt: .5, Bullet: 1, Heat: .3, Stab: .5 },
+};
 const T = {
   wood:  "--t1:#8a6338;--t2:#6b4a27",
   sheet: "--t1:#8d9499;--t2:#666d72",
   armor: "--t1:#4d5358;--t2:#2f3438",
   stone: "--t1:#9a958a;--t2:#6f6b63",
 };
-// Kaynak: Rust sunucu dosyaları (22 Eylül 2026 public build), GameServerKings raid tablosu.
-// Patlayıcı hasarı: tür başına (patlama e, darbe b, delme s). Malzeme koruması: o türün yüzde kaçını engellediği.
-const BLAST = {
-  c4:      { e: 550, b: 0,   s: 0,   stick: true },
-  rocket:  { e: 275, b: 75,  s: 0,   stick: false },
-  satchel: { e: 75,  b: 200, s: 200, stick: true },
-};
-const PROT = {
-  wood:   { e: 0.10, b: 0.98, s: 0.90 },  // ahşap duvar, yüksek ahşap sur
-  stone:  { e: 0.50, b: 0.98, s: 0.95 },
-  metal:  { e: 0.50, b: 0.99, s: 0.98 },  // metal ve HQ duvar
-  mdoor:  { e: 0.20, b: 0.95, s: 1.00 },  // metal kapılar, garaj, HQ kapı, kapaklar
-  wdoor:  { e: -1.0, b: 0.95, s: 0.95 },  // ahşap kapı ve Tool Cupboard: patlamadan 2 kat hasar alır
-};
-// hard: dış yüz (sert taraf) koruması var mı. ammo: 20 m içinden Explo 5.56 sayısı (100 m+ için +0..3).
-// fixed: koruma değerleri bilinmeyen parçalar; sadece tablodaki tek patlayıcı sayıları kullanılır.
-const GROUPS = { door: "Kapılar", hatch: "Kapaklar", wall: "Duvarlar", other: "Diğer" };
+const GROUPS = { door: "Kapılar", hatch: "Kapaklar", wall: "Duvarlar", window: "Pencere ve açıklıklar", ext: "Dış surlar", dep: "Eşyalar" };
 const TARGETS = [
-  { id: "wdoor",   g: "door",  name: "Wooden Door",      icon: "door",     tier: "wood",  hp: 200,  prot: "wdoor", hard: true, ammo: 18 },
-  { id: "sdoor",   g: "door",  name: "Metal Door",       icon: "door",     tier: "sheet", hp: 250,  prot: "mdoor", hard: true, ammo: 63 },
-  { id: "gdoor",   g: "door",  name: "Garage Door",      icon: "garage",   tier: "sheet", hp: 600,  prot: "mdoor", hard: true, ammo: 150 },
-  { id: "adoor",   g: "door",  name: "HQ Door",          icon: "door",     tier: "armor", hp: 1000, prot: "mdoor", hard: true, ammo: 250 },
-  { id: "addoor",  g: "door",  name: "HQ Double Door",   icon: "ddoor",    tier: "armor", hp: 1000, prot: "mdoor", hard: true, ammo: 250 },
-  { id: "hatch",   g: "hatch", name: "Ladder Hatch",     icon: "hatch",    tier: "sheet", hp: 250,  prot: "mdoor", hard: true, ammo: 63 },
-  { id: "thatch",  g: "hatch", name: "Triangle Ladder Hatch", icon: "trihatch", tier: "sheet", hp: 250, prot: "mdoor", hard: true, ammo: 63 },
-  { id: "ahatch",  g: "hatch", name: "HQ Ladder Hatch",  icon: "hatch",    tier: "armor", hp: 1000, prot: "mdoor", hard: true, ammo: 250, isNew: true },
-  { id: "athatch", g: "hatch", name: "HQ Triangle Ladder Hatch", icon: "trihatch", tier: "armor", hp: 1000, prot: "mdoor", hard: true, ammo: 250, isNew: true },
-  { id: "wwall",   g: "wall",  name: "Wood Wall",        icon: "wall",     tier: "wood",  hp: 250,  prot: "wood",  hard: true, ammo: 48 },
-  { id: "stwall",  g: "wall",  name: "Stone Wall",       icon: "wall",     tier: "stone", hp: 500,  prot: "stone", hard: true, ammo: 182 },
-  { id: "smwall",  g: "wall",  name: "Metal Wall",       icon: "wall",     tier: "sheet", hp: 1000, prot: "metal", hard: true, ammo: 399 },
-  { id: "awall",   g: "wall",  name: "HQ Wall",          icon: "wall",     tier: "armor", hp: 2000, prot: "metal", hard: true, ammo: 798 },
-  { id: "hew",     g: "wall",  name: "High External Wooden Wall", icon: "hes", tier: "wood", hp: 500, prot: "wood", hard: true, ammo: 96 },
-  { id: "hes",     g: "wall",  name: "High External Stone Wall",  icon: "hes", tier: "stone", hp: 500, prot: "stone", hard: true, ammo: 182 },
-  { id: "tc",      g: "other", name: "Tool Cupboard",    icon: "tc",       tier: "wood",  hp: 100,  prot: "wdoor", hard: false, ammo: 9 },
-  { id: "bars",    g: "other", name: "Metal Window Bars", icon: "bars",    tier: "sheet", hp: 500,  fixed: { c4: 2, rocket: 4, satchel: 12 }, ammo: 200 },
-  { id: "glass",   g: "other", name: "Strengthened Glass Window", icon: "glass", tier: "sheet", hp: 350, fixed: { c4: 2, rocket: 3, satchel: 9 }, ammo: 140 },
+  { id: "wdoor",   g: "door",   name: "Wooden Door",              icon: "door",     tier: "wood",  hp: 200,  prot: "wdoor", shell: true },
+  { id: "wddoor",  g: "door",   name: "Wood Double Door",         icon: "ddoor",    tier: "wood",  hp: 200,  prot: "wdoor", shell: true },
+  { id: "sdoor",   g: "door",   name: "Metal Door",               icon: "door",     tier: "sheet", hp: 250,  prot: "mdoor", shell: true },
+  { id: "sddoor",  g: "door",   name: "Metal Double Door",        icon: "ddoor",    tier: "sheet", hp: 250,  prot: "mdoor", shell: true },
+  { id: "gdoor",   g: "door",   name: "Garage Door",              icon: "garage",   tier: "sheet", hp: 600,  prot: "mdoor", shell: true },
+  { id: "adoor",   g: "door",   name: "HQ Door",                  icon: "door",     tier: "armor", hp: 1000, prot: "mdoor", shell: true },
+  { id: "addoor",  g: "door",   name: "HQ Double Door",           icon: "ddoor",    tier: "armor", hp: 1000, prot: "mdoor", shell: true },
+  { id: "hatch",   g: "hatch",  name: "Ladder Hatch",             icon: "hatch",    tier: "sheet", hp: 250,  prot: "mdoor", shell: true },
+  { id: "ahatch",  g: "hatch",  name: "HQ Ladder Hatch",          icon: "hatch",    tier: "armor", hp: 1000, prot: "mdoor", shell: true, isNew: true },
+  { id: "thatch",  g: "hatch",  name: "Triangle Ladder Hatch",    icon: "trihatch", tier: "sheet", hp: 250,  prot: "mdoor", shell: true, est: true },
+  { id: "athatch", g: "hatch",  name: "HQ Triangle Ladder Hatch", icon: "trihatch", tier: "armor", hp: 1000, prot: "mdoor", shell: true, isNew: true, est: true },
+  { id: "fgrill",  g: "hatch",  name: "Floor Grill",              icon: "grill",    tier: "sheet", hp: 250,  prot: "mdoor", shell: true },
+  { id: "wwall",   g: "wall",   name: "Wood Wall",                icon: "wall",     tier: "wood",  hp: 250,  prot: "wood",  shell: true },
+  { id: "stwall",  g: "wall",   name: "Stone Wall",               icon: "wall",     tier: "stone", hp: 500,  prot: "stone", shell: true },
+  { id: "smwall",  g: "wall",   name: "Metal Wall",               icon: "wall",     tier: "sheet", hp: 1000, prot: "metal", shell: true },
+  { id: "awall",   g: "wall",   name: "HQ Wall",                  icon: "wall",     tier: "armor", hp: 2000, prot: "metal", shell: true },
+  { id: "wbars",   g: "window", name: "Wooden Window Bars",       icon: "bars",     tier: "wood",  hp: 250,  prot: "wood",  shell: true },
+  { id: "bars",    g: "window", name: "Metal Window Bars",        icon: "bars",     tier: "sheet", hp: 500,  prot: "metal", shell: true },
+  { id: "rglass",  g: "window", name: "Reinforced Glass Window",  icon: "glass",    tier: "armor", hp: 500,  prot: "metal", shell: true },
+  { id: "glass",   g: "window", name: "Strengthened Glass Window", icon: "glass",   tier: "sheet", hp: 350,  prot: "metal", shell: true },
+  { id: "emb",     g: "window", name: "Metal Horizontal Embrasure", icon: "emb",    tier: "sheet", hp: 500,  prot: "deploy", shell: false },
+  { id: "shut",    g: "window", name: "Wood Shutters",            icon: "shutter",  tier: "wood",  hp: 200,  prot: "soft",  shell: false },
+  { id: "shop",    g: "window", name: "Shop Front",               icon: "shop",     tier: "wood",  hp: 500,  prot: "wdoor", shell: true },
+  { id: "mshop",   g: "window", name: "Metal Shop Front",         icon: "shop",     tier: "sheet", hp: 750,  prot: "metal", shell: true },
+  { id: "hew",     g: "ext",    name: "High External Wooden Wall", icon: "hes",     tier: "wood",  hp: 500,  prot: "wood",  shell: true },
+  { id: "hewg",    g: "ext",    name: "High External Wooden Gate", icon: "gate",    tier: "wood",  hp: 500,  prot: "wood",  shell: true },
+  { id: "hes",     g: "ext",    name: "High External Stone Wall", icon: "hes",      tier: "stone", hp: 500,  prot: "stone", shell: true },
+  { id: "hesg",    g: "ext",    name: "High External Stone Gate", icon: "gate",     tier: "stone", hp: 500,  prot: "stone", shell: true },
+  { id: "tc",      g: "dep",    name: "Tool Cupboard",            icon: "tc",       tier: "wood",  hp: 100,  prot: "wdoor", shell: true },
+  { id: "wb1",     g: "dep",    name: "Workbench Level 1",        icon: "wb",       tier: "wood",  hp: 500,  prot: "soft",  shell: false },
+  { id: "wb2",     g: "dep",    name: "Workbench Level 2",        icon: "wb",       tier: "sheet", hp: 500,  prot: "deploy", shell: false },
+  { id: "wb3",     g: "dep",    name: "Workbench Level 3",        icon: "wb",       tier: "armor", hp: 750,  prot: "deploy", shell: false },
+  { id: "box",     g: "dep",    name: "Large Wood Box",           icon: "box",      tier: "wood",  hp: 300,  prot: "soft",  shell: false },
+  { id: "turret",  g: "dep",    name: "Auto Turret",              icon: "turret",   tier: "armor", hp: 1000, prot: "turret", shell: false },
+  { id: "sam",     g: "dep",    name: "SAM Site",                 icon: "sam",      tier: "armor", hp: 1000, prot: "sam",   shell: false },
 ];
-// Tek atış hasarı (sunucunun formülü: her tür × (1 − koruma); sert yüz darbe/delmeyi %90 azaltır, yapışan patlayıcılar bunu atlar)
-function hit(t, k) {
-  if (k === "ammo") return t.hp / t.ammo;
-  if (t.fixed) return t.hp / t.fixed[k];
-  const d = BLAST[k], p = PROT[t.prot], face = t.hard && !d.stick ? 0.1 : 1;
-  return d.e * (1 - p.e) + (d.b * (1 - p.b) + d.s * (1 - p.s)) * face;
-}
-TARGETS.forEach(t => ["c4", "rocket", "satchel"].forEach(k => t[k] = t.fixed ? t.fixed[k] : Math.ceil(t.hp / hit(t, k) - 1e-9)));
 
-// E adet patlayıcı için tüm malzeme dökümü
-function breakdown(k, E) {
+/* ───────── Sunucunun hasar hesabı (float32, birebir) ───────── */
+const U = Math.fround;
+const clamp = v => Math.min(1, Math.max(-1, v));
+function applyDamage(dmg, prot, face) {
+  let total = 0;
+  for (const [type, v] of Object.entries(dmg)) {
+    let d = U(v);
+    const p = prot[type] ?? 0; if (p !== 0) d = U(d * U(1 - clamp(p)));
+    const f = face?.[type] ?? 0; if (f !== 0) d = U(d * U(1 - clamp(f)));
+    total = U(total + d);
+  }
+  return total;
+}
+// Bir atışın hasar parçaları (Explo için iki parça: mermi + küçük patlama)
+function hits(k, t, side, far) {
+  const prot = P[t.prot], face = t.shell && side === "hard" ? HARD_FACE : undefined;
+  if (k === "ammo") {
+    const sc = U(far ? AMMO_FAR : 1), bullet = {};
+    for (const [ty, v] of Object.entries(AMMO_BULLET)) bullet[ty] = U(v * sc);
+    return [applyDamage(bullet, prot, face), applyDamage(AMMO_BLAST, prot, face)];
+  }
+  const e = EXP[k];
+  return [applyDamage(e.dmg, prot, e.delivery === "stuck" ? undefined : face)];
+}
+// Can bitene kadar kaç atış (start: kalan can)
+function shots(hp, hs, start = hp) {
+  if (hs.every(h => h <= 0)) return null;
+  let n = U(start);
+  for (let g = 1; g <= 100000; g++) { for (const h of hs) n = U(n - h); if (n <= 0) return g; }
+  return null;
+}
+
+/* ───────── Üretim ve sülfür ───────── */
+function breakdown(k, qty) {
   const r = Object.fromEntries(Object.keys(MAT).map(m => [m, 0]));
-  for (const m in EXP[k].ins) r[m] += EXP[k].ins[m] * E;
-  const direct = { gp: r.gp, sulfur: r.sulfur, frag: r.frag };
-  r.gp = direct.gp + r.explosives * 50 + r.beancan * 60;
-  r.sulfur = direct.sulfur + r.explosives * 10 + r.gp * 2;
-  r.char = r.gp * 3;
-  r.frag = direct.frag + r.explosives * 10 + r.beancan * 20;
-  r.lgf = r.explosives * 3;
+  const add = (item, q) => {
+    if (RAW.includes(item)) { r[item] += q; return; }
+    r[item] += q;
+    const rc = RECIPE[item];
+    for (const [m, v] of Object.entries(rc.ins)) add(m, v * q / rc.out);
+  };
+  for (const [m, v] of Object.entries(EXP[k].ins)) add(m, v * qty / EXP[k].out);
   return r;
 }
-const unitSulfur = k => breakdown(k, 1).sulfur;
+const UNIT = Object.fromEntries(ORDER.map(k => [k, breakdown(k, 1).sulfur]));
+const unitSulfur = k => UNIT[k];
 
+/* ───────── Durum ───────── */
 const EXAMPLE = { gdoor: 1, stwall: 2 };
-let state = { counts: { ...EXAMPLE }, choice: {}, example: true, tab: "raid", sulfur: 10000 };
-try { const s = JSON.parse(localStorage.getItem("raidhesap3")); if (s && s.counts) state = { ...state, ...s, choice: s.choice || {} }; } catch (e) {}
-const save = () => { try { localStorage.setItem("raidhesap3", JSON.stringify(state)); } catch (e) {} };
-const $ = id => document.getElementById(id);
-const ORDER = ["c4", "rocket", "satchel", "ammo"];
+let state = { counts: { ...EXAMPLE }, choice: {}, example: true, tab: "raid", sulfur: 10000, side: "hard",
+  enabled: { c4: true, rocket: true, satchel: true, ammo: true, beancan: true, hv: false, he: false } };
+try { const s = JSON.parse(localStorage.getItem("raidhesap4")); if (s && s.counts) state = { ...state, ...s, choice: s.choice || {}, enabled: { ...state.enabled, ...(s.enabled || {}) } }; } catch (e) {}
+const save = () => { try { localStorage.setItem("raidhesap4", JSON.stringify(state)); } catch (e) {} };
 
-// Bir hedefi kırmanın tüm yolları (tek patlayıcı + iki patlayıcı karışımı), sülfüre göre sıralı.
+/* ───────── Bir hedefi kırmanın yolları ───────── */
 function methods(t) {
+  const ks = ORDER.filter(k => state.enabled[k]);
+  const H = Object.fromEntries(ks.map(k => [k, hits(k, t, state.side, false)]));
   const out = [], seen = new Set();
   const add = (parts, mix) => {
     const key = ORDER.filter(k => parts[k]).map(k => k + parts[k]).join("+");
     if (seen.has(key)) return; seen.add(key);
-    const sulfur = Object.entries(parts).reduce((s, [k, q]) => s + q * unitSulfur(k), 0);
-    const items = ORDER.filter(k => parts[k] && k !== "ammo").reduce((s, k) => s + parts[k], 0);
+    const sulfur = Object.entries(parts).reduce((s, [k, q]) => s + q * UNIT[k], 0);
+    const items = Object.values(parts).reduce((s, q) => s + q, 0);
     out.push({ key, parts, mix, sulfur, items });
   };
-  ORDER.forEach(k => { if (t[k] != null) add({ [k]: t[k] }, false); });
-  // İki patlayıcı karışımı: a'dan n tane at, kalan canı b ile bitir.
-  ORDER.forEach(a => {
-    if (t[a] == null) return;
-    if (t.fixed) return; // koruma bilinmiyorsa karışım hesaplanmaz
-    for (let n = 1; n * hit(t, a) < t.hp; n++) ORDER.forEach(b => {
-      if (b === a || t[b] == null) return;
-      const need = Math.ceil((t.hp - n * hit(t, a)) / hit(t, b) - 1e-9);
-      if (need > 0 && need < t[b]) add({ [a]: n, [b]: need }, true);
-    });
-  });
-  // Başka bir yolla aynı ya da daha az malzeme kullanan (daha kötü) yolları ele
+  for (const a of ks) {
+    const L = shots(t.hp, H[a]);
+    if (L === null) continue;
+    add({ [a]: L }, false);
+    for (const b of ks) {
+      if (b === a) continue;
+      let rem = U(t.hp);
+      for (let l = 1; l < L; l++) {
+        for (const h of H[a]) rem = U(rem - h);
+        const m = shots(t.hp, H[b], rem);
+        if (m !== null) add({ [a]: l, [b]: m }, true);
+      }
+    }
+  }
   const le = (x, y) => ORDER.every(k => (x.parts[k] || 0) <= (y.parts[k] || 0));
   const kept = out.filter(m => !out.some(o => o !== m && le(o, m) && !le(m, o)));
-  out.length = 0; out.push(...kept);
-  out.sort((x, y) => x.sulfur - y.sulfur || x.items - y.items);
-  // En ucuz 5 yol + her saf yol (karşılaştırma için)
-  return out.filter((m, i) => i < 5 || !m.mix);
+  kept.sort((x, y) => x.sulfur - y.sulfur || x.items - y.items);
+  return kept.filter((m, i) => i < 5 || !m.mix);
 }
-TARGETS.forEach(t => t.methods = methods(t));
-const chosen = t => t.methods.find(m => m.key === state.choice[t.id]) || t.methods[0];
 const label = parts => ORDER.filter(k => parts[k]).map(k => `${fmt(parts[k])} ${EXP[k].name}`).join(" + ");
 const icons = parts => ORDER.filter(k => parts[k]).map(k => ico(EXP[k].icon)).join("");
+const chosen = t => t.methods.find(m => m.key === state.choice[t.id]) || t.methods[0];
 
-// Tüm hedefler tablosu (Tarifler sekmesi)
-$("best-all").innerHTML = TARGETS.map(t => {
-  const b = t.methods[0], pure = t.methods.find(m => !m.mix);
-  const save = pure.sulfur - b.sulfur;
-  return `<div class="mat best-row">${ico(t.icon, "i", T[t.tier])}<span class="nm">${t.name}<small><span class="ic">${icons(b.parts)}</span>${label(b.parts)}${save > 0 ? ` · tek patlayıcıya göre ${fmt(save)} S ucuz` : ""}</small></span><span class="v">${fmt(b.sulfur)}</span></div>`;
-}).join("");
+/* ───────── Raid ekranı kurulum ───────── */
+$("side").innerHTML = [["hard", "Dıştan · sert"], ["soft", "İçten · yumuşak"]].map(([v, l]) => `<button data-v="${v}">${l}</button>`).join("");
+$("side").querySelectorAll("button").forEach(b => b.onclick = () => { state.side = b.dataset.v; render(); });
+$("exps").innerHTML = ORDER.map(k => `<button data-v="${k}" class="expchip">${ico(EXP[k].icon)}${EXP[k].name}</button>`).join("");
+$("exps").querySelectorAll("button").forEach(b => b.onclick = () => {
+  const k = b.dataset.v; state.enabled[k] = !state.enabled[k];
+  if (!ORDER.some(x => state.enabled[x])) state.enabled[k] = true; // en az biri açık kalsın
+  render();
+});
+$("build-note").textContent = `Veriler Rust sunucu dosyalarından: build ${BUILD.protocol} (${BUILD.date}, "${BUILD.update}" güncellemesi). Hesap sunucunun kendi hasar formülüyle yapılır. Facepunch her ayın ilk perşembesi güncelleme çıkarır; modlu sunucularda sayılar farklı olabilir.`;
 
-// Hedef kutuları
 $("tiles").innerHTML = Object.keys(GROUPS).map(g => `<div class="grp"><h3>${GROUPS[g]}</h3><div class="tiles">` + TARGETS.filter(t => t.g === g).map(t => `
   <div class="tile" data-id="${t.id}">
     <div class="art">${ico(t.icon, "i", T[t.tier])}<span class="badge"></span></div>
-    <div class="tname">${t.name}</div>
-    ${t.isNew ? `<div class="flags"><span class="new">Yeni</span></div>` : ""}
+    <div class="tname">${t.name}<small>${fmt(t.hp)} HP</small></div>
+    ${t.isNew || t.est ? `<div class="flags">${t.isNew ? `<span class="new">Yeni</span>` : ""}${t.est ? `<span class="est">kare kapakla aynı sayıldı</span>` : ""}</div>` : ""}
     <button class="need" data-plan="${t.id}"></button>
     <div class="step"><button aria-label="${t.name} azalt" data-d="-1">−</button><output>0</output><button aria-label="${t.name} artır" data-d="1">+</button></div>
   </div>`).join("") + `</div></div>`).join("");
@@ -661,18 +798,17 @@ $("tiles").querySelectorAll(".tile").forEach(el => {
 });
 $("reset").onclick = () => { state.counts = {}; state.choice = {}; state.example = false; render(); };
 
-// Sekmeler
+// Sekmeler ve sarı şerit akışı
 document.querySelectorAll(".tab").forEach(b => b.onclick = () => { state.tab = b.dataset.tab; render(); window.scrollTo(0, 0); });
 const FLOW = { raid: "mat", mat: "sulfur", sulfur: "raid" };
 $("strip").onclick = () => { const next = FLOW[state.tab] || "mat"; if (next === "sulfur") state.linked = true; state.tab = next; render(); window.scrollTo(0, 0); };
 
-// Toplama hesabı verileri (Facepunch wiki + raid sitelerinin node tabloları)
+/* ───────── Toplama hesabı verileri ───────── */
 const TOOLS = [
   { id: "pick", name: "Pickaxe / Icepick / Jackhammer", short: "Metal kazma / Jackhammer", ore: 300 },
   { id: "stone", name: "Stone Pickaxe", short: "Stone Pickaxe", ore: 257 },
 ];
 const CHAR_PER_WOOD = 0.75;
-// sec = 1 sülfür ore'un erime süresi (tüm furnace), wood = ore başına yanan odun
 const FURNACES = [
   { id: "large", name: "Large Furnace", sec: 1 / 3, wood: 0.17, note: "Dakikada 180 sülfür" },
   { id: "small", name: "Furnace", sec: 1 / 0.6, wood: 0.83, note: "Dakikada 36 sülfür" },
@@ -696,7 +832,7 @@ $("tool").querySelectorAll("button").forEach(b => b.onclick = () => { state.tool
 $("from-plan").onclick = () => { state.linked = true; render(); };
 $("need-in").oninput = e => { state.linked = false; state.need = e.target.value; render(); };
 
-// Sülfür
+// Elindeki sülfür
 const input = $("sulfur-in");
 input.value = state.sulfur;
 input.oninput = () => { state.sulfur = input.value; render(); };
@@ -706,24 +842,38 @@ $("quick").querySelectorAll("button").forEach(b => b.onclick = () => { input.val
 // Tarifler (sabit)
 const chip = (m, q) => `<span class="chip">${ico(MAT[m].icon)}<b>${fmt(q)}</b> ${MAT[m].name}</span>`;
 $("recipes").insertAdjacentHTML("beforeend",
-  Object.keys(EXP).map(k => `
+  ORDER.map(k => `
     <div class="recipe">
-      <div class="recipe-h">${ico(EXP[k].icon)}<div><b>${EXP[k].long}</b><small>Toplam ${fmt(unitSulfur(k))} sülfür${k === "ammo" ? " · tarif 1 mermi için, oyunda 2'şer yapılır" : ""}</small></div></div>
+      <div class="recipe-h">${ico(EXP[k].icon)}<div><b>${EXP[k].out > 1 ? EXP[k].out + " × " : ""}${EXP[k].long}</b><small>Adet başına ${fmt(UNIT[k])} sülfür${NEEDS[k] ? " · " + NEEDS[k] : ""}</small></div></div>
       <div class="chips">${Object.entries(EXP[k].ins).map(([m, q]) => chip(m, q)).join("")}</div>
     </div>`).join("") +
   `<h2 style="margin-top:8px">Ara ürünler</h2>` +
-  SUB.map(s => `
+  INTER.map(m => `
     <div class="recipe">
-      <div class="recipe-h">${ico(s.icon)}<div><b>${s.out > 1 ? s.out + " × " : ""}${s.name}</b><small>Çalışma tezgâhında</small></div></div>
-      <div class="chips">${Object.entries(s.ins).map(([m, q]) => chip(m, q)).join("")}</div>
+      <div class="recipe-h">${ico(MAT[m].icon)}<div><b>${RECIPE[m].out > 1 ? RECIPE[m].out + " × " : ""}${MAT[m].name}</b><small>Çalışma tezgâhında</small></div></div>
+      <div class="chips">${Object.entries(RECIPE[m].ins).map(([x, q]) => chip(x, q)).join("")}</div>
     </div>`).join(""));
 
+/* ───────── Çizim ───────── */
 function render() {
+  $("side").querySelectorAll("button").forEach(b => b.setAttribute("aria-pressed", b.dataset.v === state.side));
+  $("exps").querySelectorAll("button").forEach(b => b.setAttribute("aria-pressed", !!state.enabled[b.dataset.v]));
+  TARGETS.forEach(t => t.methods = methods(t));
+
   const tot = {}, sel = [];
+  let broken = 0;
   TARGETS.forEach(t => {
     const n = state.counts[t.id] || 0, el = $("tiles").querySelector(`[data-id="${t.id}"]`), m = chosen(t);
     el.classList.toggle("on", n > 0);
     el.querySelector("output").textContent = n;
+    if (!m) {
+      el.classList.add("na");
+      el.querySelector(".badge").textContent = n ? "?" : "";
+      el.querySelector(".need").innerHTML = `<span><b>Seçili patlayıcılarla kırılmaz</b><small>Yukarıdan başka patlayıcı aç</small></span>`;
+      if (n) broken += n;
+      return;
+    }
+    el.classList.remove("na");
     el.querySelector(".badge").textContent = n ? fmt(m.sulfur * n) + " S" : "";
     const best = m === t.methods[0];
     el.querySelector(".need").innerHTML = `<span class="ic">${icons(m.parts)}</span><span><b>${label(m.parts)}</b><small>${best ? "En ucuz" : "Senin seçimin"} · ${fmt(m.sulfur)} S ›</small></span>`;
@@ -733,41 +883,53 @@ function render() {
   });
   $("example-tag").hidden = !state.example;
 
-  // Tüm malzemelerin toplamı
   const B = Object.fromEntries(Object.keys(MAT).map(m => [m, 0]));
   for (const k in tot) { const b = breakdown(k, tot[k]); for (const m in B) B[m] += b[m]; }
   const any = sel.length > 0, first = ORDER.find(k => tot[k]) || "c4";
 
-  // Özet şeridi
+  // Sarı şerit
   const strip = $("strip");
   strip.disabled = !any && state.tab === "raid";
+  const go = `<span class="go">${{ raid: "Plan ›", mat: "Toplama ›", sulfur: "‹ Raid" }[state.tab] || ""}</span>`;
   strip.innerHTML = any
-    ? `${ico(EXP[first].icon, "i big")}<span class="txt"><span class="q">${label(tot)}</span><span class="s">${fmt(B.sulfur)} sülfür</span></span><span class="go">${{ raid: "Plan ›", mat: "Toplama ›", sulfur: "‹ Raid" }[state.tab] || "Plan ›"}</span>`
-    : `${ico("c4", "i big")}<span class="txt"><span class="q">Hedef seç</span><span class="s">Kapı, kapak ya da duvar ekle</span></span>${state.tab === "raid" ? "" : `<span class="go">${{ mat: "Toplama ›", sulfur: "‹ Raid" }[state.tab] || ""}</span>`}`;
+    ? `${ico(EXP[first].icon, "i big")}<span class="txt"><span class="q">${label(tot)}</span><span class="s">${fmt(B.sulfur)} sülfür</span></span>${go}`
+    : `${ico("c4", "i big")}<span class="txt"><span class="q">Hedef seç</span><span class="s">Kapı, kapak ya da duvar ekle</span></span>${state.tab === "raid" ? "" : go}`;
 
-  // Plan + malzeme ekranı
+  // Plan ekranı
   const row = (m, v, key, sub) => `<div class="mat${key ? " key" : ""}">${ico(MAT[m].icon)}<span class="nm">${MAT[m].name}${sub ? `<small>${sub}</small>` : ""}</span><span class="v">${fmt(v)}</span></div>`;
   const list = (ms, opts = {}) => ms.filter(m => B[m] > 0).map(m => row(m, B[m], opts.key === m, opts.sub && opts.sub[m])).join("");
+  const duds = ORDER.filter(k => tot[k] && EXP[k].dud).map(k => `${EXP[k].name}: ortalama ${Math.ceil(tot[k] * EXP[k].dud)} tanesi dud olur`).join(" · ");
   $("view-mat").innerHTML = any ? `
     <div class="sec"><h2>Patlayıcılar</h2><div class="mats">${ORDER.filter(k => tot[k]).map(k =>
-      `<div class="mat key">${ico(EXP[k].icon)}<span class="nm">${EXP[k].long}<small>${fmt(unitSulfur(k))} sülfür / adet</small></span><span class="v">${fmt(tot[k])}</span></div>`).join("")}
-      <div class="mat total"><span class="nm">Toplam sülfür</span><span class="v">${fmt(B.sulfur)}</span></div></div></div>
-    <div class="sec"><h2>Hedef başına en ucuz yol</h2>${sel.map(t => {
+      `<div class="mat key">${ico(EXP[k].icon)}<span class="nm">${EXP[k].long}<small>${fmt(UNIT[k])} sülfür / adet${NEEDS[k] ? " · " + NEEDS[k] : ""}</small></span><span class="v">${fmt(tot[k])}</span></div>`).join("")}
+      <div class="mat total"><span class="nm">Toplam sülfür</span><span class="v">${fmt(B.sulfur)}</span></div></div>
+      ${duds ? `<p class="note warn">Yedek al: ${duds}.</p>` : ""}
+      ${broken ? `<p class="note warn">${broken} hedef seçili patlayıcılarla kırılamıyor, toplama eklenmedi.</p>` : ""}</div>
+    <div class="sec"><h2>Hedef başına yollar (${state.side === "hard" ? "dıştan" : "içten"})</h2>${sel.map(t => {
       const n = state.counts[t.id], c = chosen(t);
+      const far = state.enabled.ammo ? shots(t.hp, hits("ammo", t, state.side, true)) : null;
       return `<div class="plan" id="plan-${t.id}">
-        <div class="plan-h">${ico(t.icon, "i", T[t.tier])}<b>${t.name}</b><span class="x">× ${n}</span></div>
+        <div class="plan-h">${ico(t.icon, "i", T[t.tier])}<b>${t.name}<small>${fmt(t.hp)} HP</small></b><span class="x">× ${n}</span></div>
         ${t.methods.map((m, i) => `<button class="opt" data-t="${t.id}" data-m="${m.key}" aria-pressed="${m === c}">
           <span class="dot"></span><span class="ic">${icons(m.parts)}</span>
           <span class="lb">${label(m.parts)}${i === 0 ? ` <em class="best">En ucuz</em>` : ""}${m.mix ? ` <em class="mix">karışık</em>` : ""}</span>
           <span class="sv">${fmt(m.sulfur * n)}</span></button>`).join("")}
+        ${far && c && c.parts.ammo ? `<p class="note">Explo sayısı 20 m içinden. 100 m ve üstünden tek başına ${fmt(far)} mermi gerekir.</p>` : ""}
       </div>`; }).join("")}
-      <p class="note">Hesap oyunun kendi hasar formülüyle yapıldı (sunucu dosyaları, 22 Eylül 2026): her patlayıcının patlama/darbe/delme hasarı, hedefin bu türlere koruması ve dış yüz kuralı. "Karışık" yol iki patlayıcıyı birlikte kullanır. Explo sayıları 20 m içinden Assault Rifle içindir; 100 m'den 1–3 mermi fazla gerekebilir. Satchel'ların %20'si dud olabilir. Sağdaki sayı o hedefin toplam sülfürüdür.</p></div>
-    <div class="sec"><h2>Toplanacak ham madde</h2><div class="mats">${list(["sulfur", "char", "frag", "lgf", "cloth", "tech", "pipe", "rope", "stash"], { key: "sulfur", sub: { char: "Odun yakarak elde edilir", sulfur: "Barut dahil toplam" } })}</div></div>
-    <div class="sec"><h2>Ara ürün</h2><div class="mats">${list(["explosives", "beancan", "gp"], { sub: { gp: "Kendin üretirsen gereken" } })}</div></div>`
+      <p class="note">Sayılar sunucunun hasar formülüyle hesaplandı: her patlayıcının hasar türleri, hedefin koruması ve dış yüz kuralı. Explo için Assault Rifle esas alındı; diğer tüfekler sayıyı biraz değiştirebilir. Sağdaki sayı o hedefin toplam sülfürüdür.</p></div>
+    <div class="sec"><h2>Toplanacak ham madde</h2><div class="mats">${list(RAW, { key: "sulfur", sub: { char: "Odun yakarak elde edilir", sulfur: "Barut dahil toplam", pipe: "Her biri 2 HQM + 20 scrap", tech: "Her biri 2 HQM + 50 scrap", rope: "Her biri 30 cloth", stash: "Her biri 10 cloth" } })}</div></div>
+    <div class="sec"><h2>Ara ürün</h2><div class="mats">${list(INTER, { sub: { gp: "Kendin üretirsen gereken" } })}</div></div>`
     : `<div class="empty">${ico("c4")}<div>Henüz hedef seçmedin.<br>Raid sekmesinden kapı, kapak ya da duvar ekle.</div><button class="btn" id="go-raid">Hedef seç</button></div>`;
   const gr = $("go-raid"); if (gr) gr.onclick = () => { state.tab = "raid"; render(); };
   $("view-mat").querySelectorAll(".opt").forEach(b => b.onclick = () => { state.choice[b.dataset.t] = b.dataset.m; render(); });
   $("view-mat").querySelectorAll(".mats").forEach(m => { if (!m.children.length) m.parentElement.hidden = true; });
+
+  // Tarifler: her hedef için en ucuz yol
+  $("best-all").innerHTML = TARGETS.map(t => {
+    const b = t.methods[0]; if (!b) return "";
+    const pure = t.methods.find(m => !m.mix), save = pure ? pure.sulfur - b.sulfur : 0;
+    return `<div class="mat best-row">${ico(t.icon, "i", T[t.tier])}<span class="nm">${t.name}<small><span class="ic">${icons(b.parts)}</span>${label(b.parts)}${save > 0 ? ` · tek patlayıcıya göre ${fmt(save)} S ucuz` : ""}</small></span><span class="v">${fmt(b.sulfur)}</span></div>`;
+  }).join("");
 
   // Toplama hesabı
   const planNeed = Math.round(B.sulfur);
@@ -787,28 +949,29 @@ function render() {
   const F = FURNACES.find(f => f.id === state.furnace) || FURNACES[0];
   $("furn").querySelectorAll("button").forEach(b => b.setAttribute("aria-pressed", b.dataset.v === F.id));
   $("fcount").querySelectorAll("button").forEach(b => b.setAttribute("aria-pressed", Number(b.dataset.v) === state.fcount));
-  const burn = Math.ceil(need * F.wood);                 // eritirken yanan odun
-  const byChar = Math.floor(burn * CHAR_PER_WOOD);       // bu odundan çıkan kömür
+  const burn = Math.ceil(need * F.wood);
+  const byChar = Math.floor(burn * CHAR_PER_WOOD);
   const extraChar = Math.max(0, char - byChar);
-  const extraWood = Math.ceil(extraChar / CHAR_PER_WOOD); // kalan kömür için ayrıca yakılacak odun
+  const extraWood = Math.ceil(extraChar / CHAR_PER_WOOD);
   const wood = burn + extraWood;
+  const mx = String(state.mult).replace(".", ",");
   const grow = (icon, name, sub, v, vsub, key) => `<div class="mat${key ? " key" : ""}">${icon}<span class="nm">${name}<small>${sub}</small></span><span class="v">${v}${vsub ? `<small>${vsub}</small>` : ""}</span></div>`;
   $("gather").innerHTML = need ? [
-    grow(ico("node"), "Sülfür taşı", `Taş başına ${fmt(perNode)} ore · ${tool.name} · ${String(state.mult).replace(".", ",")}x`, fmt(nodes), "taş", true),
+    grow(ico("node"), "Sülfür taşı", `Taş başına ${fmt(perNode)} ore · ${tool.name} · ${mx}x`, fmt(nodes), "taş", true),
     grow(ico("sulfur"), "Sulfur Ore", "Furnace'ta 1 ore = 1 sülfür", fmt(need)),
     grow(ico("furnace"), "Eritme süresi", `${state.fcount} × ${F.name} · ${F.note}`, dur(need * F.sec / state.fcount), "", true),
     grow(ico("wood"), "Eritirken yanan odun", F.wood ? `Ore başına ≈ ${String(F.wood).replace(".", ",")} odun` : "Odun yakmaz", fmt(burn)),
     grow(ico("char"), "Charcoal (gereken)", fromPlan ? "Raid planındaki barut için" : "≈ hepsi barut olursa", fmt(char)),
     grow(ico("char"), "Charcoal (eritmeden çıkan)", "Yanan odundan kendiliğinden çıkar", "≈ " + fmt(Math.min(byChar, char)), byChar > char ? `${fmt(byChar - char)} fazla` : ""),
     grow(ico("wood"), "Ek odun (kalan kömür için)", extraChar ? `${fmt(extraChar)} kömür daha lazım` : "Gerek yok, eritme yetiyor", "≈ " + fmt(extraWood)),
-    grow(ico("wood"), "Toplam odun", `Eritme + ek kömür${state.mult > 1 ? ` · ${String(state.mult).replace(".", ",")}x'te ağaçlardan daha hızlı toplarsın` : ""}`, "≈ " + fmt(wood), "", false),
+    grow(ico("wood"), "Toplam odun", `Eritme + ek kömür${state.mult > 1 ? ` · ${mx}x'te ağaçlardan daha hızlı toplarsın` : ""}`, "≈ " + fmt(wood), "", false),
   ].join("") : `<div class="mat"><span class="nm">Gereken sülfürü yaz ya da raid planından al.</span></div>`;
-  $("gather-note").textContent = "Çarpan, taştan ve ağaçtan topladığın miktarı artırır; eritme süresi ve gereken odun değişmez. Taş başına ore oyun verisinden (metal kazma 300, Stone Pickaxe 257). Furnace hızları resmi wiki'den; odun tüketimi furnace'ın saniyede 0,5 odun yakmasından hesaplandı. Yanan her odunun %75 şansı kömüre döner, bu yüzden kömür sayısı ortalamadır. Pure Ore Tea taştan çıkan ore'u %50 artırır.";
+  $("gather-note").textContent = "Çarpan, taştan ve ağaçtan topladığın miktarı artırır; eritme süresi ve gereken odun değişmez. Taş başına ore oyun verisinden (metal kazma 300, Stone Pickaxe 257). Furnace hızları resmi wiki'den; odun tüketimi furnace'ın saniyede 0,5 odun yakmasından hesaplandı. Yanan her odunun %75 şansı kömüre döner, bu yüzden kömür sayısı ortalamadır.";
 
-  // Sülfür ekranı
+  // Elindeki sülfür
   const s = Math.max(0, Number(state.sulfur) || 0);
-  $("craft").innerHTML = Object.keys(EXP).map(x =>
-    `<div>${ico(EXP[x].icon)}<b>${fmt(Math.floor(s / unitSulfur(x)))}</b><span>${EXP[x].long}</span><small>${fmt(unitSulfur(x))} sülfür / adet</small></div>`).join("");
+  $("craft").innerHTML = ORDER.map(x =>
+    `<div>${ico(EXP[x].icon)}<b>${fmt(Math.floor(s / UNIT[x]))}</b><span>${EXP[x].long}</span><small>${fmt(UNIT[x])} sülfür / adet</small></div>`).join("");
 
   // Sekmeler
   ["raid", "mat", "sulfur", "book"].forEach(v => $("view-" + v).hidden = state.tab !== v);
