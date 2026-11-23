@@ -43,7 +43,8 @@ body {
 }
 input { -webkit-user-select: text; user-select: text; }
 body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 30; background: #181210; }
-button { font: inherit; color: inherit; cursor: pointer; border: 0; background: none; padding: 0; }
+button { font: inherit; color: inherit; cursor: pointer; border: 0; background: none; padding: 0; touch-action: manipulation; }
+input, label, a { touch-action: manipulation; }
 button:focus-visible, input:focus-visible { outline: 2px solid var(--sulfur); outline-offset: 2px; }
 svg.i { display: block; flex: none; }
 
@@ -1140,12 +1141,14 @@ function methods(t) {
     const items = Object.values(parts).reduce((s, q) => s + q, 0);
     out.push({ key, parts, mix, sulfur, items });
   };
+  const per = k => H[k].reduce((x, y) => x + y, 0);   // tek atışın toplam hasarı
   for (const a of ks) {
     const L = shots(t.hp, H[a]);
     if (L === null) continue;
     add({ [a]: L }, false);
     for (const b of ks) {
-      if (b === a) continue;
+      // Karışımı sadece güçlü patlayıcıdan başlayıp zayıfla bitirerek dene (tersi aynı yolu verir, boşuna yavaşlatır)
+      if (b === a || per(b) > per(a) || (per(b) === per(a) && b < a)) continue;
       let rem = U(t.hp);
       for (let l = 1; l < L; l++) {
         for (const h of H[a]) rem = U(rem - h);
@@ -1162,6 +1165,14 @@ function methods(t) {
 const label = parts => ORDER.filter(k => parts[k]).map(k => `${fmt(parts[k])} ${EXP[k].name}`).join(" + ");
 const icons = parts => ORDER.filter(k => parts[k]).map(k => ico(EXP[k].icon)).join("");
 const chosen = t => t.methods.find(m => m.key === state.choice[t.id]) || t.methods[0];
+// Yollar sadece seçili patlayıcılar değişince yeniden hesaplanır
+const methodCache = new Map();
+function refreshMethods() {
+  const key = ORDER.filter(k => state.enabled[k]).join(",") + "|" + state.side;
+  if (!methodCache.has(key)) methodCache.set(key, Object.fromEntries(TARGETS.map(t => [t.id, methods(t)])));
+  const m = methodCache.get(key);
+  TARGETS.forEach(t => t.methods = m[t.id]);
+}
 
 /* ───────── Raid ekranı kurulum ───────── */
 $("gl").innerHTML = `<button data-v="0">${L("Yok", "No")}</button><button data-v="1" class="expchip">${ico("he")}${L("Var · 40mm HE kullan", "Yes · use 40mm HE")}</button>`;
@@ -1432,7 +1443,7 @@ function render() {
         "40mm HE is included. It can't be crafted; it comes from airdrops, heavy scientists and loot, so it costs no sulfur. The plan shows how many you need to find.")
     : L("Grenade Launcher ve 40mm HE üretilemez, loot'tan çıkar. Elinde varsa \"Var\" de; 40mm HE de hesaba katılır.",
         "The grenade launcher and 40mm HE can't be crafted; they come from loot. If you have them, pick \"Yes\" and 40mm HE is included.");
-  TARGETS.forEach(t => t.methods = methods(t));
+  refreshMethods();
 
   const tot = {}, sel = [];
   let broken = 0;
