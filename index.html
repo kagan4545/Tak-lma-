@@ -383,6 +383,24 @@ h2 { font-family: var(--f-display); font-weight: 700; text-transform: uppercase;
       <circle cx="11" cy="32" r="5" fill="#c9a06a"/><circle cx="11" cy="32" r="2" fill="#a07a45"/>
       <circle cx="14" cy="19" r="5" fill="#d2ab74"/><circle cx="14" cy="19" r="2" fill="#a07a45"/>
     </symbol>
+    <symbol id="i-tc" viewBox="0 0 48 48">
+      <rect x="10" y="6" width="28" height="38" rx="2" fill="#8a6338"/>
+      <rect x="13" y="9" width="22" height="16" rx="1" fill="#6b4a27"/>
+      <path d="M16 14 l6 6 M22 12 l-6 8" stroke="#c9c2a0" stroke-width="2" stroke-linecap="round"/>
+      <path d="M26 13 h6 M26 17 h6 M26 21 h4" stroke="#c9c2a0" stroke-width="1.6"/>
+      <rect x="13" y="28" width="22" height="13" rx="1" fill="#6b4a27"/>
+      <rect x="21" y="32" width="6" height="4" rx="1" fill="#e8c547"/>
+    </symbol>
+    <symbol id="i-bars" viewBox="0 0 48 48">
+      <rect x="5" y="5" width="38" height="38" rx="2" fill="none" stroke="#5f6468" stroke-width="4"/>
+      <path d="M14 7v34 M24 7v34 M34 7v34 M7 18h34 M7 30h34" stroke="#8d9499" stroke-width="3"/>
+    </symbol>
+    <symbol id="i-glass" viewBox="0 0 48 48">
+      <rect x="5" y="5" width="38" height="38" rx="2" fill="#5f6468"/>
+      <rect x="9" y="9" width="30" height="30" rx="1" fill="#6f98a8"/>
+      <path d="M13 22 L22 13 M13 30 L30 13" stroke="#b9d6e0" stroke-width="2" stroke-linecap="round"/>
+      <path d="M24 39v-30 M9 24h30" stroke="#4d5358" stroke-width="2.4"/>
+    </symbol>
     <symbol id="i-wall" viewBox="0 0 48 48">
       <rect x="4" y="6" width="40" height="38" rx="2" fill="var(--t1)"/>
       <path d="M4 15.5h40 M4 25h40 M4 34.5h40 M16 6v9.5 M32 6v9.5 M10 15.5v9.5 M24 15.5v9.5 M38 15.5v9.5 M16 25v9.5 M32 25v9.5 M10 34.5v9.5 M24 34.5v9.5 M38 34.5v9.5" stroke="var(--t2)" stroke-width="2"/>
@@ -459,7 +477,7 @@ h2 { font-family: var(--f-display); font-weight: 700; text-transform: uppercase;
   <section class="view" id="view-book" hidden>
     <div class="sec"><h2>Her hedef için en ucuz yol</h2><div class="mats" id="best-all"></div></div>
     <div class="sec" id="recipes"><h2>Ne neyle yapılır?</h2></div>
-    <p class="note">Tarifler ve raid sayıları yaklaşıktır; Facepunch güncellemelerinde değişebilir.</p>
+    <p class="note">Tarifler ve raid sayıları 22 Eylül 2026 tarihli sunucu dosyalarına göredir; Facepunch'ın aylık güncellemelerinde değişebilir. Modlu sunucularda farklı olabilir.</p>
   </section>
 </main>
 
@@ -511,24 +529,51 @@ const T = {
   armor: "--t1:#4d5358;--t2:#2f3438",
   stone: "--t1:#9a958a;--t2:#6f6b63",
 };
-// hp = can; c4/rocket/satchel/ammo = tek başına kırmak için gereken adet
-const GROUPS = { door: "Kapılar", hatch: "Kapaklar", wall: "Duvarlar" };
+// Kaynak: Rust sunucu dosyaları (22 Eylül 2026 public build), GameServerKings raid tablosu.
+// Patlayıcı hasarı: tür başına (patlama e, darbe b, delme s). Malzeme koruması: o türün yüzde kaçını engellediği.
+const BLAST = {
+  c4:      { e: 550, b: 0,   s: 0,   stick: true },
+  rocket:  { e: 275, b: 75,  s: 0,   stick: false },
+  satchel: { e: 75,  b: 200, s: 200, stick: true },
+};
+const PROT = {
+  wood:   { e: 0.10, b: 0.98, s: 0.90 },  // ahşap duvar, yüksek ahşap sur
+  stone:  { e: 0.50, b: 0.98, s: 0.95 },
+  metal:  { e: 0.50, b: 0.99, s: 0.98 },  // metal ve HQ duvar
+  mdoor:  { e: 0.20, b: 0.95, s: 1.00 },  // metal kapılar, garaj, HQ kapı, kapaklar
+  wdoor:  { e: -1.0, b: 0.95, s: 0.95 },  // ahşap kapı ve Tool Cupboard: patlamadan 2 kat hasar alır
+};
+// hard: dış yüz (sert taraf) koruması var mı. ammo: 20 m içinden Explo 5.56 sayısı (100 m+ için +0..3).
+// fixed: koruma değerleri bilinmeyen parçalar; sadece tablodaki tek patlayıcı sayıları kullanılır.
+const GROUPS = { door: "Kapılar", hatch: "Kapaklar", wall: "Duvarlar", other: "Diğer" };
 const TARGETS = [
-  { id: "wdoor", hp: 200,   g: "door",  name: "Wooden Door",      icon: "door",     tier: "wood",  c4: 1, rocket: 1,  satchel: 2,  ammo: 18 },
-  { id: "sdoor", hp: 250,   g: "door",  name: "Metal Door",       icon: "door",     tier: "sheet", c4: 1, rocket: 2,  satchel: 4,  ammo: 63 },
-  { id: "gdoor", hp: 600,   g: "door",  name: "Garage Door",      icon: "garage",   tier: "sheet", c4: 2, rocket: 3,  satchel: 9,  ammo: 150 },
-  { id: "adoor", hp: 1000,   g: "door",  name: "HQ Door",          icon: "door",     tier: "armor", c4: 3, rocket: 5,  satchel: 15, ammo: 250 },
-  { id: "addoor", hp: 1000,  g: "door",  name: "HQ Double Door",   icon: "ddoor",    tier: "armor", c4: 3, rocket: 5,  satchel: 15, ammo: 250 },
-  { id: "hatch", hp: 250,   g: "hatch", name: "Ladder Hatch",     icon: "hatch",    tier: "sheet", c4: 1, rocket: 2,  satchel: 4,  ammo: 63 },
-  { id: "thatch", hp: 250,  g: "hatch", name: "Triangle Ladder Hatch", icon: "trihatch", tier: "sheet", c4: 1, rocket: 2, satchel: 4, ammo: 63 },
-  { id: "ahatch", hp: 1000,  g: "hatch", name: "HQ Ladder Hatch",  icon: "hatch",    tier: "armor", c4: 3, rocket: 5,  satchel: 15, ammo: 250, isNew: true },
-  { id: "athatch", hp: 1000, g: "hatch", name: "HQ Triangle Ladder Hatch", icon: "trihatch", tier: "armor", c4: 3, rocket: 5, satchel: 15, ammo: 250, isNew: true },
-  { id: "wwall", hp: 250,   g: "wall",  name: "Wood Wall",        icon: "wall",     tier: "wood",  c4: 1, rocket: 2,  satchel: 3,  ammo: 49 },
-  { id: "stwall", hp: 500,  g: "wall",  name: "Stone Wall",       icon: "wall",     tier: "stone", c4: 2, rocket: 4,  satchel: 10, ammo: 185 },
-  { id: "smwall", hp: 1000,  g: "wall",  name: "Metal Wall",       icon: "wall",     tier: "sheet", c4: 4, rocket: 8,  satchel: 23, ammo: 400 },
-  { id: "awall", hp: 2000,   g: "wall",  name: "HQ Wall",          icon: "wall",     tier: "armor", c4: 8, rocket: 15, satchel: 46, ammo: 799 },
-  { id: "hes", hp: 500,     g: "wall",  name: "High External Stone Wall", icon: "hes", tier: "stone", c4: 2, rocket: 4, satchel: 10, ammo: 185 },
+  { id: "wdoor",   g: "door",  name: "Wooden Door",      icon: "door",     tier: "wood",  hp: 200,  prot: "wdoor", hard: true, ammo: 18 },
+  { id: "sdoor",   g: "door",  name: "Metal Door",       icon: "door",     tier: "sheet", hp: 250,  prot: "mdoor", hard: true, ammo: 63 },
+  { id: "gdoor",   g: "door",  name: "Garage Door",      icon: "garage",   tier: "sheet", hp: 600,  prot: "mdoor", hard: true, ammo: 150 },
+  { id: "adoor",   g: "door",  name: "HQ Door",          icon: "door",     tier: "armor", hp: 1000, prot: "mdoor", hard: true, ammo: 250 },
+  { id: "addoor",  g: "door",  name: "HQ Double Door",   icon: "ddoor",    tier: "armor", hp: 1000, prot: "mdoor", hard: true, ammo: 250 },
+  { id: "hatch",   g: "hatch", name: "Ladder Hatch",     icon: "hatch",    tier: "sheet", hp: 250,  prot: "mdoor", hard: true, ammo: 63 },
+  { id: "thatch",  g: "hatch", name: "Triangle Ladder Hatch", icon: "trihatch", tier: "sheet", hp: 250, prot: "mdoor", hard: true, ammo: 63 },
+  { id: "ahatch",  g: "hatch", name: "HQ Ladder Hatch",  icon: "hatch",    tier: "armor", hp: 1000, prot: "mdoor", hard: true, ammo: 250, isNew: true },
+  { id: "athatch", g: "hatch", name: "HQ Triangle Ladder Hatch", icon: "trihatch", tier: "armor", hp: 1000, prot: "mdoor", hard: true, ammo: 250, isNew: true },
+  { id: "wwall",   g: "wall",  name: "Wood Wall",        icon: "wall",     tier: "wood",  hp: 250,  prot: "wood",  hard: true, ammo: 48 },
+  { id: "stwall",  g: "wall",  name: "Stone Wall",       icon: "wall",     tier: "stone", hp: 500,  prot: "stone", hard: true, ammo: 182 },
+  { id: "smwall",  g: "wall",  name: "Metal Wall",       icon: "wall",     tier: "sheet", hp: 1000, prot: "metal", hard: true, ammo: 399 },
+  { id: "awall",   g: "wall",  name: "HQ Wall",          icon: "wall",     tier: "armor", hp: 2000, prot: "metal", hard: true, ammo: 798 },
+  { id: "hew",     g: "wall",  name: "High External Wooden Wall", icon: "hes", tier: "wood", hp: 500, prot: "wood", hard: true, ammo: 96 },
+  { id: "hes",     g: "wall",  name: "High External Stone Wall",  icon: "hes", tier: "stone", hp: 500, prot: "stone", hard: true, ammo: 182 },
+  { id: "tc",      g: "other", name: "Tool Cupboard",    icon: "tc",       tier: "wood",  hp: 100,  prot: "wdoor", hard: false, ammo: 9 },
+  { id: "bars",    g: "other", name: "Metal Window Bars", icon: "bars",    tier: "sheet", hp: 500,  fixed: { c4: 2, rocket: 4, satchel: 12 }, ammo: 200 },
+  { id: "glass",   g: "other", name: "Strengthened Glass Window", icon: "glass", tier: "sheet", hp: 350, fixed: { c4: 2, rocket: 3, satchel: 9 }, ammo: 140 },
 ];
+// Tek atış hasarı (sunucunun formülü: her tür × (1 − koruma); sert yüz darbe/delmeyi %90 azaltır, yapışan patlayıcılar bunu atlar)
+function hit(t, k) {
+  if (k === "ammo") return t.hp / t.ammo;
+  if (t.fixed) return t.hp / t.fixed[k];
+  const d = BLAST[k], p = PROT[t.prot], face = t.hard && !d.stick ? 0.1 : 1;
+  return d.e * (1 - p.e) + (d.b * (1 - p.b) + d.s * (1 - p.s)) * face;
+}
+TARGETS.forEach(t => ["c4", "rocket", "satchel"].forEach(k => t[k] = t.fixed ? t.fixed[k] : Math.ceil(t.hp / hit(t, k) - 1e-9)));
 
 // E adet patlayıcı için tüm malzeme dökümü
 function breakdown(k, E) {
@@ -552,9 +597,6 @@ const $ = id => document.getElementById(id);
 const ORDER = ["c4", "rocket", "satchel", "ammo"];
 
 // Bir hedefi kırmanın tüm yolları (tek patlayıcı + iki patlayıcı karışımı), sülfüre göre sıralı.
-// Tek atışın hasarı. C4 kapı ve kapaklara 440 vurur; diğerleri için can / gereken adet
-// (alt sınır, yani bitiriş sayısı güvenli tarafta kalır).
-const dmg = (t, k) => (k === "c4" && t.g !== "wall") ? Math.max(440, t.hp / t.c4) : t.hp / t[k];
 function methods(t) {
   const out = [], seen = new Set();
   const add = (parts, mix) => {
@@ -568,9 +610,10 @@ function methods(t) {
   // İki patlayıcı karışımı: a'dan n tane at, kalan canı b ile bitir.
   ORDER.forEach(a => {
     if (t[a] == null) return;
-    for (let n = 1; n * dmg(t, a) < t.hp; n++) ORDER.forEach(b => {
+    if (t.fixed) return; // koruma bilinmiyorsa karışım hesaplanmaz
+    for (let n = 1; n * hit(t, a) < t.hp; n++) ORDER.forEach(b => {
       if (b === a || t[b] == null) return;
-      const need = Math.ceil((t.hp - n * dmg(t, a)) / dmg(t, b) - 1e-9);
+      const need = Math.ceil((t.hp - n * hit(t, a)) / hit(t, b) - 1e-9);
       if (need > 0 && need < t[b]) add({ [a]: n, [b]: need }, true);
     });
   });
@@ -715,10 +758,10 @@ function render() {
         <div class="plan-h">${ico(t.icon, "i", T[t.tier])}<b>${t.name}</b><span class="x">× ${n}</span></div>
         ${t.methods.map((m, i) => `<button class="opt" data-t="${t.id}" data-m="${m.key}" aria-pressed="${m === c}">
           <span class="dot"></span><span class="ic">${icons(m.parts)}</span>
-          <span class="lb">${label(m.parts)}${i === 0 ? ` <em class="best">En ucuz</em>` : ""}${m.mix ? ` <em class="mix">≈ karışık</em>` : ""}</span>
+          <span class="lb">${label(m.parts)}${i === 0 ? ` <em class="best">En ucuz</em>` : ""}${m.mix ? ` <em class="mix">karışık</em>` : ""}</span>
           <span class="sv">${fmt(m.sulfur * n)}</span></button>`).join("")}
       </div>`; }).join("")}
-      <p class="note">"Karışık" yollar iki patlayıcıyı birlikte kullanır (ör. önce C4, kalan canı Explo ile bitir). Hesap hedefin canına ve atış başına hasara göre yapıldı; C4 kapı ve kapaklara 440 vurur. Bitiriş sayısı güvenli tarafta tutuldu, oyunda birkaç tane az gerekebilir. Sağdaki sayı o hedefin toplam sülfürüdür.</p></div>
+      <p class="note">Hesap oyunun kendi hasar formülüyle yapıldı (sunucu dosyaları, 22 Eylül 2026): her patlayıcının patlama/darbe/delme hasarı, hedefin bu türlere koruması ve dış yüz kuralı. "Karışık" yol iki patlayıcıyı birlikte kullanır. Explo sayıları 20 m içinden Assault Rifle içindir; 100 m'den 1–3 mermi fazla gerekebilir. Satchel'ların %20'si dud olabilir. Sağdaki sayı o hedefin toplam sülfürüdür.</p></div>
     <div class="sec"><h2>Toplanacak ham madde</h2><div class="mats">${list(["sulfur", "char", "frag", "lgf", "cloth", "tech", "pipe", "rope", "stash"], { key: "sulfur", sub: { char: "Odun yakarak elde edilir", sulfur: "Barut dahil toplam" } })}</div></div>
     <div class="sec"><h2>Ara ürün</h2><div class="mats">${list(["explosives", "beancan", "gp"], { sub: { gp: "Kendin üretirsen gereken" } })}</div></div>`
     : `<div class="empty">${ico("c4")}<div>Henüz hedef seçmedin.<br>Raid sekmesinden kapı, kapak ya da duvar ekle.</div><button class="btn" id="go-raid">Hedef seç</button></div>`;
@@ -760,7 +803,7 @@ function render() {
     grow(ico("wood"), "Ek odun (kalan kömür için)", extraChar ? `${fmt(extraChar)} kömür daha lazım` : "Gerek yok, eritme yetiyor", "≈ " + fmt(extraWood)),
     grow(ico("wood"), "Toplam odun", `Eritme + ek kömür${state.mult > 1 ? ` · ${String(state.mult).replace(".", ",")}x'te ağaçlardan daha hızlı toplarsın` : ""}`, "≈ " + fmt(wood), "", false),
   ].join("") : `<div class="mat"><span class="nm">Gereken sülfürü yaz ya da raid planından al.</span></div>`;
-  $("gather-note").textContent = "Çarpan, taştan ve ağaçtan topladığın miktarı artırır; eritme süresi ve gereken odun değişmez. Furnace hızları ve odun tüketimi Facepunch wiki ve furnace rehberlerinden alındı. Odunun kömüre dönme oranı (~%75) tahminidir. Pure Ore Tea taştan çıkan ore'u %50 artırır.";
+  $("gather-note").textContent = "Çarpan, taştan ve ağaçtan topladığın miktarı artırır; eritme süresi ve gereken odun değişmez. Taş başına ore oyun verisinden (metal kazma 300, Stone Pickaxe 257). Furnace hızları resmi wiki'den; odun tüketimi furnace'ın saniyede 0,5 odun yakmasından hesaplandı. Yanan her odunun %75 şansı kömüre döner, bu yüzden kömür sayısı ortalamadır. Pure Ore Tea taştan çıkan ore'u %50 artırır.";
 
   // Sülfür ekranı
   const s = Math.max(0, Number(state.sulfur) || 0);
