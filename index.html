@@ -622,7 +622,8 @@ $("reset").onclick = () => { state.counts = {}; state.choice = {}; state.example
 
 // Sekmeler
 document.querySelectorAll(".tab").forEach(b => b.onclick = () => { state.tab = b.dataset.tab; render(); window.scrollTo(0, 0); });
-$("strip").onclick = () => { state.tab = state.tab === "mat" ? "raid" : "mat"; render(); window.scrollTo(0, 0); };
+const FLOW = { raid: "mat", mat: "sulfur", sulfur: "raid" };
+$("strip").onclick = () => { const next = FLOW[state.tab] || "mat"; if (next === "sulfur") state.linked = true; state.tab = next; render(); window.scrollTo(0, 0); };
 
 // Toplama hesabı verileri (Facepunch wiki + raid sitelerinin node tabloları)
 const TOOLS = [
@@ -700,7 +701,7 @@ function render() {
   const strip = $("strip");
   strip.disabled = !any;
   strip.innerHTML = any
-    ? `${ico(EXP[first].icon, "i big")}<span class="txt"><span class="q">${label(tot)}</span><span class="s">${fmt(B.sulfur)} sülfür</span></span><span class="go">${state.tab === "mat" ? "‹ Raid" : "Plan ›"}</span>`
+    ? `${ico(EXP[first].icon, "i big")}<span class="txt"><span class="q">${label(tot)}</span><span class="s">${fmt(B.sulfur)} sülfür</span></span><span class="go">${{ raid: "Plan ›", mat: "Toplama ›", sulfur: "‹ Raid" }[state.tab] || "Plan ›"}</span>`
     : `${ico("c4", "i big")}<span class="txt"><span class="q">Hedef seç</span><span class="s">Kapı, kapak ya da duvar ekle</span></span>`;
 
   // Plan + malzeme ekranı
@@ -771,7 +772,7 @@ function render() {
   // Sekmeler
   ["raid", "mat", "sulfur", "book"].forEach(v => $("view-" + v).hidden = state.tab !== v);
   document.querySelectorAll(".tab").forEach(b => b.setAttribute("aria-selected", b.dataset.tab === state.tab));
-  strip.hidden = !(state.tab === "raid" || state.tab === "mat");
+  strip.hidden = !(state.tab in FLOW);
   $("top-sub").textContent = { raid: "Raid planla", mat: "Raid planı", sulfur: "Toplama ve eritme", book: "Tarifler" }[state.tab];
   save();
 }
