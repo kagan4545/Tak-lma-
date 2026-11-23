@@ -690,6 +690,29 @@ body.spot-dock .dock { z-index: 41; }
       <circle cx="11" cy="32" r="3" fill="none" stroke="#9c7542" stroke-width="1"/><circle cx="14" cy="19" r="3" fill="none" stroke="#9c7542" stroke-width="1"/>
       <path d="M22 16 h16 M20 29 h18" stroke="#fff" stroke-opacity=".22" stroke-width="1.6" stroke-linecap="round"/>
     </symbol>
+    <symbol id="i-bolt" viewBox="0 0 48 48">
+      <path d="M27 3.5 L9.5 27 H22 L18.5 44.5 L38.5 18.5 H25.5Z" fill="url(#gSulf)" stroke="#0b0807" stroke-width="1.6" stroke-linejoin="round"/>
+      <path d="M26 7 L13.5 24.5" stroke="#fff" stroke-opacity=".6" stroke-width="1.6" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="i-solar" viewBox="0 0 48 48">
+      <g stroke="#0b0807" stroke-width="1.4" stroke-linejoin="round">
+        <rect x="21" y="30" width="6" height="14" fill="url(#gGun)"/>
+        <path d="M4.5 28.5 L10 8.5 H38 L43.5 28.5Z" fill="#23466a"/>
+      </g>
+      <path d="M9 18.5 H39 M7 24 H41 M17 8.5 L15 28.5 M24 8.5 V28.5 M31 8.5 L33 28.5" stroke="#6fa3d6" stroke-width="1.2"/>
+      <path d="M10.5 10 L22 10 L19 17Z" fill="#fff" opacity=".25"/>
+      <circle cx="41" cy="6" r="3.5" fill="url(#gSulf)" stroke="#0b0807"/>
+    </symbol>
+    <symbol id="i-battery" viewBox="0 0 48 48">
+      <g stroke="#0b0807" stroke-width="1.4" stroke-linejoin="round">
+        <rect x="18" y="4.5" width="12" height="6" rx="1.5" fill="url(#gSteel)"/>
+        <rect x="9.5" y="9.5" width="29" height="35" rx="4" fill="url(#gGun)"/>
+        <rect x="14" y="27" width="20" height="13" rx="1.5" fill="#3fbf6a"/>
+        <rect x="14" y="15" width="20" height="10" rx="1.5" fill="#1d2a20"/>
+      </g>
+      <path d="M26 16.5 L21 22 H25 L22 28" stroke="#e8c547" stroke-width="1.6" fill="none" stroke-linejoin="round" stroke-linecap="round"/>
+      <rect x="10" y="10" width="7" height="34" fill="#fff" opacity=".1"/>
+    </symbol>
     <symbol id="i-furnace" viewBox="0 0 48 48">
       <g stroke="#0b0807" stroke-width="1.4" stroke-linejoin="round">
         <rect x="20" y="1.5" width="8" height="8" fill="url(#gGun)"/>
@@ -1328,6 +1351,13 @@ const TOOLS = [
   { id: "stone", name: "Stone Pickaxe", short: "Stone Pickaxe", ore: 257 },
 ];
 const CHAR_PER_WOOD = 0.75;
+// Elektrik (Facepunch wiki): Electric Furnace 3 rW harcar; Large Solar Panel en fazla 20 rW üretir (gündüz, tam güneşte)
+const POWER = { furnace: 3, solar: 20 };
+const BATTERIES = [
+  { name: "Small Rechargeable Battery",  out: 15,  cap: 400 },
+  { name: "Medium Rechargeable Battery", out: 50,  cap: 9000 },
+  { name: "Large Rechargeable Battery",  out: 100, cap: 24000 },
+];
 const FURNACES = [
   { id: "large", name: "Large Furnace", sec: 1 / 3, wood: 0.17, note: L("Dakikada 180 sülfür", "180 sulfur per minute") },
   { id: "small", name: "Furnace", sec: 1 / 0.6, wood: 0.83, note: L("Dakikada 36 sülfür", "36 sulfur per minute") },
@@ -1665,6 +1695,20 @@ function render() {
     grow(ico("node"), L("Sülfür taşı", "Sulfur nodes"), L(`Taş başına ${fmt(perNode)} ore`, `${fmt(perNode)} ore per node`) + ` · ${tool.name} · ${mx}x`, fmt(nodes), L("taş", "nodes"), true),
     grow(ico("sulfur"), "Sulfur Ore", L("Furnace'ta 1 ore = 1 sülfür", "1 ore = 1 sulfur in a furnace"), fmt(need)),
     grow(ico("furnace"), L("Eritme süresi", "Smelting time"), `${state.fcount} × ${F.name} · ${F.note}`, dur(need * F.sec / state.fcount), "", true),
+    ...(F.id === "electric" ? (() => {
+      const rw = POWER.furnace * state.fcount;                 // anlık çekilen güç
+      const rwm = Math.ceil(need * F.sec * POWER.furnace / 60); // toplam enerji (rW·dakika); furnace sayısından bağımsız
+      const panels = Math.ceil(rw / POWER.solar);
+      // tek tip batarya: çıkışı ve kapasitesi yetecek en küçük tür; yetmezse en büyükten kaç tane
+      const one = BATTERIES.find(b => b.out >= rw && b.cap >= rwm);
+      const big = BATTERIES[2], nBig = Math.max(Math.ceil(rw / big.out), Math.ceil(rwm / big.cap));
+      return [
+        grow(ico("bolt"), L("Elektrik", "Power"), L(`${fmt(state.fcount)} furnace × ${POWER.furnace} rW`, `${fmt(state.fcount)} furnace × ${POWER.furnace} rW`), fmt(rw) + " rW", L("sürekli", "constant"), true),
+        grow(ico("bolt"), L("Toplam enerji", "Total energy"), L("Eritme bitene kadar harcanan", "Used until smelting is done"), fmt(rwm) + " rWm"),
+        grow(ico("solar"), "Large Solar Panel", L(`Tanesi en fazla ${POWER.solar} rW · sadece gündüz, tam güneşte`, `Up to ${POWER.solar} rW each · daytime, full sun only`), fmt(panels), L("panel", "panels")),
+        grow(ico("battery"), L("Batarya", "Battery"), one ? `${one.name} · ${fmt(one.cap)} rWm, ${L("en fazla", "up to")} ${one.out} rW` : `Large Rechargeable Battery · ${fmt(big.cap)} rWm, ${L("en fazla", "up to")} ${big.out} rW`, one ? "1" : fmt(nBig), L("tane, dolu", "full")),
+      ];
+    })() : []),
     grow(ico("wood"), L("Eritirken yanan odun", "Wood burned while smelting"), F.wood ? L(`Ore başına ≈ ${dec(F.wood)} odun`, `≈ ${dec(F.wood)} wood per ore`) : L("Odun yakmaz", "Burns no wood"), fmt(burn)),
     grow(ico("char"), L("Charcoal (gereken)", "Charcoal (needed)"), fromPlan ? L("Raid planı ve kitteki barut için", "For the gunpowder in your raid plan and kit") : L("≈ hepsi barut olursa", "≈ if it all becomes gunpowder"), fmt(char)),
     grow(ico("char"), L("Charcoal (eritmeden çıkan)", "Charcoal (from smelting)"), L("Yanan odundan kendiliğinden çıkar", "Comes from the wood you burn"), "≈ " + fmt(Math.min(byChar, char)), byChar > char ? `${fmt(byChar - char)} ${L("fazla", "extra")}` : ""),
