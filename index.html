@@ -204,6 +204,11 @@ h2 { font-family: var(--f-display); font-weight: 700; text-transform: uppercase;
 .quick { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 2px; scrollbar-width: none; }
 .quick button { flex: none; background: var(--panel); border: 1px solid var(--line); border-radius: 999px; padding: 7px 13px; font-family: var(--f-mono); font-size: .82rem; }
 .quick button[aria-pressed="true"] { border-color: #ff8a6e55; color: var(--sulfur-ink); background: linear-gradient(180deg, var(--sulfur-hi), #b8341f); font-weight: 700; box-shadow: inset 0 1px 0 rgba(255,255,255,.2); }
+.quick .qinput { flex: none; display: flex; align-items: center; gap: 6px; background: var(--panel); border: 1px solid var(--line); border-radius: 999px; padding: 3px 4px 3px 12px; font-size: .82rem; color: var(--muted); }
+.quick .qinput.on { border-color: var(--sulfur); color: var(--fg); }
+.quick .qinput input { width: 64px; background: #0f0b0a; border: 1px solid var(--line); border-radius: 999px; color: var(--fg); font-family: var(--f-mono); font-weight: 700; font-size: .9rem; padding: 5px 8px; text-align: center; -moz-appearance: textfield; }
+.quick .qinput input::-webkit-outer-spin-button, .quick .qinput input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+.quick .qinput input:focus { outline: none; border-color: var(--sulfur); }
 .quick .link-chip { font-family: var(--f-body); color: var(--sulfur); border-color: var(--sulfur-dim); }
 .mini { font-family: var(--f-display); font-weight: 600; font-size: .74rem; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); margin-top: 4px; }
 .mat .v small { display: block; text-align: right; font-size: .68rem; color: var(--muted); font-weight: 500; }
@@ -848,8 +853,9 @@ body.spot-dock .dock { z-index: 41; }
       <span class="mini" data-i18n="tool">Alet</span>
       <div class="quick" id="tool"></div>
       <span class="mini">Furnace</span>
-      <div class="quick" id="furn"></div>
-      <div class="quick" id="fcount"></div>
+      <div class="quick wrap" id="furn"></div>
+      <span class="mini" data-i18n="fcountTitle">Kaç tane furnace?</span>
+      <div class="quick wrap" id="fcount"></div>
       <div class="mats" id="gather"></div>
       <p class="note" id="gather-note"></p>
     </div>
@@ -1194,11 +1200,13 @@ if (state.mult == null) state.mult = 1;
 if (!TOOLS.some(x => x.id === state.tool)) state.tool = "pick";
 if (state.linked == null) state.linked = true;
 if (!FURNACES.some(f => f.id === state.furnace)) state.furnace = "large";
-if (state.fcount == null) state.fcount = 1;
+if (!(state.fcount >= 1)) state.fcount = 1;
 $("furn").innerHTML = FURNACES.map(f => `<button data-v="${f.id}">${f.name}</button>`).join("");
 $("furn").querySelectorAll("button").forEach(b => b.onclick = () => { state.furnace = b.dataset.v; render(); });
-$("fcount").innerHTML = [1, 2, 3, 4, 6].map(v => `<button data-v="${v}">${L(v + " tane", v + " ×")}</button>`).join("");
-$("fcount").querySelectorAll("button").forEach(b => b.onclick = () => { state.fcount = Number(b.dataset.v); render(); });
+$("fcount").innerHTML = [1, 2, 3, 4, 5, 6].map(v => `<button data-v="${v}">${v}</button>`).join("") +
+  `<label class="qinput"><span>${L("Diğer", "Other")}</span><input id="fcount-in" type="number" inputmode="numeric" min="1" max="999" placeholder="${L("ör. 20", "e.g. 20")}" aria-label="${L("Furnace sayısı", "Number of furnaces")}"></label>`;
+$("fcount").querySelectorAll("button").forEach(b => b.onclick = () => { state.fcount = Number(b.dataset.v); $("fcount-in").value = ""; render(); });
+$("fcount-in").oninput = e => { const v = Math.floor(Number(e.target.value)); if (v >= 1) { state.fcount = Math.min(999, v); render(); } };
 $("mult").innerHTML = [1, 1.5, 2, 3, 5, 10].map(v => `<button data-v="${v}">${dec(v)}x</button>`).join("");
 $("mult").querySelectorAll("button").forEach(b => b.onclick = () => { state.mult = Number(b.dataset.v); render(); });
 $("tool").innerHTML = TOOLS.map(x => `<button data-v="${x.id}">${x.short}</button>`).join("");
@@ -1305,7 +1313,7 @@ const STATIC = {
   bestAll: ["Her hedef için en ucuz yol", "Cheapest way for every target"], recipesTitle: ["Ne neyle yapılır?", "Recipes"],
   bookNote: ["Tarifler ve raid sayıları 22 Eylül 2026 tarihli sunucu dosyalarına göredir; Facepunch'ın aylık güncellemelerinde değişebilir. Modlu sunucularda farklı olabilir.",
              "Recipes and raid counts follow the 22 September 2026 server files and can change with Facepunch's monthly updates. Modded servers may differ."],
-  tabFarm: ["Toplama", "Farm"], tabBook: ["Tarifler", "Recipes"],
+  tabFarm: ["Toplama", "Farm"], fcountTitle: ["Kaç tane furnace?", "How many furnaces?"], tabBook: ["Tarifler", "Recipes"],
 };
 document.querySelectorAll("[data-i18n]").forEach(el => { const v = STATIC[el.dataset.i18n]; if (v) el.textContent = L(v[0], v[1]); });
 const setLang = lang => {
@@ -1503,6 +1511,9 @@ function render() {
   const F = FURNACES.find(f => f.id === state.furnace) || FURNACES[0];
   $("furn").querySelectorAll("button").forEach(b => b.setAttribute("aria-pressed", b.dataset.v === F.id));
   $("fcount").querySelectorAll("button").forEach(b => b.setAttribute("aria-pressed", Number(b.dataset.v) === state.fcount));
+  const fin = $("fcount-in");
+  if (document.activeElement !== fin) fin.value = state.fcount > 6 ? state.fcount : "";
+  fin.closest(".qinput").classList.toggle("on", state.fcount > 6);
   const burn = Math.ceil(need * F.wood);
   const byChar = Math.floor(burn * CHAR_PER_WOOD);
   const extraChar = Math.max(0, char - byChar);
