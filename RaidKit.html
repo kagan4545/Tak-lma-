@@ -3,12 +3,29 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="description" content="RaidKit: Rust oyuncuları için raid, kit ve toplama hesaplayıcısı.">
+<meta name="description" content="RaidKit: Rust oyuncuları için raid, kit ve toplama hesaplayıcısı. En ucuz raid yolu, patlayıcı ve sülfür maliyeti.">
 <title>RaidKit</title>
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#181210">
+<link rel="icon" type="image/png" href="favicon.png">
 <link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2048%2048%22%3E%3Crect%20width%3D%2248%22%20height%3D%2248%22%20rx%3D%2210%22%20fill%3D%22%231b1513%22%2F%3E%3Crect%20x%3D%225%22%20y%3D%2214%22%20width%3D%2238%22%20height%3D%2226%22%20rx%3D%224%22%20fill%3D%22%236f6a4b%22%20stroke%3D%22%23000%22%20stroke-width%3D%221.4%22%2F%3E%3Crect%20x%3D%2210%22%20y%3D%2224%22%20width%3D%2218%22%20height%3D%2211%22%20rx%3D%222%22%20fill%3D%22%23111%22%2F%3E%3Crect%20x%3D%2212.5%22%20y%3D%2227%22%20width%3D%224%22%20height%3D%225%22%20rx%3D%221%22%20fill%3D%22%23e5533f%22%2F%3E%3Crect%20x%3D%2218%22%20y%3D%2227%22%20width%3D%224%22%20height%3D%225%22%20rx%3D%221%22%20fill%3D%22%23e5533f%22%2F%3E%3Ccircle%20cx%3D%2235.5%22%20cy%3D%2229.5%22%20r%3D%224%22%20fill%3D%22%23c9c2a0%22%2F%3E%3Cpath%20d%3D%22M15%2015C11%205%2023%204%2020%2014%22%20stroke%3D%22%233d86e6%22%20stroke-width%3D%222.2%22%20fill%3D%22none%22%2F%3E%3Cpath%20d%3D%22M31%2015C29%204%2042%205%2037%2014%22%20stroke%3D%22%23e04a35%22%20stroke-width%3D%222.2%22%20fill%3D%22none%22%2F%3E%3C%2Fsvg%3E">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="apple-mobile-web-app-title" content="RaidKit">
+<!-- Bağlantı önizlemesi (WhatsApp, iMessage, Discord) -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="RaidKit">
+<meta property="og:title" content="RaidKit · Raid, kit ve toplama hesaplayıcı">
+<meta property="og:description" content="Kapı, duvar, taret: en ucuz raid yolunu, gereken patlayıcıyı ve sülfürü anında gör. Telefonda ve bilgisayarda çalışır.">
+<meta property="og:url" content="https://kagan4545.github.io/Tak-lma-/">
+<meta property="og:image" content="https://kagan4545.github.io/Tak-lma-/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="RaidKit logosu ve patlayıcı ikonları">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="RaidKit · Raid, kit ve toplama hesaplayıcı">
+<meta name="twitter:description" content="En ucuz raid yolunu, gereken patlayıcıyı ve sülfürü anında gör.">
+<meta name="twitter:image" content="https://kagan4545.github.io/Tak-lma-/og.png">
 <style>
 @font-face {
   font-family: 'Saira Condensed';
@@ -351,6 +368,21 @@ h2 { font-family: var(--f-display); font-weight: 700; text-transform: uppercase;
 .hbtn.lang { color: var(--sulfur); border-color: var(--sulfur-dim); }
 
 /* Tanıtım rehberi */
+/* Sponsor sunucu kutusu */
+.sponsor { position: relative; border: 1px solid var(--line); border-radius: 16px; padding: 14px 14px 14px 16px; display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
+  background: linear-gradient(135deg, rgba(226,81,58,.10), rgba(226,81,58,0) 55%), linear-gradient(180deg, #1e1714, #161110); overflow: hidden; }
+.sponsor::before { content: ""; position: absolute; inset: 0 auto 0 0; width: 4px; background: var(--sulfur); }
+.sponsor .sp-tag { position: absolute; top: 8px; right: 10px; font-family: var(--f-mono); font-size: .62rem; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+.sponsor .sp-ico { width: 46px; height: 46px; flex: none; border-radius: 12px; background: radial-gradient(circle at 50% 35%, #3a241e, #150f0d); border: 1px solid var(--line); display: grid; place-items: center; }
+.sponsor .sp-ico svg { width: 34px; height: 34px; }
+.sponsor .sp-txt { flex: 1; min-width: 180px; display: flex; flex-direction: column; gap: 2px; }
+.sponsor .sp-txt b { font-family: var(--f-display); font-weight: 700; font-size: 1.1rem; letter-spacing: .02em; }
+.sponsor .sp-txt span { font-size: .84rem; color: var(--muted); }
+.sponsor .sp-txt code { font-family: var(--f-mono); font-size: .8rem; color: var(--fg); background: #0f0b0a; border: 1px solid var(--line); border-radius: 6px; padding: 2px 6px; align-self: flex-start; margin-top: 4px; user-select: all; -webkit-user-select: all; }
+.sponsor .sp-act { display: flex; gap: 8px; flex-wrap: wrap; }
+.sponsor .sp-act a, .sponsor .sp-act button { font-family: var(--f-display); font-weight: 700; letter-spacing: .05em; text-transform: uppercase; font-size: .82rem; padding: 9px 14px; border-radius: 10px; text-decoration: none; }
+.sponsor .sp-act .pri { background: linear-gradient(180deg, var(--sulfur-hi), #b8341f); color: var(--sulfur-ink); }
+.sponsor .sp-act .sec2 { border: 1px solid var(--line); color: var(--fg); }
 .tour::before { content: ""; position: fixed; inset: 0; z-index: 40; background: rgba(8,7,4,.62); }
 .spot { position: relative; z-index: 41; border-radius: 14px; box-shadow: 0 0 0 3px var(--sulfur), 0 0 0 9999px rgba(8,7,4,0); scroll-margin-top: 90px; }
 body.spot-dock .dock { z-index: 41; }
@@ -925,6 +957,7 @@ body.spot-dock .dock { z-index: 41; }
       </div>
       <div class="sec" id="tiles"></div>
     </div>
+    <div class="sponsor" data-sponsor></div>
     <p class="note" id="build-note"></p>
   </section>
 
@@ -978,6 +1011,7 @@ body.spot-dock .dock { z-index: 41; }
   <section class="view" id="view-book" hidden>
     <div class="sec"><h2 data-i18n="bestAll">Her hedef için en ucuz yol</h2><div class="mats" id="best-all"></div></div>
     <div class="sec" id="recipes"><h2 data-i18n="recipesTitle">Ne neyle yapılır?</h2></div>
+    <div class="sponsor" data-sponsor></div>
     <p class="note" data-i18n="bookNote">Tarifler ve raid sayıları 22 Eylül 2026 tarihli sunucu dosyalarına göredir; Facepunch'ın aylık güncellemelerinde değişebilir. Modlu sunucularda farklı olabilir.</p>
   </section>
 </main>
@@ -1333,6 +1367,38 @@ $("recipes").insertAdjacentHTML("beforeend",
       <div class="recipe-h">${ico(MAT[m].icon)}<div><b>${RECIPE[m].out > 1 ? RECIPE[m].out + " × " : ""}${MAT[m].name}</b><small>${L("Çalışma tezgâhında", "At a workbench")}</small></div></div>
       <div class="chips">${Object.entries(RECIPE[m].ins).map(([x, q]) => chip(x, q)).join("")}</div>
     </div>`).join(""));
+
+/* ───────── Sponsor sunucu ─────────
+   Sponsor bulununca SPONSOR'u doldur, örnek:
+   const SPONSOR = { name: "TR Vanilla 2x", text: "Haftalık wipe · Türk topluluğu", connect: "123.45.67.89:28015", url: "https://discord.gg/xxxx" };
+   Sponsor yokken null kalsın; kutu "Sunucunu burada tanıt" der. */
+const SPONSOR_SHOW = false; // true yapınca sponsor kutuları görünür
+const SPONSOR = null;
+const SPONSOR_CONTACT = "https://github.com/kagan4545/Tak-lma-/issues/new?title=" + encodeURIComponent("Sponsorluk: sunucumu RaidKit'te tanıtmak istiyorum") +
+  "&body=" + encodeURIComponent("Sunucu adı:\nDiscord linki:\nSana nasıl ulaşabilirim:\n");
+function renderSponsor() {
+  const html = SPONSOR ? `
+    <span class="sp-tag">${L("Sponsor", "Sponsor")}</span>
+    <div class="sp-ico">${ico("c4")}</div>
+    <div class="sp-txt"><b>${SPONSOR.name}</b><span>${SPONSOR.text || ""}</span>${SPONSOR.connect ? `<code>client.connect ${SPONSOR.connect}</code>` : ""}</div>
+    <div class="sp-act">${SPONSOR.connect ? `<button class="pri" data-copy="client.connect ${SPONSOR.connect}">${L("Adresi kopyala", "Copy address")}</button>` : ""}${SPONSOR.url ? `<a class="sec2" href="${SPONSOR.url}" target="_blank" rel="noopener">Discord</a>` : ""}</div>`
+    : `
+    <span class="sp-tag">${L("Sponsor alanı", "Sponsor spot")}</span>
+    <div class="sp-ico">${ico("turret")}</div>
+    <div class="sp-txt"><b>${L("Rust sunucun mu var?", "Run a Rust server?")}</b><span>${L("Sunucunu burada binlerce raid planının yanında tanıt.", "Show your server here, next to every raid plan.")}</span></div>
+    <div class="sp-act"><a class="pri" href="${SPONSOR_CONTACT}" target="_blank" rel="noopener">${L("Burada tanıt", "Advertise here")}</a></div>`;
+  document.querySelectorAll("[data-sponsor]").forEach(el => {
+    el.hidden = !SPONSOR_SHOW;
+    el.innerHTML = html;
+    el.querySelectorAll("[data-copy]").forEach(b => b.onclick = async () => {
+      const t = b.dataset.copy, old = b.textContent;
+      try { await navigator.clipboard.writeText(t); b.textContent = L("Kopyalandı", "Copied"); }
+      catch (e) { const r = document.createRange(); const c = el.querySelector("code"); r.selectNodeContents(c); const sel = getSelection(); sel.removeAllRanges(); sel.addRange(r); b.textContent = L("Seçildi, kopyala", "Selected, copy it"); }
+      setTimeout(() => b.textContent = old, 1800);
+    });
+  });
+}
+renderSponsor();
 
 /* ───────── Kit kurulum ───────── */
 ORDER.filter(k => !EXP[k].loot).forEach(k => KIT.push({ id: "x" + k, g: "exp", name: EXP[k].long, icon: EXP[k].icon, out: EXP[k].out, step: 1, ins: EXP[k].ins, exp: k }));

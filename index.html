@@ -1232,6 +1232,7 @@ $("recipes").insertAdjacentHTML("beforeend",
    Sponsor bulununca SPONSOR'u doldur, örnek:
    const SPONSOR = { name: "TR Vanilla 2x", text: "Haftalık wipe · Türk topluluğu", connect: "123.45.67.89:28015", url: "https://discord.gg/xxxx" };
    Sponsor yokken null kalsın; kutu "Sunucunu burada tanıt" der. */
+const SPONSOR_SHOW = false; // true yapınca sponsor kutuları görünür
 const SPONSOR = null;
 const SPONSOR_CONTACT = "https://github.com/kagan4545/Tak-lma-/issues/new?title=" + encodeURIComponent("Sponsorluk: sunucumu RaidKit'te tanıtmak istiyorum") +
   "&body=" + encodeURIComponent("Sunucu adı:\nDiscord linki:\nSana nasıl ulaşabilirim:\n");
@@ -1247,6 +1248,7 @@ function renderSponsor() {
     <div class="sp-txt"><b>${L("Rust sunucun mu var?", "Run a Rust server?")}</b><span>${L("Sunucunu burada binlerce raid planının yanında tanıt.", "Show your server here, next to every raid plan.")}</span></div>
     <div class="sp-act"><a class="pri" href="${SPONSOR_CONTACT}" target="_blank" rel="noopener">${L("Burada tanıt", "Advertise here")}</a></div>`;
   document.querySelectorAll("[data-sponsor]").forEach(el => {
+    el.hidden = !SPONSOR_SHOW;
     el.innerHTML = html;
     el.querySelectorAll("[data-copy]").forEach(b => b.onclick = async () => {
       const t = b.dataset.copy, old = b.textContent;

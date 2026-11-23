@@ -5,6 +5,7 @@ import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const root = dirname(dirname(fileURLToPath(import.meta.url)));
+const SITE = "https://kagan4545.github.io/Tak-lma-/";
 const src = readFileSync(join(root, "..", "index.html"), "utf8");
 
 const FONTS = {
@@ -44,8 +45,25 @@ const html = `<!doctype html>
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="description" content="RaidKit: Rust oyuncuları için raid, kit ve toplama hesaplayıcısı.">
-${title}${metas}<link rel="icon" href="${icon}">
+<meta name="description" content="RaidKit: Rust oyuncuları için raid, kit ve toplama hesaplayıcısı. En ucuz raid yolu, patlayıcı ve sülfür maliyeti.">
+${title}${metas}<link rel="icon" type="image/png" href="favicon.png">
+<link rel="icon" href="${icon}">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="apple-mobile-web-app-title" content="RaidKit">
+<!-- Bağlantı önizlemesi (WhatsApp, iMessage, Discord) -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="RaidKit">
+<meta property="og:title" content="RaidKit · Raid, kit ve toplama hesaplayıcı">
+<meta property="og:description" content="Kapı, duvar, taret: en ucuz raid yolunu, gereken patlayıcıyı ve sülfürü anında gör. Telefonda ve bilgisayarda çalışır.">
+<meta property="og:url" content="${SITE}">
+<meta property="og:image" content="${SITE}og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="RaidKit logosu ve patlayıcı ikonları">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="RaidKit · Raid, kit ve toplama hesaplayıcı">
+<meta name="twitter:description" content="En ucuz raid yolunu, gereken patlayıcıyı ve sülfürü anında gör.">
+<meta name="twitter:image" content="${SITE}og.png">
 <style>
 ${fontCss}:root { padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); }
 body { margin: 0; }
