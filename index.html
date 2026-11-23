@@ -574,6 +574,9 @@ h2 { font-family: var(--f-display); font-weight: 700; text-transform: uppercase;
       <div class="quick wrap" id="side"></div>
       <span class="mini">Kullanabileceğin patlayıcılar</span>
       <div class="quick wrap" id="exps"></div>
+      <span class="mini">Bomba atarın (Grenade Launcher) var mı?</span>
+      <div class="quick wrap" id="gl"></div>
+      <p class="note" id="gl-note"></p>
     </div>
     <div class="sec">
       <div class="sec-h">
@@ -876,9 +879,11 @@ const icons = parts => ORDER.filter(k => parts[k]).map(k => ico(EXP[k].icon)).jo
 const chosen = t => t.methods.find(m => m.key === state.choice[t.id]) || t.methods[0];
 
 /* ───────── Raid ekranı kurulum ───────── */
+$("gl").innerHTML = `<button data-v="0">Yok</button><button data-v="1" class="expchip">${ico("he")}Var · 40mm HE kullan</button>`;
+$("gl").querySelectorAll("button").forEach(b => b.onclick = () => { state.enabled.he = b.dataset.v === "1"; render(); });
 $("side").innerHTML = [["hard", "Dıştan · sert"], ["soft", "İçten · yumuşak"]].map(([v, l]) => `<button data-v="${v}">${l}</button>`).join("");
 $("side").querySelectorAll("button").forEach(b => b.onclick = () => { state.side = b.dataset.v; render(); });
-$("exps").innerHTML = ORDER.map(k => `<button data-v="${k}" class="expchip">${ico(EXP[k].icon)}${EXP[k].name}</button>`).join("");
+$("exps").innerHTML = ORDER.filter(k => k !== "he").map(k => `<button data-v="${k}" class="expchip">${ico(EXP[k].icon)}${EXP[k].name}</button>`).join("");
 $("exps").querySelectorAll("button").forEach(b => b.onclick = () => {
   const k = b.dataset.v; state.enabled[k] = !state.enabled[k];
   if (!ORDER.some(x => state.enabled[x])) state.enabled[k] = true; // en az biri açık kalsın
@@ -998,6 +1003,10 @@ function kitTotals() {
 function render() {
   $("side").querySelectorAll("button").forEach(b => b.setAttribute("aria-pressed", b.dataset.v === state.side));
   $("exps").querySelectorAll("button").forEach(b => b.setAttribute("aria-pressed", !!state.enabled[b.dataset.v]));
+  $("gl").querySelectorAll("button").forEach(b => b.setAttribute("aria-pressed", (b.dataset.v === "1") === !!state.enabled.he));
+  $("gl-note").textContent = state.enabled.he
+    ? "40mm HE hesaba katılıyor. Çoğu hedefte en ucuz yol bu olur (ör. Metal Door: 9 tane, 765 sülfür). Kit sekmesinden yedek 40mm HE de ekleyebilirsin."
+    : "Bomba atarın varsa \"Var\" de; 40mm HE mermileri de hesaba katılır. Yoksa hiç kullanılmaz.";
   TARGETS.forEach(t => t.methods = methods(t));
 
   const tot = {}, sel = [];
