@@ -2,24 +2,26 @@
 <meta name="claude:viewport-fit-sides" content="cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="theme-color" content="#14120d">
+<meta name="theme-color" content="#181210">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Saira+Condensed:wght@600;700;800&family=IBM+Plex+Sans:wght@400;500;600&family=JetBrains+Mono:wght@500;700&display=swap">
 <style>
 /* Layout: telefon uygulaması — üst başlık, kayan içerik, altta sabit özet şeridi + sekme çubuğu */
 :root {
   color-scheme: dark;
-  --bg: #14120d;
-  --panel: #1f1c15;
-  --panel-2: #29251b;
-  --raised: #332e21;
-  --line: #3a3426;
-  --fg: #efe9d6;
-  --muted: #9f977f;
-  --sulfur: #e8c547;
-  --sulfur-dim: #6b5c27;
-  --sulfur-ink: #1d1a0c;
-  --danger: #e0674a;
+  /* Pas kırmızısı tema: koyu kömür zemin, kırmızı vurgu */
+  --bg: #110d0c;
+  --panel: #1b1513;
+  --panel-2: #241a17;
+  --raised: #2e211d;
+  --line: #3d2b26;
+  --fg: #f0e6e0;
+  --muted: #a8948b;
+  --sulfur: #e2513a;      /* vurgu rengi (kırmızı) */
+  --sulfur-hi: #f06a50;
+  --sulfur-dim: #7a2a1d;
+  --sulfur-ink: #fff4ef;  /* kırmızı üstündeki yazı */
+  --danger: #f2a33a;
   --f-display: "Saira Condensed", "Arial Narrow", system-ui, sans-serif;
   --f-body: "IBM Plex Sans", system-ui, -apple-system, sans-serif;
   --f-mono: "JetBrains Mono", ui-monospace, Menlo, monospace;
@@ -29,28 +31,36 @@
 * { box-sizing: border-box; }
 [hidden] { display: none !important; }
 html, body { background: var(--bg); color: var(--fg); }
+html { background:
+  radial-gradient(120% 60% at 50% -10%, rgba(150, 52, 34, .22), transparent 60%),
+  repeating-linear-gradient(115deg, rgba(255,255,255,.012) 0 2px, transparent 2px 9px),
+  var(--bg); background-attachment: fixed; }
+body { background: transparent; }
 body {
   font-family: var(--f-body); font-size: 15px; line-height: 1.4;
   -webkit-tap-highlight-color: transparent; -webkit-user-select: none; user-select: none;
   overscroll-behavior-y: none;
 }
 input { -webkit-user-select: text; user-select: text; }
-body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 30; background: var(--bg); }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 30; background: #181210; }
 button { font: inherit; color: inherit; cursor: pointer; border: 0; background: none; padding: 0; }
 button:focus-visible, input:focus-visible { outline: 2px solid var(--sulfur); outline-offset: 2px; }
 svg.i { display: block; flex: none; }
 
 /* Üst başlık */
 .top {
-  position: sticky; top: env(safe-area-inset-top, 0px); z-index: 20; background: var(--bg);
+  position: sticky; top: env(safe-area-inset-top, 0px); z-index: 20;
+  background: linear-gradient(180deg, #1f1714, #161110);
   padding-left: var(--gutter-l); padding-right: var(--gutter-r); padding-block: 12px 10px;
-  border-bottom: 1px solid var(--line);
+  border-bottom: 2px solid var(--sulfur);
+  box-shadow: 0 6px 18px rgba(0,0,0,.45);
 }
 .top-in { max-width: 560px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
 .brand { display: flex; align-items: center; gap: 10px; }
-.brand svg { width: 34px; height: 34px; }
+.brand svg { width: 38px; height: 38px; filter: drop-shadow(0 2px 2px rgba(0,0,0,.6)); }
 h1 { font-family: var(--f-display); font-weight: 800; font-size: 1.55rem; letter-spacing: .03em; margin: 0; text-transform: uppercase; line-height: 1; }
 h1 span { color: var(--sulfur); }
+h1 { text-shadow: 0 2px 0 rgba(0,0,0,.6); }
 .top small { font-family: var(--f-display); font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); font-size: .72rem; }
 
 main {
@@ -68,14 +78,15 @@ h2 { font-family: var(--f-display); font-weight: 700; text-transform: uppercase;
 /* Hedef kutuları */
 .tiles { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 .tile {
-  position: relative; background: var(--panel); border: 1.5px solid var(--line); border-radius: 16px;
+  position: relative; background: linear-gradient(180deg, #201916, #171210); border: 1.5px solid var(--line); border-radius: 16px;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.05), 0 4px 10px rgba(0,0,0,.25);
   padding: 12px; display: flex; flex-direction: column; gap: 8px; min-width: 0;
   transition: border-color .15s, background .15s;
 }
-.tile.on { border-color: var(--sulfur-dim); background: var(--panel-2); }
+.tile.on { border-color: var(--sulfur); background: linear-gradient(180deg, #2a1d19, #1c1411); box-shadow: inset 0 1px 0 rgba(255,255,255,.06), 0 0 0 1px rgba(226,81,58,.25), 0 6px 16px rgba(0,0,0,.35); }
 .tile .art { display: flex; align-items: flex-start; justify-content: space-between; }
-.tile .art svg { width: 52px; height: 52px; }
-.badge { font-family: var(--f-mono); font-weight: 700; font-size: .95rem; background: var(--sulfur); color: var(--sulfur-ink); border-radius: 999px; padding: 2px 9px; min-width: 32px; text-align: center; }
+.tile .art svg { width: 56px; height: 56px; filter: drop-shadow(0 3px 3px rgba(0,0,0,.55)); }
+.badge { font-family: var(--f-mono); font-weight: 700; font-size: .85rem; background: linear-gradient(180deg, var(--sulfur-hi), #b8341f); color: var(--sulfur-ink); box-shadow: 0 2px 6px rgba(0,0,0,.4); border-radius: 999px; padding: 2px 9px; min-width: 32px; text-align: center; }
 .tile:not(.on) .badge { visibility: hidden; }
 .tname { font-weight: 600; font-size: .95rem; line-height: 1.2; }
 .need { display: flex; align-items: center; gap: 8px; width: 100%; text-align: left; background: var(--bg); border: 1px dashed var(--line); border-radius: 10px; padding: 6px 8px; }
@@ -85,7 +96,7 @@ h2 { font-family: var(--f-display); font-weight: 700; text-transform: uppercase;
 .need > span:last-child { display: flex; flex-direction: column; min-width: 0; }
 .need b { font-family: var(--f-display); font-weight: 700; font-size: .95rem; line-height: 1.15; color: var(--fg); }
 .need small { font-family: var(--f-mono); font-size: .68rem; color: var(--sulfur); }
-.plan { background: var(--panel); border: 1px solid var(--line); border-radius: 16px; padding: 12px; display: flex; flex-direction: column; gap: 6px; scroll-margin: 90px; }
+.plan { background: linear-gradient(180deg, #1e1714, #161110); border: 1px solid var(--line); border-radius: 16px; padding: 12px; display: flex; flex-direction: column; gap: 6px; scroll-margin: 90px; }
 .plan-h { display: flex; align-items: center; gap: 10px; padding-bottom: 4px; }
 .plan-h svg { width: 34px; height: 34px; }
 .plan-h b { flex: 1; min-width: 0; }
@@ -104,7 +115,7 @@ h2 { font-family: var(--f-display); font-weight: 700; text-transform: uppercase;
 .mat.total .v { color: var(--sulfur); font-size: 1.2rem; }
 .best-row small { display: flex !important; align-items: center; gap: 5px; flex-wrap: wrap; color: var(--sulfur) !important; }
 .best-row small .ic { display: flex; }
-.best-row small .ic svg { width: 18px; height: 18px; background: none; padding: 0; }
+.best-row small .ic svg { width: 18px; height: 18px; background: none; padding: 0; border: 0; }
 .best-row small .ic svg + svg { margin-left: -5px; }
 .quick.wrap { flex-wrap: wrap; overflow: visible; }
 .expchip { display: flex; align-items: center; gap: 6px; font-family: var(--f-body) !important; font-weight: 600; }
@@ -115,7 +126,7 @@ h2 { font-family: var(--f-display); font-weight: 700; text-transform: uppercase;
 .note.warn { color: var(--danger); }
 .kitrow { display: flex; align-items: center; gap: 10px; padding: 9px 12px; border-bottom: 1px solid var(--line); }
 .kitrow:last-child { border-bottom: 0; }
-.kitrow > svg { width: 38px; height: 38px; background: var(--bg); border-radius: 9px; padding: 3px; flex: none; }
+.kitrow > svg { width: 42px; height: 42px; background: radial-gradient(circle at 50% 35%, #2c211d, #120e0d); border: 1px solid var(--line); border-radius: 10px; padding: 3px; flex: none; }
 .kitrow .nm { flex: 1; min-width: 0; font-weight: 600; font-size: .92rem; }
 .kitrow .nm small { display: block; font-weight: 400; font-size: .72rem; color: var(--muted); }
 .kitrow .nm small b { color: var(--sulfur); font-family: var(--f-mono); font-weight: 600; }
@@ -136,22 +147,25 @@ h2 { font-family: var(--f-display); font-weight: 700; text-transform: uppercase;
 .new { font-family: var(--f-display); font-weight: 700; font-size: .68rem; letter-spacing: .08em; text-transform: uppercase; background: var(--danger); color: var(--sulfur-ink); border-radius: 5px; padding: 1px 6px; }
 .est { font-family: var(--f-mono); font-size: .66rem; color: var(--muted); border: 1px solid var(--line); border-radius: 5px; padding: 0 5px; }
 .grp { display: flex; flex-direction: column; gap: 8px; }
-.grp h3 { margin: 6px 0 0; font-family: var(--f-display); font-weight: 600; font-size: .78rem; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+.grp h3 { margin: 8px 0 0; font-family: var(--f-display); font-weight: 700; font-size: .8rem; letter-spacing: .12em; text-transform: uppercase; color: var(--fg); display: flex; align-items: center; gap: 8px; }
+.grp h3::before { content: ""; width: 4px; height: 14px; border-radius: 2px; background: var(--sulfur); }
+.grp h3::after { content: ""; flex: 1; height: 1px; background: linear-gradient(90deg, var(--line), transparent); }
 
 /* Alt dok: özet şeridi + sekmeler */
 .dock {
   position: fixed; left: 0; right: 0; bottom: 0; z-index: 25;
-  background: rgba(20,18,13,.94); -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px);
-  border-top: 1px solid var(--line);
+  background: rgba(17,13,12,.95); -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px);
+  border-top: 1px solid var(--line); box-shadow: 0 -8px 20px rgba(0,0,0,.4);
   padding-left: var(--gutter-l); padding-right: var(--gutter-r);
   padding-bottom: env(safe-area-inset-bottom, 0px);
 }
 .dock-in { max-width: 560px; margin: 0 auto; }
 .strip {
   margin-top: 10px; width: 100%; display: flex; align-items: center; gap: 12px;
-  background: var(--sulfur); color: var(--sulfur-ink); border-radius: 14px; padding: 9px 12px; text-align: left;
+  background: linear-gradient(180deg, #ec5d43, #b5321e); color: var(--sulfur-ink); border-radius: 14px; padding: 9px 12px; text-align: left;
+  border: 1px solid #ff8a6e33; box-shadow: inset 0 1px 0 rgba(255,255,255,.25), 0 6px 18px rgba(180,50,30,.35);
 }
-.strip svg.big { width: 38px; height: 38px; background: rgba(29,26,12,.14); border-radius: 10px; padding: 3px; }
+.strip svg.big { width: 40px; height: 40px; background: rgba(20,8,5,.35); border-radius: 10px; padding: 3px; }
 .strip .txt { flex: 1; min-width: 0; display: flex; flex-direction: column; }
 .strip .q { font-family: var(--f-display); font-weight: 800; font-size: 1.2rem; text-transform: uppercase; letter-spacing: .02em; line-height: 1.1; }
 .strip .s { font-family: var(--f-mono); font-weight: 700; font-size: .85rem; }
@@ -161,13 +175,14 @@ h2 { font-family: var(--f-display); font-weight: 700; text-transform: uppercase;
 .tabs { display: grid; grid-template-columns: repeat(5, 1fr); padding-block: 6px 4px; }
 .tab { display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 6px 0; color: var(--muted); font-size: .7rem; font-weight: 600; letter-spacing: .02em; }
 .tab svg { width: 24px; height: 24px; }
-.tab[aria-selected="true"] { color: var(--sulfur); }
+.tab[aria-selected="true"] { color: var(--sulfur-hi); }
+.tab[aria-selected="true"] svg { filter: drop-shadow(0 0 6px rgba(226,81,58,.55)); }
 
 /* Malzeme listesi */
-.mats { display: flex; flex-direction: column; background: var(--panel); border: 1px solid var(--line); border-radius: 16px; overflow: hidden; }
+.mats { display: flex; flex-direction: column; background: linear-gradient(180deg, #1d1614, #171210); border: 1px solid var(--line); border-radius: 16px; overflow: hidden; box-shadow: inset 0 1px 0 rgba(255,255,255,.04); }
 .mat { display: flex; align-items: center; gap: 12px; padding: 10px 14px; border-bottom: 1px solid var(--line); }
 .mat:last-child { border-bottom: 0; }
-.mat svg { width: 36px; height: 36px; background: var(--bg); border-radius: 9px; padding: 3px; }
+.mat svg { width: 40px; height: 40px; background: radial-gradient(circle at 50% 35%, #2c211d, #120e0d); border: 1px solid var(--line); border-radius: 10px; padding: 3px; }
 .mat .nm { flex: 1; min-width: 0; font-weight: 500; }
 .mat .nm small { display: block; color: var(--muted); font-size: .74rem; font-weight: 400; }
 .mat .v { font-family: var(--f-mono); font-weight: 700; font-size: 1.05rem; font-variant-numeric: tabular-nums; }
@@ -178,7 +193,7 @@ h2 { font-family: var(--f-display); font-weight: 700; text-transform: uppercase;
 .chip b { font-family: var(--f-mono); color: var(--sulfur); }
 .empty { text-align: center; padding: 40px 20px; display: flex; flex-direction: column; align-items: center; gap: 10px; color: var(--muted); }
 .empty svg { width: 72px; height: 72px; opacity: .55; }
-.btn { background: var(--sulfur); color: var(--sulfur-ink); font-family: var(--f-display); font-weight: 700; text-transform: uppercase; letter-spacing: .06em; padding: 10px 18px; border-radius: 12px; }
+.btn { background: linear-gradient(180deg, var(--sulfur-hi), #b8341f); color: var(--sulfur-ink); font-family: var(--f-display); font-weight: 700; text-transform: uppercase; letter-spacing: .06em; padding: 10px 18px; border-radius: 12px; }
 
 /* Sülfür */
 .field { display: flex; align-items: center; gap: 12px; background: var(--panel); border: 1.5px solid var(--line); border-radius: 16px; padding: 10px 14px; }
@@ -188,21 +203,21 @@ h2 { font-family: var(--f-display); font-weight: 700; text-transform: uppercase;
 .field:focus-within { border-color: var(--sulfur); }
 .quick { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 2px; scrollbar-width: none; }
 .quick button { flex: none; background: var(--panel); border: 1px solid var(--line); border-radius: 999px; padding: 7px 13px; font-family: var(--f-mono); font-size: .82rem; }
-.quick button[aria-pressed="true"] { border-color: var(--sulfur); color: var(--sulfur-ink); background: var(--sulfur); font-weight: 700; }
+.quick button[aria-pressed="true"] { border-color: #ff8a6e55; color: var(--sulfur-ink); background: linear-gradient(180deg, var(--sulfur-hi), #b8341f); font-weight: 700; box-shadow: inset 0 1px 0 rgba(255,255,255,.2); }
 .quick .link-chip { font-family: var(--f-body); color: var(--sulfur); border-color: var(--sulfur-dim); }
 .mini { font-family: var(--f-display); font-weight: 600; font-size: .74rem; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); margin-top: 4px; }
 .mat .v small { display: block; text-align: right; font-size: .68rem; color: var(--muted); font-weight: 500; }
 .craft { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-.craft div { background: var(--panel); border: 1px solid var(--line); border-radius: 16px; padding: 12px; display: flex; flex-direction: column; gap: 6px; min-width: 0; }
-.craft svg { width: 46px; height: 46px; }
+.craft div { background: linear-gradient(180deg, #1e1714, #161110); border: 1px solid var(--line); border-radius: 16px; padding: 12px; display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.craft svg { width: 50px; height: 50px; filter: drop-shadow(0 3px 3px rgba(0,0,0,.55)); }
 .craft b { font-family: var(--f-mono); font-size: 1.9rem; color: var(--sulfur); font-variant-numeric: tabular-nums; line-height: 1; }
 .craft span { font-weight: 600; }
 .craft small { font-size: .74rem; color: var(--muted); }
 
 /* Tarifler */
-.recipe { background: var(--panel); border: 1px solid var(--line); border-radius: 16px; padding: 14px; display: flex; flex-direction: column; gap: 10px; }
+.recipe { background: linear-gradient(180deg, #1e1714, #161110); border: 1px solid var(--line); border-radius: 16px; padding: 14px; display: flex; flex-direction: column; gap: 10px; }
 .recipe-h { display: flex; align-items: center; gap: 12px; }
-.recipe-h svg { width: 48px; height: 48px; }
+.recipe-h svg { width: 52px; height: 52px; filter: drop-shadow(0 3px 3px rgba(0,0,0,.55)); }
 .recipe-h b { font-family: var(--f-display); font-weight: 700; font-size: 1.2rem; text-transform: uppercase; letter-spacing: .02em; display: block; line-height: 1.1; }
 .recipe-h small { color: var(--muted); font-size: .78rem; }
 
@@ -231,7 +246,7 @@ body.spot-dock .dock { z-index: 41; }
 .tour-dots { display: flex; gap: 5px; }
 .tour-dots i { width: 7px; height: 7px; border-radius: 50%; background: var(--line); }
 .tour-dots i.on { background: var(--sulfur); }
-.tour-card h3 { margin: 0; font-family: var(--f-display); font-weight: 800; font-size: 1.35rem; text-transform: uppercase; letter-spacing: .02em; line-height: 1.1; }
+.tour-card h3 { margin: 0; font-family: var(--f-display); font-weight: 800; font-size: 1.45rem; letter-spacing: .02em; line-height: 1.1; }
 .tour-card p { margin: 0; color: var(--fg); font-size: .92rem; line-height: 1.45; }
 .tour-lang { display: flex; gap: 6px; }
 .tour-lang button { border: 1px solid var(--line); border-radius: 999px; padding: 6px 12px; font-size: .82rem; font-weight: 600; }
@@ -244,335 +259,488 @@ body.spot-dock .dock { z-index: 41; }
 
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
   <defs>
-    <!-- Patlayıcılar -->
+    <!-- Ortak renk geçişleri -->
+    <linearGradient id="gShine" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".38"/><stop offset=".5" stop-color="#fff" stop-opacity="0"/></linearGradient>
+    <linearGradient id="gShade" x1="0" y1="0" x2="0" y2="1"><stop offset=".45" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".42"/></linearGradient>
+    <linearGradient id="gSide" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#fff" stop-opacity=".22"/><stop offset=".35" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".3"/></linearGradient>
+    <linearGradient id="gBrass" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#f6dc8a"/><stop offset=".45" stop-color="#d9ac45"/><stop offset="1" stop-color="#9a7022"/></linearGradient>
+    <linearGradient id="gSteel" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#dde2e5"/><stop offset="1" stop-color="#717a80"/></linearGradient>
+    <linearGradient id="gGun" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5c6268"/><stop offset="1" stop-color="#25292c"/></linearGradient>
+    <linearGradient id="gRed" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ef6a4c"/><stop offset="1" stop-color="#9c2a1a"/></linearGradient>
+    <linearGradient id="gOlive" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8f8a62"/><stop offset="1" stop-color="#4a4630"/></linearGradient>
+    <linearGradient id="gArmy" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8aa06c"/><stop offset="1" stop-color="#4b5a39"/></linearGradient>
+    <linearGradient id="gLeather" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#b48a52"/><stop offset="1" stop-color="#6e4d26"/></linearGradient>
+    <linearGradient id="gWoodG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#b3814f"/><stop offset="1" stop-color="#6d4626"/></linearGradient>
+    <linearGradient id="gCloth" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e6d8b4"/><stop offset="1" stop-color="#a8946b"/></linearGradient>
+    <linearGradient id="gSulf" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff0a0"/><stop offset=".5" stop-color="#f0cd45"/><stop offset="1" stop-color="#b88a1c"/></linearGradient>
+    <linearGradient id="gCoal" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#5a544e"/><stop offset="1" stop-color="#17151a"/></linearGradient>
+    <linearGradient id="gRock" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#a7a194"/><stop offset="1" stop-color="#56524a"/></linearGradient>
+    <linearGradient id="gPCB" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3f9461"/><stop offset="1" stop-color="#1c4f32"/></linearGradient>
+    <linearGradient id="gGlass" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#a9d3e2"/><stop offset="1" stop-color="#4d7f92"/></linearGradient>
+    <linearGradient id="gWhite" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f4f4f2"/><stop offset="1" stop-color="#b9bcbd"/></linearGradient>
+    <radialGradient id="gFire" cx=".5" cy=".7" r=".7"><stop offset="0" stop-color="#fff4b8"/><stop offset=".45" stop-color="#f6a43a"/><stop offset="1" stop-color="#d4401f"/></radialGradient>
+    <radialGradient id="gLed" cx=".5" cy=".4" r=".7"><stop offset="0" stop-color="#ff9a80"/><stop offset="1" stop-color="#d12f1b"/></radialGradient>
+
+    <!-- ── Patlayıcılar ── -->
     <symbol id="i-c4" viewBox="0 0 48 48">
-      <path d="M15 15 C12 6 22 5 20 14" stroke="#3d7fd9" stroke-width="2.2" fill="none" stroke-linecap="round"/>
-      <path d="M31 15 C30 5 41 6 37 14" stroke="#d94f3d" stroke-width="2.2" fill="none" stroke-linecap="round"/>
-      <rect x="5" y="14" width="38" height="26" rx="4" fill="#5f5b42"/>
-      <rect x="5" y="14" width="38" height="7" rx="3" fill="#7d7756"/>
-      <rect x="10" y="24" width="18" height="11" rx="2" fill="#141510"/>
-      <rect x="12.5" y="27" width="4" height="5" rx="1" fill="#e5533f"/>
-      <rect x="18" y="27" width="4" height="5" rx="1" fill="#e5533f"/>
-      <rect x="23.5" y="27" width="2.5" height="5" rx="1" fill="#e5533f" opacity=".5"/>
-      <circle cx="35.5" cy="29.5" r="4" fill="#c9c2a0"/><circle cx="35.5" cy="29.5" r="1.6" fill="#5f5b42"/>
+      <path d="M15 15 C11 5 23 4 20 14" stroke="#0b0807" stroke-width="3.6" fill="none" stroke-linecap="round"/>
+      <path d="M15 15 C11 5 23 4 20 14" stroke="#3d86e6" stroke-width="2" fill="none" stroke-linecap="round"/>
+      <path d="M31 15 C29 4 42 5 37 14" stroke="#0b0807" stroke-width="3.6" fill="none" stroke-linecap="round"/>
+      <path d="M31 15 C29 4 42 5 37 14" stroke="#e04a35" stroke-width="2" fill="none" stroke-linecap="round"/>
+      <g stroke="#0b0807" stroke-width="1.4" stroke-linejoin="round">
+        <rect x="4.5" y="13.5" width="39" height="27" rx="4" fill="url(#gOlive)"/>
+        <rect x="9.5" y="23.5" width="19" height="12" rx="2" fill="#121210"/>
+        <circle cx="35.5" cy="29.5" r="4.3" fill="url(#gSteel)"/>
+      </g>
+      <rect x="5" y="14" width="38" height="8" rx="3.5" fill="url(#gShine)"/>
+      <path d="M5 22h38" stroke="#0b0807" stroke-opacity=".5" stroke-width="1"/>
+      <rect x="12" y="26.5" width="4.2" height="6" rx="1" fill="url(#gLed)"/>
+      <rect x="17.6" y="26.5" width="4.2" height="6" rx="1" fill="url(#gLed)"/>
+      <rect x="23.2" y="26.5" width="3" height="6" rx="1" fill="#5a1f14"/>
+      <circle cx="35.5" cy="29.5" r="1.6" fill="#3a3828"/>
+      <rect x="5" y="31" width="38" height="9" rx="3" fill="url(#gShade)"/>
     </symbol>
     <symbol id="i-rocket" viewBox="0 0 48 48">
       <g transform="rotate(45 24 24)">
-        <path d="M20.5 38 L24 47 L27.5 38Z" fill="#f0a63c"/>
-        <path d="M19 30 L12 41 L19 37Z" fill="#4d5741"/><path d="M29 30 L36 41 L29 37Z" fill="#4d5741"/>
-        <rect x="19" y="11" width="10" height="27" rx="1.5" fill="#71805e"/>
-        <rect x="19" y="11" width="3.5" height="27" fill="#8a9a74"/>
-        <rect x="19" y="18" width="10" height="3" fill="#e8c547"/>
-        <path d="M19 11.5 L24 1 L29 11.5Z" fill="#c9503c"/>
+        <path d="M20.5 38 L24 47.5 L27.5 38Z" fill="url(#gFire)"/>
+        <g stroke="#0b0807" stroke-width="1.3" stroke-linejoin="round">
+          <path d="M19 29 L11.5 41 L19 37.5Z" fill="#3f4a33"/><path d="M29 29 L36.5 41 L29 37.5Z" fill="#3f4a33"/>
+          <rect x="18.5" y="11" width="11" height="27.5" rx="1.5" fill="url(#gArmy)"/>
+          <path d="M18.5 11.5 L24 0.8 L29.5 11.5Z" fill="url(#gRed)"/>
+        </g>
+        <rect x="18.5" y="11" width="4" height="27.5" fill="#fff" opacity=".18"/>
+        <rect x="18.5" y="18" width="11" height="3.2" fill="#e8c547" stroke="#0b0807" stroke-width=".8"/>
+        <rect x="18.5" y="31" width="11" height="2" fill="#000" opacity=".25"/>
       </g>
     </symbol>
     <symbol id="i-satchel" viewBox="0 0 48 48">
-      <path d="M14 19 C14 8 32 8 32 19" stroke="#5c4526" stroke-width="3.2" fill="none"/>
-      <path d="M36 20 q3 -8 8 -6" stroke="#c9c2a0" stroke-width="1.8" fill="none"/>
-      <circle cx="44" cy="14" r="3" fill="#f0a63c"/><circle cx="44" cy="14" r="1.3" fill="#fff3c4"/>
-      <path d="M7 19 h32 v19 a4 4 0 0 1-4 4 H11 a4 4 0 0 1-4-4Z" fill="#82643a"/>
-      <path d="M7 19 h32 v10 q-16 4 -32 0Z" fill="#a07c48"/>
-      <rect x="20" y="26" width="6" height="7" rx="1.5" fill="#3a2c18"/>
+      <path d="M14 19 C14 7 32 7 32 19" stroke="#0b0807" stroke-width="5" fill="none"/>
+      <path d="M14 19 C14 7 32 7 32 19" stroke="#6b4e2a" stroke-width="3" fill="none"/>
+      <path d="M36 20 q3 -8 8 -6" stroke="#0b0807" stroke-width="3" fill="none"/><path d="M36 20 q3 -8 8 -6" stroke="#d6cfae" stroke-width="1.5" fill="none"/>
+      <circle cx="44" cy="14" r="3.4" fill="url(#gFire)"/>
+      <g stroke="#0b0807" stroke-width="1.4" stroke-linejoin="round">
+        <path d="M6.5 19 h33 v19.5 a4 4 0 0 1-4 4 H10.5 a4 4 0 0 1-4-4Z" fill="url(#gLeather)"/>
+        <path d="M6.5 19 h33 v10.5 q-16.5 4.5 -33 0Z" fill="#a37b45"/>
+        <rect x="19.5" y="26" width="7" height="8" rx="1.5" fill="url(#gBrass)"/>
+      </g>
+      <path d="M7 19.5 h32 v4 H7Z" fill="url(#gShine)"/>
+      <path d="M10 22 h26 M10 36 h26" stroke="#3b2913" stroke-width=".9" stroke-dasharray="2 1.6"/>
+      <path d="M6.5 32 h33 v6.5 a4 4 0 0 1-4 4 H10.5 a4 4 0 0 1-4-4Z" fill="url(#gShade)"/>
     </symbol>
     <symbol id="i-ammo" viewBox="0 0 48 48">
-      <g><rect x="9" y="22" width="8" height="20" rx="1.2" fill="#c9a54a"/><rect x="9" y="38" width="8" height="4" fill="#a7862f"/><path d="M9 22 Q13 9 17 22Z" fill="#d94f3d"/></g>
-      <g><rect x="20" y="18" width="8" height="24" rx="1.2" fill="#d6b257"/><rect x="20" y="38" width="8" height="4" fill="#a7862f"/><path d="M20 18 Q24 5 28 18Z" fill="#e5533f"/></g>
-      <g><rect x="31" y="22" width="8" height="20" rx="1.2" fill="#c9a54a"/><rect x="31" y="38" width="8" height="4" fill="#a7862f"/><path d="M31 22 Q35 9 39 22Z" fill="#d94f3d"/></g>
-    </symbol>
-    <!-- Ara ürünler -->
-    <symbol id="i-explosives" viewBox="0 0 48 48">
-      <path d="M24 12 q2 -7 8 -7" stroke="#c9c2a0" stroke-width="1.8" fill="none"/><circle cx="32" cy="5" r="2.5" fill="#f0a63c"/>
-      <rect x="10" y="13" width="9" height="29" rx="2.5" fill="#a93a2a"/>
-      <rect x="19.5" y="11" width="9" height="31" rx="2.5" fill="#c4442f"/>
-      <rect x="29" y="13" width="9" height="29" rx="2.5" fill="#a93a2a"/>
-      <rect x="8" y="25" width="32" height="5" rx="1" fill="#2a2724"/>
-    </symbol>
-    <symbol id="i-beancan" viewBox="0 0 48 48">
-      <path d="M24 15 q2 -8 9 -7" stroke="#c9c2a0" stroke-width="1.8" fill="none"/><circle cx="33" cy="8" r="2.5" fill="#f0a63c"/>
-      <rect x="13" y="15" width="22" height="28" rx="3.5" fill="#6f7e44"/>
-      <rect x="13" y="22" width="22" height="11" fill="#d4bd70"/>
-      <ellipse cx="24" cy="27.5" rx="5" ry="3" fill="#8a5a2b"/>
-      <rect x="13" y="15" width="22" height="3" rx="1.5" fill="#8a9a5a"/>
-    </symbol>
-    <symbol id="i-gp" viewBox="0 0 48 48">
-      <path d="M4 42 Q24 8 44 42Z" fill="#34322f"/>
-      <path d="M12 42 Q24 20 36 42Z" fill="#45423e"/>
-      <circle cx="18" cy="34" r="1.3" fill="#77726a"/><circle cx="26" cy="29" r="1.3" fill="#77726a"/><circle cx="30" cy="37" r="1.3" fill="#77726a"/><circle cx="22" cy="39" r="1.3" fill="#77726a"/><circle cx="34" cy="31" r="1" fill="#77726a"/>
-      <path d="M36 10 l1.6 4 4 1.6 -4 1.6 -1.6 4 -1.6-4 -4-1.6 4-1.6Z" fill="#f0a63c"/>
-    </symbol>
-    <!-- Ham madde -->
-    <symbol id="i-sulfur" viewBox="0 0 48 48">
-      <path d="M6 41 L14 24 L22 41Z" fill="#d9b63c"/>
-      <path d="M16 41 L27 10 L38 41Z" fill="#f2d66a"/>
-      <path d="M27 10 L33 25 L38 41 L27 41Z" fill="#c9a52f"/>
-      <path d="M30 41 L37 27 L44 41Z" fill="#e8c547"/>
-      <path d="M37 27 L44 41 L37 41Z" fill="#b8962a"/>
-      <rect x="4" y="40" width="40" height="3.5" rx="1.75" fill="#5a4e2a"/>
-    </symbol>
-    <symbol id="i-char" viewBox="0 0 48 48">
-      <path d="M6 38 L10 26 L20 22 L24 32 L18 40Z" fill="#2c2926"/>
-      <path d="M10 26 L20 22 L17 28Z" fill="#4c4741"/>
-      <path d="M20 40 L24 26 L34 20 L42 30 L38 41Z" fill="#23211f"/>
-      <path d="M24 26 L34 20 L32 27Z" fill="#514b44"/>
-      <path d="M22 18 L28 10 L35 14 L31 20Z" fill="#33302c"/>
-      <path d="M28 10 L35 14 L30 15Z" fill="#5a544c"/>
-    </symbol>
-    <symbol id="i-frag" viewBox="0 0 48 48">
-      <path d="M5 34 L15 22 L22 30 L14 42Z" fill="#8e969c"/>
-      <path d="M15 22 L22 30 L18 26Z" fill="#c3c9cd"/>
-      <path d="M20 16 L32 8 L36 22 L24 26Z" fill="#a4abb0"/>
-      <path d="M20 16 L32 8 L28 15Z" fill="#d3d8db"/>
-      <path d="M26 34 L38 26 L44 38 L30 42Z" fill="#7b8287"/>
-      <path d="M38 26 L44 38 L40 33Z" fill="#b5bcc1"/>
-    </symbol>
-    <symbol id="i-lgf" viewBox="0 0 48 48">
-      <rect x="17" y="5" width="13" height="7" rx="2" fill="#7e2b1f"/>
-      <rect x="11" y="10" width="26" height="33" rx="4" fill="#b8402f"/>
-      <rect x="15" y="16" width="18" height="22" rx="2" fill="#a23626"/>
-      <path d="M17 18 L31 36 M31 18 L17 36" stroke="#7e2b1f" stroke-width="2.4" stroke-linecap="round"/>
-      <rect x="32" y="4" width="5" height="9" rx="1.5" fill="#d9a33c"/>
-    </symbol>
-    <symbol id="i-cloth" viewBox="0 0 48 48">
-      <rect x="6" y="15" width="36" height="22" rx="4" fill="#c4b28c"/>
-      <path d="M6 23 h36 M6 30 h36" stroke="#a08f6a" stroke-width="1.6"/>
-      <path d="M34 15 v22" stroke="#a08f6a" stroke-width="1.6" stroke-dasharray="2 2"/>
-    </symbol>
-    <symbol id="i-tech" viewBox="0 0 48 48">
-      <rect x="6" y="10" width="36" height="28" rx="3" fill="#2f6a46"/>
-      <path d="M10 16 h6 v6 M38 16 h-6 v6 M10 32 h6 v-5 M38 32 h-6 v-5" stroke="#d9b63c" stroke-width="1.6" fill="none"/>
-      <rect x="18" y="17" width="12" height="13" rx="1.5" fill="#151515"/>
-      <circle cx="10" cy="14" r="1.4" fill="#d9b63c"/><circle cx="38" cy="34" r="1.4" fill="#d9b63c"/>
-    </symbol>
-    <symbol id="i-pipe" viewBox="0 0 48 48">
-      <g transform="rotate(-35 24 24)">
-        <rect x="4" y="18" width="40" height="12" rx="2" fill="#8e969c"/>
-        <rect x="4" y="18" width="40" height="3.5" fill="#bcc3c7"/>
-        <rect x="4" y="16" width="5" height="16" rx="1" fill="#6d7378"/>
-        <rect x="39" y="16" width="5" height="16" rx="1" fill="#6d7378"/>
+      <g stroke="#0b0807" stroke-width="1.2" stroke-linejoin="round">
+        <rect x="7.5" y="21" width="9" height="21" rx="1.2" fill="url(#gBrass)"/><path d="M7.5 21 Q12 7 16.5 21Z" fill="url(#gRed)"/>
+        <rect x="19.5" y="17" width="9" height="25" rx="1.2" fill="url(#gBrass)"/><path d="M19.5 17 Q24 3 28.5 17Z" fill="url(#gRed)"/>
+        <rect x="31.5" y="21" width="9" height="21" rx="1.2" fill="url(#gBrass)"/><path d="M31.5 21 Q36 7 40.5 21Z" fill="url(#gRed)"/>
       </g>
-    </symbol>
-    <symbol id="i-rope" viewBox="0 0 48 48">
-      <circle cx="24" cy="25" r="15" stroke="#b9925a" stroke-width="5" fill="none"/>
-      <circle cx="24" cy="25" r="8" stroke="#a07a45" stroke-width="5" fill="none"/>
-      <path d="M38 30 q6 6 4 12" stroke="#b9925a" stroke-width="4" fill="none" stroke-linecap="round"/>
-    </symbol>
-    <symbol id="i-stash" viewBox="0 0 48 48">
-      <rect x="9" y="19" width="30" height="21" rx="2.5" fill="#6b5232"/>
-      <rect x="7" y="14" width="34" height="8" rx="2.5" fill="#8a6a40"/>
-      <rect x="21" y="19" width="6" height="6" rx="1" fill="#c9a54a"/>
-      <path d="M9 30 h30" stroke="#57422a" stroke-width="1.5"/>
-    </symbol>
-    <!-- Hedefler: --t1 ana renk, --t2 detay -->
-    <symbol id="i-door" viewBox="0 0 48 48">
-      <rect x="10" y="4" width="28" height="41" rx="2" fill="#2a2621"/>
-      <rect x="12.5" y="6.5" width="23" height="37" rx="1" fill="var(--t1)"/>
-      <rect x="15.5" y="10" width="17" height="13" rx="1" fill="var(--t2)"/>
-      <rect x="15.5" y="26" width="17" height="14" rx="1" fill="var(--t2)"/>
-      <circle cx="31" cy="25" r="2" fill="#e8c547"/>
-    </symbol>
-    <symbol id="i-garage" viewBox="0 0 48 48">
-      <rect x="4" y="6" width="40" height="38" rx="2" fill="#2a2621"/>
-      <rect x="7" y="9" width="34" height="35" fill="var(--t1)"/>
-      <path d="M7 15.5h34 M7 22h34 M7 28.5h34 M7 35h34" stroke="var(--t2)" stroke-width="2.4"/>
-      <rect x="20" y="38" width="8" height="2.5" rx="1" fill="#e8c547"/>
-    </symbol>
-    <symbol id="i-hatch" viewBox="0 0 48 48">
-      <rect x="5" y="5" width="38" height="38" rx="3" fill="var(--t1)"/>
-      <rect x="9" y="9" width="30" height="30" rx="2" fill="none" stroke="var(--t2)" stroke-width="2"/>
-      <path d="M18 9 v30 M30 9 v30 M18 15h12 M18 21h12 M18 27h12 M18 33h12" stroke="var(--t2)" stroke-width="2.4"/>
-      <rect x="21" y="39" width="6" height="3" rx="1" fill="#e8c547"/>
-    </symbol>
-    <symbol id="i-ddoor" viewBox="0 0 48 48">
-      <rect x="4" y="4" width="40" height="41" rx="2" fill="#2a2621"/>
-      <rect x="6.5" y="6.5" width="17" height="37" rx="1" fill="var(--t1)"/>
-      <rect x="24.5" y="6.5" width="17" height="37" rx="1" fill="var(--t1)"/>
-      <rect x="9" y="10" width="12" height="13" rx="1" fill="var(--t2)"/><rect x="27" y="10" width="12" height="13" rx="1" fill="var(--t2)"/>
-      <rect x="9" y="26" width="12" height="14" rx="1" fill="var(--t2)"/><rect x="27" y="26" width="12" height="14" rx="1" fill="var(--t2)"/>
-      <circle cx="21.5" cy="25" r="1.6" fill="#e8c547"/><circle cx="26.5" cy="25" r="1.6" fill="#e8c547"/>
-    </symbol>
-    <symbol id="i-trihatch" viewBox="0 0 48 48">
-      <path d="M24 4 L45 42 H3Z" fill="var(--t1)" stroke-linejoin="round"/>
-      <path d="M24 12 L38 38 H10Z" fill="none" stroke="var(--t2)" stroke-width="2"/>
-      <path d="M20 22 v16 M28 22 v16 M20 27h8 M20 33h8" stroke="var(--t2)" stroke-width="2.4"/>
-    </symbol>
-    <symbol id="i-node" viewBox="0 0 48 48">
-      <path d="M4 42 L9 24 L18 14 L31 12 L41 20 L45 42Z" fill="#6f6a60"/>
-      <path d="M9 24 L18 14 L31 12 L26 22 L14 28Z" fill="#8a857a"/>
-      <path d="M15 30 l5 -3 l3 4 l-4 3Z M27 25 l6 -2 l2 5 l-5 2Z M22 36 l5 -2 l2 4 l-5 1Z M34 33 l4 -1 l1 4 l-4 1Z" fill="#e8c547"/>
-    </symbol>
-    <symbol id="i-furnace" viewBox="0 0 48 48">
-      <path d="M10 44 V18 Q10 8 24 8 Q38 8 38 18 V44Z" fill="#7a7468"/>
-      <path d="M10 18 Q10 8 24 8 Q38 8 38 18Z" fill="#8e877a"/>
-      <rect x="16" y="26" width="16" height="13" rx="2" fill="#1d1a14"/>
-      <path d="M19 39 Q20 31 24 29 Q23 34 27 33 Q29 36 29 39Z" fill="#f0a63c"/>
-      <path d="M22 39 Q23 35 25 34 Q26 37 26.5 39Z" fill="#ffe08a"/>
-      <rect x="20" y="2" width="8" height="7" fill="#5f594f"/>
-    </symbol>
-    <symbol id="i-wood" viewBox="0 0 48 48">
-      <rect x="5" y="26" width="38" height="12" rx="6" fill="#8a6338"/>
-      <rect x="8" y="13" width="34" height="12" rx="6" fill="#9c7243"/>
-      <circle cx="11" cy="32" r="5" fill="#c9a06a"/><circle cx="11" cy="32" r="2" fill="#a07a45"/>
-      <circle cx="14" cy="19" r="5" fill="#d2ab74"/><circle cx="14" cy="19" r="2" fill="#a07a45"/>
-    </symbol>
-    <symbol id="i-tc" viewBox="0 0 48 48">
-      <rect x="10" y="6" width="28" height="38" rx="2" fill="#8a6338"/>
-      <rect x="13" y="9" width="22" height="16" rx="1" fill="#6b4a27"/>
-      <path d="M16 14 l6 6 M22 12 l-6 8" stroke="#c9c2a0" stroke-width="2" stroke-linecap="round"/>
-      <path d="M26 13 h6 M26 17 h6 M26 21 h4" stroke="#c9c2a0" stroke-width="1.6"/>
-      <rect x="13" y="28" width="22" height="13" rx="1" fill="#6b4a27"/>
-      <rect x="21" y="32" width="6" height="4" rx="1" fill="#e8c547"/>
-    </symbol>
-    <symbol id="i-bars" viewBox="0 0 48 48">
-      <rect x="5" y="5" width="38" height="38" rx="2" fill="none" stroke="var(--t2)" stroke-width="4"/>
-      <path d="M14 7v34 M24 7v34 M34 7v34 M7 18h34 M7 30h34" stroke="var(--t1)" stroke-width="3"/>
-    </symbol>
-    <symbol id="i-glass" viewBox="0 0 48 48">
-      <rect x="5" y="5" width="38" height="38" rx="2" fill="#5f6468"/>
-      <rect x="9" y="9" width="30" height="30" rx="1" fill="#6f98a8"/>
-      <path d="M13 22 L22 13 M13 30 L30 13" stroke="#b9d6e0" stroke-width="2" stroke-linecap="round"/>
-      <path d="M24 39v-30 M9 24h30" stroke="#4d5358" stroke-width="2.4"/>
+      <path d="M7.5 38h9 M19.5 38h9 M31.5 38h9" stroke="#0b0807" stroke-opacity=".55"/>
+      <path d="M10 13 q1.5 -2 2 -1 M22 9 q1.5 -2 2 -1 M34 13 q1.5 -2 2 -1" stroke="#fff" stroke-opacity=".55" stroke-width="1.2" fill="none" stroke-linecap="round"/>
     </symbol>
     <symbol id="i-hv" viewBox="0 0 48 48">
       <g transform="rotate(45 24 24)">
-        <path d="M21 38 L24 46 L27 38Z" fill="#7cc4f0"/>
-        <path d="M20 31 L14 40 L20 37Z" fill="#3e5f78"/><path d="M28 31 L34 40 L28 37Z" fill="#3e5f78"/>
-        <rect x="20" y="11" width="8" height="27" rx="1.5" fill="#5f87a3"/>
-        <rect x="20" y="11" width="3" height="27" fill="#7fa6c0"/>
-        <rect x="20" y="18" width="8" height="3" fill="#e8c547"/>
-        <path d="M20 11.5 L24 2 L28 11.5Z" fill="#c9d3da"/>
+        <path d="M21 38 L24 47 L27 38Z" fill="#8fd2ff"/>
+        <g stroke="#0b0807" stroke-width="1.3" stroke-linejoin="round">
+          <path d="M20 30 L13.5 40.5 L20 37.5Z" fill="#2f4a5e"/><path d="M28 30 L34.5 40.5 L28 37.5Z" fill="#2f4a5e"/>
+          <rect x="19.5" y="11" width="9" height="27.5" rx="1.5" fill="#5f87a3"/>
+          <path d="M19.5 11.5 L24 1.5 L28.5 11.5Z" fill="url(#gSteel)"/>
+        </g>
+        <rect x="19.5" y="11" width="3.4" height="27.5" fill="#fff" opacity=".22"/>
+        <rect x="19.5" y="18" width="9" height="3" fill="#e8c547" stroke="#0b0807" stroke-width=".8"/>
       </g>
     </symbol>
     <symbol id="i-he" viewBox="0 0 48 48">
-      <rect x="15" y="22" width="18" height="20" rx="2" fill="#c9a54a"/>
-      <rect x="15" y="38" width="18" height="4" fill="#a7862f"/>
-      <path d="M15 22 Q15 8 24 7 Q33 8 33 22Z" fill="#5f6b45"/>
-      <rect x="15" y="20" width="18" height="3" fill="#e8c547"/>
+      <g stroke="#0b0807" stroke-width="1.4" stroke-linejoin="round">
+        <rect x="14" y="22" width="20" height="21" rx="2" fill="url(#gBrass)"/>
+        <path d="M14 22 Q14 6 24 5 Q34 6 34 22Z" fill="url(#gArmy)"/>
+        <rect x="14" y="19.5" width="20" height="3.5" fill="#e8c547"/>
+      </g>
+      <path d="M17 18 Q17 9 22 7.5" stroke="#fff" stroke-opacity=".45" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+      <rect x="14" y="36" width="20" height="7" fill="url(#gShade)"/>
+      <path d="M14 39h20" stroke="#0b0807" stroke-opacity=".5"/>
     </symbol>
-    <symbol id="i-emb" viewBox="0 0 48 48">
-      <rect x="5" y="5" width="38" height="38" rx="2" fill="var(--t1)"/>
-      <rect x="9" y="20" width="30" height="7" rx="1.5" fill="#1d1a14"/>
-      <path d="M5 13h38 M5 34h38" stroke="var(--t2)" stroke-width="2"/>
+    <symbol id="i-beancan" viewBox="0 0 48 48">
+      <path d="M24 15 q2 -8 9 -7" stroke="#0b0807" stroke-width="3" fill="none"/><path d="M24 15 q2 -8 9 -7" stroke="#d6cfae" stroke-width="1.5" fill="none"/>
+      <circle cx="33" cy="8" r="3.2" fill="url(#gFire)"/>
+      <g stroke="#0b0807" stroke-width="1.4" stroke-linejoin="round">
+        <rect x="12.5" y="15" width="23" height="28" rx="3.5" fill="url(#gArmy)"/>
+        <rect x="12.5" y="22" width="23" height="11" fill="#dcc67a"/>
+      </g>
+      <ellipse cx="24" cy="27.5" rx="5.2" ry="3.2" fill="#8a4f22" stroke="#0b0807" stroke-width="1"/>
+      <rect x="13" y="15.5" width="22" height="5" rx="2" fill="url(#gShine)"/>
+      <rect x="13" y="34" width="22" height="9" rx="3" fill="url(#gShade)"/>
     </symbol>
-    <symbol id="i-shutter" viewBox="0 0 48 48">
-      <rect x="5" y="6" width="18" height="36" rx="1.5" fill="var(--t1)"/><rect x="25" y="6" width="18" height="36" rx="1.5" fill="var(--t1)"/>
-      <path d="M7 13h14 M7 20h14 M7 27h14 M7 34h14 M27 13h14 M27 20h14 M27 27h14 M27 34h14" stroke="var(--t2)" stroke-width="2"/>
+
+    <!-- ── Ara ürünler ── -->
+    <symbol id="i-explosives" viewBox="0 0 48 48">
+      <path d="M24 12 q2 -7 8 -7" stroke="#0b0807" stroke-width="3" fill="none"/><path d="M24 12 q2 -7 8 -7" stroke="#d6cfae" stroke-width="1.5" fill="none"/>
+      <circle cx="32" cy="5" r="3" fill="url(#gFire)"/>
+      <g stroke="#0b0807" stroke-width="1.3" stroke-linejoin="round">
+        <rect x="9.5" y="13" width="9.5" height="29.5" rx="2.6" fill="url(#gRed)"/>
+        <rect x="28.5" y="13" width="9.5" height="29.5" rx="2.6" fill="url(#gRed)"/>
+        <rect x="19" y="11" width="9.5" height="31.5" rx="2.6" fill="url(#gRed)"/>
+        <rect x="7.5" y="24.5" width="33" height="5.5" rx="1" fill="#2a2420"/>
+      </g>
+      <path d="M11.5 15v8 M21 13v10 M30.5 15v8" stroke="#fff" stroke-opacity=".4" stroke-width="1.4" stroke-linecap="round"/>
     </symbol>
-    <symbol id="i-shop" viewBox="0 0 48 48">
-      <rect x="4" y="6" width="40" height="36" rx="2" fill="var(--t1)"/>
-      <rect x="8" y="10" width="32" height="14" rx="1" fill="#6f98a8"/>
-      <rect x="6" y="26" width="36" height="5" fill="var(--t2)"/>
-      <rect x="8" y="33" width="32" height="7" fill="#1d1a14"/>
+    <symbol id="i-gp" viewBox="0 0 48 48">
+      <path d="M3.5 42.5 Q24 6 44.5 42.5Z" fill="url(#gCoal)" stroke="#0b0807" stroke-width="1.4" stroke-linejoin="round"/>
+      <path d="M12 42 Q24 20 36 42Z" fill="#46413c"/>
+      <g fill="#8b857c"><circle cx="17" cy="35" r="1.2"/><circle cx="25" cy="28" r="1.3"/><circle cx="30" cy="37" r="1.2"/><circle cx="21" cy="39.5" r="1.1"/><circle cx="34" cy="32" r="1"/><circle cx="27" cy="34" r="1"/></g>
+      <path d="M17 24 Q22 16 27 15" stroke="#fff" stroke-opacity=".25" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+      <path d="M37 6 l2 5 5 2 -5 2 -2 5 -2-5 -5-2 5-2Z" fill="#ffd36a" stroke="#0b0807" stroke-width="1"/>
     </symbol>
-    <symbol id="i-grill" viewBox="0 0 48 48">
-      <rect x="5" y="5" width="38" height="38" rx="3" fill="#2a2621"/>
-      <path d="M10 10v28 M16 10v28 M22 10v28 M28 10v28 M34 10v28 M38 10v28 M8 16h32 M8 24h32 M8 32h32" stroke="var(--t1)" stroke-width="2.2"/>
+
+    <!-- ── Ham madde ── -->
+    <symbol id="i-sulfur" viewBox="0 0 48 48">
+      <g stroke="#0b0807" stroke-width="1.3" stroke-linejoin="round">
+        <path d="M5 41 L13.5 23 L22 41Z" fill="url(#gSulf)"/>
+        <path d="M16 41 L27 8.5 L38.5 41Z" fill="url(#gSulf)"/>
+        <path d="M29.5 41 L37 26 L44.5 41Z" fill="url(#gSulf)"/>
+      </g>
+      <path d="M27 9.5 L33 25 L38 41 L27 41Z" fill="#000" opacity=".2"/>
+      <path d="M37 26 L44 41 L37 41Z" fill="#000" opacity=".2"/>
+      <path d="M13.5 24 L9 34" stroke="#fff" stroke-opacity=".6" stroke-width="1.4" stroke-linecap="round"/>
+      <path d="M26 13 L21 30" stroke="#fff" stroke-opacity=".6" stroke-width="1.6" stroke-linecap="round"/>
+      <rect x="3.5" y="40" width="41" height="4" rx="2" fill="#4d4120" stroke="#0b0807" stroke-width="1.2"/>
     </symbol>
-    <symbol id="i-gate" viewBox="0 0 48 48">
-      <path d="M4 45 V12 L8.5 4 L13 12 V45Z M35 45 V12 L39.5 4 L44 12 V45Z" fill="var(--t1)"/>
-      <rect x="14" y="12" width="20" height="33" fill="var(--t2)"/>
-      <path d="M24 12v33" stroke="var(--t1)" stroke-width="2"/>
-      <circle cx="21" cy="29" r="1.6" fill="#e8c547"/><circle cx="27" cy="29" r="1.6" fill="#e8c547"/>
+    <symbol id="i-char" viewBox="0 0 48 48">
+      <g stroke="#0b0807" stroke-width="1.3" stroke-linejoin="round" fill="url(#gCoal)">
+        <path d="M5 38 L9.5 25.5 L20 21 L24.5 32 L18 40.5Z"/>
+        <path d="M20 41 L24 26 L34.5 19.5 L43 30 L38.5 42Z"/>
+        <path d="M21.5 18 L28 9.5 L35.5 13.5 L31 20Z"/>
+      </g>
+      <path d="M9.5 25.5 L20 21 L16.5 27.5Z M24 26 L34.5 19.5 L32 27Z M28 9.5 L35.5 13.5 L30 15Z" fill="#8a837a" opacity=".7"/>
+      <circle cx="30" cy="33" r="1.1" fill="#e8743a"/><circle cx="14" cy="33" r=".9" fill="#e8743a"/>
     </symbol>
-    <symbol id="i-wb" viewBox="0 0 48 48">
-      <rect x="4" y="16" width="40" height="7" rx="1.5" fill="var(--t1)"/>
-      <rect x="7" y="23" width="5" height="20" fill="var(--t2)"/><rect x="36" y="23" width="5" height="20" fill="var(--t2)"/>
-      <rect x="10" y="9" width="12" height="7" rx="1" fill="#8e969c"/><path d="M28 16 l6 -9 l3 2 l-5 7Z" fill="#c9a54a"/>
+    <symbol id="i-frag" viewBox="0 0 48 48">
+      <g stroke="#0b0807" stroke-width="1.3" stroke-linejoin="round" fill="url(#gSteel)">
+        <path d="M4.5 34 L15 21.5 L22.5 30 L14 42.5Z"/>
+        <path d="M19.5 16 L32 7.5 L36.5 22 L24 26.5Z"/>
+        <path d="M25.5 34 L38 25.5 L44.5 38 L30 42.5Z"/>
+      </g>
+      <path d="M15 21.5 L22.5 30 L18 26Z M19.5 16 L32 7.5 L28 15Z M38 25.5 L44.5 38 L40 33Z" fill="#fff" opacity=".55"/>
+      <path d="M14 42.5 L22.5 30 L18 38Z M24 26.5 L36.5 22 L30 25Z" fill="#000" opacity=".3"/>
     </symbol>
-    <symbol id="i-box" viewBox="0 0 48 48">
-      <rect x="4" y="14" width="40" height="28" rx="2" fill="#8a6338"/>
-      <rect x="4" y="14" width="40" height="8" rx="2" fill="#a07a45"/>
-      <path d="M4 32h40" stroke="#6b4a27" stroke-width="2"/>
-      <rect x="21" y="19" width="6" height="7" rx="1" fill="#c9a54a"/>
+    <symbol id="i-lgf" viewBox="0 0 48 48">
+      <g stroke="#0b0807" stroke-width="1.4" stroke-linejoin="round">
+        <rect x="16.5" y="4.5" width="14" height="8" rx="2.5" fill="#7a2416"/>
+        <rect x="10.5" y="10" width="27" height="33.5" rx="4" fill="url(#gRed)"/>
+        <rect x="31.5" y="3" width="5.5" height="10" rx="1.5" fill="url(#gBrass)"/>
+      </g>
+      <rect x="14.5" y="16" width="19" height="23" rx="2" fill="#000" opacity=".18"/>
+      <path d="M17 18.5 L31 36.5 M31 18.5 L17 36.5" stroke="#6b1d11" stroke-width="2.6" stroke-linecap="round"/>
+      <rect x="11" y="10.5" width="26" height="7" rx="3.5" fill="url(#gShine)"/>
     </symbol>
-    <symbol id="i-turret" viewBox="0 0 48 48">
-      <rect x="18" y="30" width="12" height="13" fill="#4d5358"/>
-      <rect x="10" y="16" width="24" height="15" rx="3" fill="#6c7378"/>
-      <rect x="32" y="20" width="13" height="4" rx="1" fill="#2f3438"/>
-      <circle cx="17" cy="23" r="3" fill="#d94f3d"/>
+    <symbol id="i-cloth" viewBox="0 0 48 48">
+      <g stroke="#0b0807" stroke-width="1.3" stroke-linejoin="round">
+        <rect x="5.5" y="24" width="37" height="14" rx="4" fill="#a8946b"/>
+        <rect x="5.5" y="12" width="37" height="15" rx="4" fill="url(#gCloth)"/>
+      </g>
+      <path d="M6 19.5 h36 M6 32 h36" stroke="#8a7a56" stroke-width="1.2"/>
+      <path d="M34 12v26" stroke="#7d6d4b" stroke-width="1.1" stroke-dasharray="2 2"/>
+      <rect x="6" y="12.5" width="36" height="5" rx="2.5" fill="url(#gShine)"/>
     </symbol>
-    <symbol id="i-sam" viewBox="0 0 48 48">
-      <rect x="14" y="34" width="20" height="9" fill="#4d5358"/>
-      <g transform="rotate(-30 24 26)"><rect x="8" y="18" width="32" height="12" rx="2" fill="#6c7378"/>
-      <circle cx="13" cy="24" r="3" fill="#c9503c"/><circle cx="21" cy="24" r="3" fill="#c9503c"/><circle cx="29" cy="24" r="3" fill="#c9503c"/><circle cx="37" cy="24" r="3" fill="#c9503c"/></g>
+    <symbol id="i-tech" viewBox="0 0 48 48">
+      <rect x="5.5" y="9.5" width="37" height="29" rx="3" fill="url(#gPCB)" stroke="#0b0807" stroke-width="1.4"/>
+      <path d="M10 16 h6 v6 M38 16 h-6 v6 M10 32 h6 v-5 M38 32 h-6 v-5 M24 10v6 M24 38v-6" stroke="#e8c547" stroke-width="1.4" fill="none"/>
+      <rect x="17.5" y="16.5" width="13" height="14" rx="1.5" fill="#141414" stroke="#0b0807"/>
+      <path d="M17.5 19h-2 M17.5 23h-2 M17.5 27h-2 M30.5 19h2 M30.5 23h2 M30.5 27h2" stroke="#c9cfd3" stroke-width="1.1"/>
+      <circle cx="10" cy="13.5" r="1.4" fill="#e8c547"/><circle cx="38" cy="34.5" r="1.4" fill="#e8c547"/>
+      <rect x="6" y="10" width="36" height="6" rx="2.5" fill="url(#gShine)"/>
+    </symbol>
+    <symbol id="i-pipe" viewBox="0 0 48 48">
+      <g transform="rotate(-35 24 24)" stroke="#0b0807" stroke-width="1.3" stroke-linejoin="round">
+        <rect x="4" y="18" width="40" height="12" rx="2" fill="url(#gSteel)"/>
+        <rect x="3" y="16" width="6" height="16" rx="1.2" fill="url(#gGun)"/>
+        <rect x="39" y="16" width="6" height="16" rx="1.2" fill="url(#gGun)"/>
+        <ellipse cx="42" cy="24" rx="1.6" ry="4.5" fill="#1a1d1f" stroke="none"/>
+      </g>
+    </symbol>
+    <symbol id="i-rope" viewBox="0 0 48 48">
+      <circle cx="24" cy="25" r="15" stroke="#0b0807" stroke-width="7.5" fill="none"/>
+      <circle cx="24" cy="25" r="15" stroke="#b9925a" stroke-width="5" fill="none" stroke-dasharray="3 1.5"/>
+      <circle cx="24" cy="25" r="8" stroke="#0b0807" stroke-width="7.5" fill="none"/>
+      <circle cx="24" cy="25" r="8" stroke="#9c7542" stroke-width="5" fill="none" stroke-dasharray="3 1.5"/>
+      <path d="M38 30 q6 6 4 12" stroke="#0b0807" stroke-width="6" fill="none" stroke-linecap="round"/>
+      <path d="M38 30 q6 6 4 12" stroke="#b9925a" stroke-width="3.6" fill="none" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="i-stash" viewBox="0 0 48 48">
+      <g stroke="#0b0807" stroke-width="1.4" stroke-linejoin="round">
+        <rect x="8.5" y="19" width="31" height="22" rx="2.5" fill="url(#gWoodG)"/>
+        <rect x="6.5" y="13.5" width="35" height="9" rx="2.5" fill="#9a7244"/>
+        <rect x="20.5" y="19" width="7" height="7" rx="1.2" fill="url(#gBrass)"/>
+      </g>
+      <path d="M9 30.5 h30" stroke="#3b2913" stroke-width="1.2"/>
+      <rect x="7" y="14" width="34" height="4" rx="2" fill="url(#gShine)"/>
+    </symbol>
+    <symbol id="i-stones" viewBox="0 0 48 48">
+      <g stroke="#0b0807" stroke-width="1.3" stroke-linejoin="round" fill="url(#gRock)">
+        <path d="M4.5 40 L9 27.5 L19.5 23.5 L24.5 34 L18 42.5Z"/><path d="M20 42.5 L24 27.5 L34.5 21.5 L43.5 32 L38 43Z"/><path d="M14.5 22 L21 11.5 L30.5 14.5 L27 22Z"/>
+      </g>
+      <path d="M9 27.5 L19.5 23.5 L15 29Z M24 27.5 L34.5 21.5 L31 28Z M21 11.5 L30.5 14.5 L25 16Z" fill="#fff" opacity=".35"/>
+    </symbol>
+    <symbol id="i-node" viewBox="0 0 48 48">
+      <path d="M3.5 42.5 L8.5 23.5 L18 13.5 L31.5 11.5 L42 19.5 L45 42.5Z" fill="url(#gRock)" stroke="#0b0807" stroke-width="1.4" stroke-linejoin="round"/>
+      <path d="M8.5 23.5 L18 13.5 L31.5 11.5 L26 22 L14 28Z" fill="#fff" opacity=".22"/>
+      <path d="M31.5 11.5 L42 19.5 L45 42.5 L33 42.5Z" fill="#000" opacity=".18"/>
+      <g fill="url(#gSulf)" stroke="#0b0807" stroke-width=".9"><path d="M14 31 l5.5 -3.5 3 4.5 -4.5 3.5Z"/><path d="M27 25 l6.5 -2 2 5.5 -5.5 2Z"/><path d="M21 37 l5.5 -2 2 4.5 -5.5 1.5Z"/><path d="M34 34 l4.5 -1 1 4.5 -4.5 1Z"/></g>
+    </symbol>
+    <symbol id="i-wood" viewBox="0 0 48 48">
+      <g stroke="#0b0807" stroke-width="1.4" stroke-linejoin="round">
+        <rect x="4.5" y="25.5" width="39" height="13" rx="6.5" fill="url(#gWoodG)"/>
+        <rect x="7.5" y="12.5" width="35" height="13" rx="6.5" fill="url(#gWoodG)"/>
+        <circle cx="11" cy="32" r="5.6" fill="#d9b07a"/><circle cx="14" cy="19" r="5.6" fill="#d9b07a"/>
+      </g>
+      <circle cx="11" cy="32" r="3" fill="none" stroke="#9c7542" stroke-width="1"/><circle cx="14" cy="19" r="3" fill="none" stroke="#9c7542" stroke-width="1"/>
+      <path d="M22 16 h16 M20 29 h18" stroke="#fff" stroke-opacity=".22" stroke-width="1.6" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="i-furnace" viewBox="0 0 48 48">
+      <g stroke="#0b0807" stroke-width="1.4" stroke-linejoin="round">
+        <rect x="20" y="1.5" width="8" height="8" fill="url(#gGun)"/>
+        <path d="M9.5 44.5 V18 Q9.5 7.5 24 7.5 Q38.5 7.5 38.5 18 V44.5Z" fill="url(#gRock)"/>
+        <rect x="15.5" y="25.5" width="17" height="14" rx="2" fill="#1a1510"/>
+      </g>
+      <path d="M10 18 Q10 8 24 8 Q38 8 38 18Z" fill="url(#gShine)"/>
+      <path d="M18.5 39.5 Q19.5 31 24 28.5 Q23 34 27.5 33 Q29.5 36 29.5 39.5Z" fill="url(#gFire)"/>
+      <path d="M10 22 h28 M10 32 h5 M33 32 h5 M14 13 v9 M34 13 v9" stroke="#0b0807" stroke-opacity=".35"/>
+    </symbol>
+
+    <!-- ── Hedefler (--t1 ana renk, --t2 detay) ── -->
+    <symbol id="i-door" viewBox="0 0 48 48">
+      <rect x="9.5" y="3.5" width="29" height="42" rx="2" fill="#221d19" stroke="#0b0807" stroke-width="1.4"/>
+      <rect x="12.5" y="6.5" width="23" height="37" rx="1" fill="var(--t1)" stroke="#0b0807" stroke-width="1.2"/>
+      <rect x="15.5" y="10" width="17" height="13" rx="1" fill="var(--t2)" stroke="#0b0807" stroke-opacity=".5"/>
+      <rect x="15.5" y="26" width="17" height="14" rx="1" fill="var(--t2)" stroke="#0b0807" stroke-opacity=".5"/>
+      <rect x="12.5" y="6.5" width="23" height="37" fill="url(#gSide)"/>
+      <rect x="12.5" y="6.5" width="23" height="37" fill="url(#gShade)"/>
+      <rect x="11" y="11" width="3" height="4" rx=".8" fill="url(#gGun)"/><rect x="11" y="34" width="3" height="4" rx=".8" fill="url(#gGun)"/>
+      <circle cx="31" cy="25" r="2.2" fill="url(#gBrass)" stroke="#0b0807" stroke-width=".8"/>
+    </symbol>
+    <symbol id="i-ddoor" viewBox="0 0 48 48">
+      <rect x="3.5" y="3.5" width="41" height="42" rx="2" fill="#221d19" stroke="#0b0807" stroke-width="1.4"/>
+      <rect x="6.5" y="6.5" width="17" height="37" rx="1" fill="var(--t1)" stroke="#0b0807" stroke-width="1.1"/>
+      <rect x="24.5" y="6.5" width="17" height="37" rx="1" fill="var(--t1)" stroke="#0b0807" stroke-width="1.1"/>
+      <rect x="9" y="10" width="12" height="13" rx="1" fill="var(--t2)"/><rect x="27" y="10" width="12" height="13" rx="1" fill="var(--t2)"/>
+      <rect x="9" y="26" width="12" height="14" rx="1" fill="var(--t2)"/><rect x="27" y="26" width="12" height="14" rx="1" fill="var(--t2)"/>
+      <rect x="6.5" y="6.5" width="35" height="37" fill="url(#gShade)"/>
+      <circle cx="21.5" cy="25" r="1.8" fill="url(#gBrass)" stroke="#0b0807" stroke-width=".7"/><circle cx="26.5" cy="25" r="1.8" fill="url(#gBrass)" stroke="#0b0807" stroke-width=".7"/>
+    </symbol>
+    <symbol id="i-garage" viewBox="0 0 48 48">
+      <rect x="3.5" y="5.5" width="41" height="39" rx="2" fill="#221d19" stroke="#0b0807" stroke-width="1.4"/>
+      <rect x="6.5" y="8.5" width="35" height="36" fill="var(--t1)" stroke="#0b0807" stroke-width="1.1"/>
+      <path d="M6.5 15.5h35 M6.5 22h35 M6.5 28.5h35 M6.5 35h35" stroke="var(--t2)" stroke-width="2.6"/>
+      <path d="M6.5 16.8h35 M6.5 23.3h35 M6.5 29.8h35 M6.5 36.3h35" stroke="#fff" stroke-opacity=".18" stroke-width="1"/>
+      <rect x="6.5" y="8.5" width="35" height="36" fill="url(#gShade)"/>
+      <rect x="19.5" y="38" width="9" height="3" rx="1" fill="url(#gBrass)" stroke="#0b0807" stroke-width=".7"/>
+    </symbol>
+    <symbol id="i-hatch" viewBox="0 0 48 48">
+      <rect x="4.5" y="4.5" width="39" height="39" rx="3" fill="var(--t1)" stroke="#0b0807" stroke-width="1.4"/>
+      <rect x="9" y="9" width="30" height="30" rx="2" fill="none" stroke="var(--t2)" stroke-width="2"/>
+      <path d="M18 9 v30 M30 9 v30" stroke="var(--t2)" stroke-width="2.6"/>
+      <path d="M18 15h12 M18 21h12 M18 27h12 M18 33h12" stroke="var(--t2)" stroke-width="2.2"/>
+      <rect x="4.5" y="4.5" width="39" height="39" rx="3" fill="url(#gSide)"/>
+      <circle cx="8" cy="8" r="1.3" fill="#0b0807" opacity=".6"/><circle cx="40" cy="8" r="1.3" fill="#0b0807" opacity=".6"/><circle cx="8" cy="40" r="1.3" fill="#0b0807" opacity=".6"/><circle cx="40" cy="40" r="1.3" fill="#0b0807" opacity=".6"/>
+      <rect x="20.5" y="39.5" width="7" height="3" rx="1" fill="url(#gBrass)" stroke="#0b0807" stroke-width=".7"/>
+    </symbol>
+    <symbol id="i-trihatch" viewBox="0 0 48 48">
+      <path d="M24 3.5 L45.5 42.5 H2.5Z" fill="var(--t1)" stroke="#0b0807" stroke-width="1.4" stroke-linejoin="round"/>
+      <path d="M24 12 L38 38 H10Z" fill="none" stroke="var(--t2)" stroke-width="2"/>
+      <path d="M20 22 v16 M28 22 v16 M20 27h8 M20 33h8" stroke="var(--t2)" stroke-width="2.4"/>
+      <path d="M24 3.5 L45.5 42.5 H2.5Z" fill="url(#gSide)"/>
     </symbol>
     <symbol id="i-wall" viewBox="0 0 48 48">
-      <rect x="4" y="6" width="40" height="38" rx="2" fill="var(--t1)"/>
+      <rect x="3.5" y="5.5" width="41" height="39" rx="2" fill="var(--t1)" stroke="#0b0807" stroke-width="1.4"/>
       <path d="M4 15.5h40 M4 25h40 M4 34.5h40 M16 6v9.5 M32 6v9.5 M10 15.5v9.5 M24 15.5v9.5 M38 15.5v9.5 M16 25v9.5 M32 25v9.5 M10 34.5v9.5 M24 34.5v9.5 M38 34.5v9.5" stroke="var(--t2)" stroke-width="2"/>
+      <path d="M4 16.6h40 M4 26.1h40 M4 35.6h40" stroke="#fff" stroke-opacity=".16"/>
+      <rect x="3.5" y="5.5" width="41" height="39" rx="2" fill="url(#gShade)"/>
     </symbol>
     <symbol id="i-hes" viewBox="0 0 48 48">
-      <path d="M4 45 V12 L8.5 4 L13 12 V45Z M14 45 V12 L18.5 4 L23 12 V45Z M24 45 V12 L28.5 4 L33 12 V45Z M34 45 V12 L38.5 4 L43 12 V45Z" fill="var(--t1)"/>
-      <path d="M4 22h39 M4 34h39" stroke="var(--t2)" stroke-width="2.4"/>
+      <g stroke="#0b0807" stroke-width="1.2" stroke-linejoin="round" fill="var(--t1)">
+        <path d="M3.5 45.5 V12 L8.5 3.5 L13.5 12 V45.5Z"/><path d="M13.5 45.5 V12 L18.5 3.5 L23.5 12 V45.5Z"/>
+        <path d="M23.5 45.5 V12 L28.5 3.5 L33.5 12 V45.5Z"/><path d="M33.5 45.5 V12 L38.5 3.5 L43.5 12 V45.5Z"/>
+      </g>
+      <path d="M3.5 22h40 M3.5 34h40" stroke="var(--t2)" stroke-width="2.6"/>
+      <rect x="3.5" y="12" width="40" height="33.5" fill="url(#gShade)"/>
     </symbol>
-    <!-- Sekme ikonları -->
+    <symbol id="i-gate" viewBox="0 0 48 48">
+      <g stroke="#0b0807" stroke-width="1.2" stroke-linejoin="round" fill="var(--t1)">
+        <path d="M3.5 45.5 V12 L8.5 3.5 L13.5 12 V45.5Z"/><path d="M34.5 45.5 V12 L39.5 3.5 L44.5 12 V45.5Z"/>
+      </g>
+      <rect x="13.5" y="11.5" width="21" height="34" fill="var(--t2)" stroke="#0b0807" stroke-width="1.2"/>
+      <path d="M24 11.5v34" stroke="#0b0807" stroke-width="1.2"/>
+      <rect x="13.5" y="11.5" width="21" height="34" fill="url(#gShade)"/>
+      <circle cx="21" cy="29" r="1.7" fill="url(#gBrass)"/><circle cx="27" cy="29" r="1.7" fill="url(#gBrass)"/>
+    </symbol>
+    <symbol id="i-bars" viewBox="0 0 48 48">
+      <rect x="4.5" y="4.5" width="39" height="39" rx="2" fill="#141110" stroke="var(--t2)" stroke-width="4"/>
+      <path d="M14 7v34 M24 7v34 M34 7v34 M7 18h34 M7 30h34" stroke="#0b0807" stroke-width="4.6"/>
+      <path d="M14 7v34 M24 7v34 M34 7v34 M7 18h34 M7 30h34" stroke="var(--t1)" stroke-width="2.8"/>
+      <path d="M13.3 7v34 M23.3 7v34 M33.3 7v34" stroke="#fff" stroke-opacity=".25"/>
+    </symbol>
+    <symbol id="i-glass" viewBox="0 0 48 48">
+      <rect x="4.5" y="4.5" width="39" height="39" rx="2" fill="var(--t1)" stroke="#0b0807" stroke-width="1.4"/>
+      <rect x="9" y="9" width="30" height="30" rx="1" fill="url(#gGlass)" stroke="#0b0807"/>
+      <path d="M12.5 22 L22 12.5 M12.5 31 L31 12.5" stroke="#e6f6fb" stroke-opacity=".85" stroke-width="2" stroke-linecap="round"/>
+      <path d="M24 39v-30 M9 24h30" stroke="var(--t2)" stroke-width="2.4"/>
+    </symbol>
+    <symbol id="i-emb" viewBox="0 0 48 48">
+      <rect x="4.5" y="4.5" width="39" height="39" rx="2" fill="var(--t1)" stroke="#0b0807" stroke-width="1.4"/>
+      <rect x="9" y="19.5" width="30" height="8" rx="1.5" fill="#100d0b" stroke="#0b0807"/>
+      <path d="M5 13h38 M5 34h38" stroke="var(--t2)" stroke-width="2"/>
+      <rect x="4.5" y="4.5" width="39" height="39" rx="2" fill="url(#gSide)"/>
+      <circle cx="8" cy="8" r="1.2" fill="#0b0807" opacity=".6"/><circle cx="40" cy="8" r="1.2" fill="#0b0807" opacity=".6"/><circle cx="8" cy="40" r="1.2" fill="#0b0807" opacity=".6"/><circle cx="40" cy="40" r="1.2" fill="#0b0807" opacity=".6"/>
+    </symbol>
+    <symbol id="i-shutter" viewBox="0 0 48 48">
+      <g stroke="#0b0807" stroke-width="1.2"><rect x="4.5" y="5.5" width="19" height="37" rx="1.5" fill="var(--t1)"/><rect x="24.5" y="5.5" width="19" height="37" rx="1.5" fill="var(--t1)"/></g>
+      <path d="M7 13h14 M7 20h14 M7 27h14 M7 34h14 M27 13h14 M27 20h14 M27 27h14 M27 34h14" stroke="var(--t2)" stroke-width="2.2"/>
+      <rect x="4.5" y="5.5" width="39" height="37" fill="url(#gShade)"/>
+    </symbol>
+    <symbol id="i-shop" viewBox="0 0 48 48">
+      <rect x="3.5" y="5.5" width="41" height="37" rx="2" fill="var(--t1)" stroke="#0b0807" stroke-width="1.4"/>
+      <rect x="7.5" y="9.5" width="33" height="14" rx="1" fill="url(#gGlass)" stroke="#0b0807"/>
+      <path d="M11 20 L18 13 M17 21 L25 13" stroke="#e6f6fb" stroke-opacity=".8" stroke-width="1.6" stroke-linecap="round"/>
+      <rect x="5.5" y="25.5" width="37" height="5" fill="var(--t2)" stroke="#0b0807"/>
+      <rect x="7.5" y="32.5" width="33" height="8" fill="#100d0b"/>
+    </symbol>
+    <symbol id="i-grill" viewBox="0 0 48 48">
+      <rect x="4.5" y="4.5" width="39" height="39" rx="3" fill="#100d0b" stroke="#0b0807" stroke-width="1.4"/>
+      <path d="M10 9v30 M16 9v30 M22 9v30 M28 9v30 M34 9v30 M39 9v30 M8 16h32 M8 24h32 M8 32h32" stroke="var(--t1)" stroke-width="2.4"/>
+      <rect x="4.5" y="4.5" width="39" height="39" rx="3" fill="none" stroke="var(--t2)" stroke-width="2.6"/>
+    </symbol>
+
+    <!-- ── Eşyalar ve taretler ── -->
+    <symbol id="i-tc" viewBox="0 0 48 48">
+      <g stroke="#0b0807" stroke-width="1.4" stroke-linejoin="round">
+        <rect x="9.5" y="5.5" width="29" height="39" rx="2" fill="url(#gWoodG)"/>
+        <rect x="12.5" y="8.5" width="23" height="17" rx="1" fill="#5c3c1f"/>
+        <rect x="12.5" y="28.5" width="23" height="13" rx="1" fill="#5c3c1f"/>
+        <rect x="20.5" y="32" width="7" height="5" rx="1" fill="url(#gBrass)"/>
+      </g>
+      <path d="M15.5 13.5 l6 6 M21.5 11.5 l-6 8" stroke="#e8e0c4" stroke-width="2" stroke-linecap="round"/>
+      <path d="M25.5 12.5h7 M25.5 16.5h7 M25.5 20.5h5" stroke="#e8e0c4" stroke-width="1.5"/>
+      <rect x="10" y="6" width="28" height="5" fill="url(#gShine)"/>
+    </symbol>
+    <symbol id="i-wb" viewBox="0 0 48 48">
+      <g stroke="#0b0807" stroke-width="1.3" stroke-linejoin="round">
+        <rect x="6.5" y="22.5" width="5.5" height="21" fill="var(--t2)"/><rect x="36" y="22.5" width="5.5" height="21" fill="var(--t2)"/>
+        <rect x="3.5" y="15.5" width="41" height="8" rx="1.5" fill="var(--t1)"/>
+        <rect x="9.5" y="8" width="13" height="8" rx="1" fill="url(#gSteel)"/>
+        <path d="M28 15.5 l6.5 -10 3.5 2 -5.5 8Z" fill="url(#gBrass)"/>
+      </g>
+      <rect x="4" y="16" width="40" height="3" fill="url(#gShine)"/>
+    </symbol>
+    <symbol id="i-box" viewBox="0 0 48 48">
+      <g stroke="#0b0807" stroke-width="1.4" stroke-linejoin="round">
+        <rect x="3.5" y="13.5" width="41" height="29" rx="2" fill="url(#gWoodG)"/>
+        <rect x="3.5" y="13.5" width="41" height="9" rx="2" fill="#a77c4a"/>
+        <rect x="20.5" y="18.5" width="7" height="8" rx="1" fill="url(#gBrass)"/>
+      </g>
+      <path d="M4 32.5h40 M15 22.5v20 M33 22.5v20" stroke="#3b2913" stroke-width="1.3"/>
+      <rect x="4" y="14" width="40" height="4" fill="url(#gShine)"/>
+    </symbol>
+    <symbol id="i-turret" viewBox="0 0 48 48">
+      <g stroke="#0b0807" stroke-width="1.4" stroke-linejoin="round">
+        <path d="M14 44.5 L18 29.5 H30 L34 44.5Z" fill="url(#gGun)"/>
+        <rect x="8.5" y="14.5" width="26" height="16" rx="3" fill="url(#gSteel)"/>
+        <rect x="33" y="19" width="13" height="5" rx="1" fill="url(#gGun)"/>
+        <rect x="11.5" y="8.5" width="9" height="7" rx="1.5" fill="url(#gGun)"/>
+      </g>
+      <circle cx="16.5" cy="22.5" r="3.2" fill="url(#gLed)" stroke="#0b0807"/>
+      <path d="M24 18v9 M28 18v9" stroke="#0b0807" stroke-opacity=".4"/>
+      <rect x="9" y="15" width="25" height="5" rx="2.5" fill="url(#gShine)"/>
+    </symbol>
+    <symbol id="i-sam" viewBox="0 0 48 48">
+      <g stroke="#0b0807" stroke-width="1.4" stroke-linejoin="round">
+        <rect x="13.5" y="33.5" width="21" height="10" rx="1" fill="url(#gGun)"/>
+        <g transform="rotate(-30 24 26)"><rect x="7.5" y="17.5" width="33" height="13" rx="2" fill="url(#gSteel)"/>
+        <circle cx="13" cy="24" r="3.2" fill="url(#gRed)"/><circle cx="21" cy="24" r="3.2" fill="url(#gRed)"/><circle cx="29" cy="24" r="3.2" fill="url(#gRed)"/><circle cx="37" cy="24" r="3.2" fill="url(#gRed)"/></g>
+      </g>
+    </symbol>
+
+    <!-- ── Kit ── -->
+    <symbol id="i-bullet" viewBox="0 0 48 48">
+      <g stroke="#0b0807" stroke-width="1.2" stroke-linejoin="round">
+        <rect x="10.5" y="19" width="9" height="23" rx="1.2" fill="url(#gBrass)"/><path d="M10.5 19 Q15 5 19.5 19Z" fill="var(--t1)"/>
+        <rect x="28.5" y="19" width="9" height="23" rx="1.2" fill="url(#gBrass)"/><path d="M28.5 19 Q33 5 37.5 19Z" fill="var(--t1)"/>
+      </g>
+      <path d="M10.5 38h9 M28.5 38h9" stroke="#0b0807" stroke-opacity=".5"/>
+      <path d="M13 12 q1.5 -2 2 -1 M31 12 q1.5 -2 2 -1" stroke="#fff" stroke-opacity=".55" stroke-width="1.2" fill="none" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="i-pbullet" viewBox="0 0 48 48">
+      <g stroke="#0b0807" stroke-width="1.2" stroke-linejoin="round">
+        <rect x="11.5" y="24" width="10" height="17" rx="1.2" fill="url(#gBrass)"/><path d="M11.5 24 Q16.5 12 21.5 24Z" fill="var(--t1)"/>
+        <rect x="26.5" y="24" width="10" height="17" rx="1.2" fill="url(#gBrass)"/><path d="M26.5 24 Q31.5 12 36.5 24Z" fill="var(--t1)"/>
+      </g>
+    </symbol>
+    <symbol id="i-shell" viewBox="0 0 48 48">
+      <g stroke="#0b0807" stroke-width="1.3" stroke-linejoin="round">
+        <rect x="14.5" y="7.5" width="19" height="27" rx="3" fill="var(--t1)"/>
+        <rect x="12.5" y="33.5" width="23" height="9" rx="1.5" fill="url(#gBrass)"/>
+      </g>
+      <rect x="15" y="8" width="18" height="26" rx="2.5" fill="url(#gSide)"/>
+      <path d="M15 14h18 M15 28h18" stroke="#0b0807" stroke-opacity=".3" stroke-width="1.4"/>
+    </symbol>
+    <symbol id="i-f1" viewBox="0 0 48 48">
+      <path d="M28 10 q9 0 9 9" stroke="#0b0807" stroke-width="3.4" fill="none"/><path d="M28 10 q9 0 9 9" stroke="#d6cfae" stroke-width="1.8" fill="none"/>
+      <g stroke="#0b0807" stroke-width="1.4"><rect x="19.5" y="7" width="9" height="9" rx="1.5" fill="url(#gSteel)"/><ellipse cx="24" cy="30" rx="13.5" ry="15" fill="url(#gArmy)"/></g>
+      <path d="M11 25h26 M11 33h26 M18 15.5v29 M30 15.5v29" stroke="#2f3a24" stroke-width="1.8"/>
+      <ellipse cx="19" cy="23" rx="4" ry="5" fill="#fff" opacity=".18"/>
+    </symbol>
+    <symbol id="i-smoke" viewBox="0 0 48 48">
+      <circle cx="13" cy="11" r="7" fill="#d4d8da" opacity=".85"/><circle cx="22" cy="7" r="5.5" fill="#e7eaeb" opacity=".85"/><circle cx="8" cy="18" r="4" fill="#c1c6c9" opacity=".8"/>
+      <g stroke="#0b0807" stroke-width="1.4"><rect x="14.5" y="16.5" width="19" height="27" rx="3" fill="url(#gGun)"/><rect x="18.5" y="12" width="11" height="5.5" rx="1" fill="url(#gSteel)"/></g>
+      <rect x="14.5" y="24" width="19" height="6.5" fill="#e8c547" stroke="#0b0807" stroke-width="1"/>
+      <rect x="15" y="17" width="5" height="26" fill="#fff" opacity=".14"/>
+    </symbol>
+    <symbol id="i-flash" viewBox="0 0 48 48">
+      <g stroke="#0b0807" stroke-width="1.4"><rect x="14.5" y="13.5" width="19" height="30" rx="3" fill="url(#gGun)"/><rect x="18.5" y="8.5" width="11" height="5.5" rx="1" fill="url(#gSteel)"/></g>
+      <path d="M15 20h18 M15 35h18" stroke="url(#gSteel)" stroke-width="2.6"/>
+      <path d="M37 3.5 l2.2 5.3 5.3 2.2 -5.3 2.2 -2.2 5.3 -2.2-5.3 -5.3-2.2 5.3-2.2Z" fill="#fff6c8" stroke="#0b0807"/>
+      <rect x="15" y="14" width="5" height="29" fill="#fff" opacity=".14"/>
+    </symbol>
+    <symbol id="i-molotov" viewBox="0 0 48 48">
+      <path d="M21 18 q-2.5 -7 3 -14 q5.5 7 3 14Z" fill="url(#gFire)" stroke="#0b0807"/>
+      <g stroke="#0b0807" stroke-width="1.4" stroke-linejoin="round">
+        <path d="M19 17.5 h10 v4.5 q6 4 6 12 v6 a3.5 3.5 0 0 1-3.5 3.5 H16.5 a3.5 3.5 0 0 1-3.5-3.5 v-6 q0-8 6-12Z" fill="#6b8a54"/>
+        <rect x="13" y="30" width="22" height="7.5" fill="url(#gCloth)"/>
+      </g>
+      <path d="M16 26 q1 -3 4 -4" stroke="#fff" stroke-opacity=".45" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="i-syringe" viewBox="0 0 48 48">
+      <g transform="rotate(45 24 24)" stroke="#0b0807" stroke-width="1.2" stroke-linejoin="round">
+        <rect x="18.5" y="9.5" width="11" height="25" rx="2" fill="url(#gWhite)"/>
+        <rect x="18.5" y="18" width="11" height="13" fill="url(#gRed)"/>
+        <rect x="15.5" y="34" width="17" height="3.4" rx="1" fill="url(#gSteel)"/>
+        <rect x="23" y="37" width="2" height="9" fill="url(#gSteel)"/>
+        <rect x="22" y="2.5" width="4" height="7.5" fill="url(#gSteel)"/><rect x="16.5" y="1.5" width="15" height="3.2" rx="1" fill="url(#gSteel)"/>
+      </g>
+    </symbol>
+    <symbol id="i-medkit" viewBox="0 0 48 48">
+      <rect x="18" y="8.5" width="12" height="7" rx="2" fill="none" stroke="#0b0807" stroke-width="4"/>
+      <rect x="18" y="8.5" width="12" height="7" rx="2" fill="none" stroke="url(#gSteel)" stroke-width="2.2"/>
+      <rect x="5.5" y="13.5" width="37" height="27" rx="3" fill="url(#gWhite)" stroke="#0b0807" stroke-width="1.4"/>
+      <path d="M24 18.5v17 M15.5 27h17" stroke="#0b0807" stroke-width="7.4"/>
+      <path d="M24 18.5v17 M15.5 27h17" stroke="#d93a26" stroke-width="5"/>
+      <rect x="6" y="31" width="36" height="9" rx="3" fill="url(#gShade)"/>
+    </symbol>
+    <symbol id="i-bandage" viewBox="0 0 48 48">
+      <g transform="rotate(-30 24 24)">
+        <rect x="5.5" y="16.5" width="37" height="15" rx="7.5" fill="url(#gCloth)" stroke="#0b0807" stroke-width="1.3"/>
+        <rect x="18" y="16.5" width="12" height="15" fill="#c2ac7c" stroke="#0b0807" stroke-width=".8"/>
+        <g fill="#8c7a52"><circle cx="21" cy="21" r="1"/><circle cx="27" cy="21" r="1"/><circle cx="21" cy="27" r="1"/><circle cx="27" cy="27" r="1"/></g>
+      </g>
+    </symbol>
     <symbol id="t-raid" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M1 12h4M19 12h4"/></g></symbol>
     <symbol id="t-mat" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M12 3 2 8l10 5 10-5Z"/><path d="m2 13 10 5 10-5"/><path d="m2 18 10 5 10-5" opacity=".5"/></g></symbol>
     <symbol id="t-sulfur" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M3 21 8 11l4 10Z"/><path d="M9 21 15 4l6 17Z"/></g></symbol>
     <symbol id="t-kit" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M5 8h14v13H5Z"/><path d="M9 8V5a3 3 0 0 1 6 0v3"/><path d="M5 13h14"/><path d="M11 13v3h2v-3"/></g></symbol>
-    <symbol id="i-bullet" viewBox="0 0 48 48">
-      <g><rect x="11" y="20" width="8" height="22" rx="1.2" fill="var(--t2)"/><rect x="11" y="38" width="8" height="4" fill="#00000040"/><path d="M11 20 Q15 7 19 20Z" fill="var(--t1)"/></g>
-      <g><rect x="29" y="20" width="8" height="22" rx="1.2" fill="var(--t2)"/><rect x="29" y="38" width="8" height="4" fill="#00000040"/><path d="M29 20 Q33 7 37 20Z" fill="var(--t1)"/></g>
-    </symbol>
-    <symbol id="i-pbullet" viewBox="0 0 48 48">
-      <g><rect x="12" y="24" width="9" height="16" rx="1.2" fill="var(--t2)"/><path d="M12 24 Q16.5 13 21 24Z" fill="var(--t1)"/></g>
-      <g><rect x="27" y="24" width="9" height="16" rx="1.2" fill="var(--t2)"/><path d="M27 24 Q31.5 13 36 24Z" fill="var(--t1)"/></g>
-    </symbol>
-    <symbol id="i-shell" viewBox="0 0 48 48">
-      <rect x="15" y="8" width="18" height="26" rx="3" fill="var(--t1)"/>
-      <rect x="13" y="34" width="22" height="8" rx="1.5" fill="#c9a54a"/>
-      <path d="M15 14h18" stroke="#00000030" stroke-width="2"/>
-    </symbol>
-    <symbol id="i-f1" viewBox="0 0 48 48">
-      <ellipse cx="24" cy="29" rx="13" ry="15" fill="#5f6b45"/>
-      <path d="M11 24h26 M11 32h26 M18 15v28 M30 15v28" stroke="#4a5435" stroke-width="2"/>
-      <rect x="20" y="8" width="8" height="8" rx="1.5" fill="#8e969c"/>
-      <path d="M28 10 q8 0 8 8" stroke="#c9c2a0" stroke-width="2" fill="none"/>
-    </symbol>
-    <symbol id="i-smoke" viewBox="0 0 48 48">
-      <circle cx="14" cy="12" r="6" fill="#c9cdd0" opacity=".8"/><circle cx="22" cy="8" r="5" fill="#dfe2e4" opacity=".8"/>
-      <rect x="15" y="16" width="18" height="27" rx="3" fill="#6c7378"/>
-      <rect x="15" y="24" width="18" height="6" fill="#e8c547"/>
-      <rect x="19" y="12" width="10" height="5" rx="1" fill="#8e969c"/>
-    </symbol>
-    <symbol id="i-flash" viewBox="0 0 48 48">
-      <rect x="15" y="14" width="18" height="29" rx="3" fill="#4d5358"/>
-      <rect x="15" y="20" width="18" height="3" fill="#8e969c"/><rect x="15" y="34" width="18" height="3" fill="#8e969c"/>
-      <path d="M36 6 l2 5 5 2 -5 2 -2 5 -2-5 -5-2 5-2Z" fill="#fff3c4"/>
-      <rect x="19" y="9" width="10" height="5" rx="1" fill="#8e969c"/>
-    </symbol>
-    <symbol id="i-molotov" viewBox="0 0 48 48">
-      <path d="M19 18 h10 v4 q6 4 6 12 v6 a3 3 0 0 1-3 3 H16 a3 3 0 0 1-3-3 v-6 q0-8 6-12Z" fill="#6f8a5a"/>
-      <rect x="13" y="30" width="22" height="7" fill="#c9b36a"/>
-      <path d="M21 18 q-2-6 3-12 q5 6 3 12Z" fill="#f0a63c"/><path d="M23 17 q-1-4 1-7 q2 3 1 7Z" fill="#ffe08a"/>
-    </symbol>
-    <symbol id="i-syringe" viewBox="0 0 48 48">
-      <g transform="rotate(45 24 24)">
-        <rect x="19" y="10" width="10" height="24" rx="2" fill="#dfe2e4"/>
-        <rect x="19" y="18" width="10" height="12" fill="#d94f3d"/>
-        <rect x="16" y="34" width="16" height="3" rx="1" fill="#8e969c"/>
-        <rect x="23" y="37" width="2" height="8" fill="#8e969c"/>
-        <rect x="22" y="3" width="4" height="7" fill="#8e969c"/><rect x="17" y="2" width="14" height="3" rx="1" fill="#8e969c"/>
-      </g>
-    </symbol>
-    <symbol id="i-medkit" viewBox="0 0 48 48">
-      <rect x="6" y="14" width="36" height="26" rx="3" fill="#dfe2e4"/>
-      <rect x="18" y="9" width="12" height="6" rx="2" fill="none" stroke="#8e969c" stroke-width="2.5"/>
-      <path d="M24 19v16 M16 27h16" stroke="#d94f3d" stroke-width="5"/>
-    </symbol>
-    <symbol id="i-bandage" viewBox="0 0 48 48">
-      <g transform="rotate(-30 24 24)"><rect x="6" y="17" width="36" height="14" rx="7" fill="#e7dcc4"/>
-      <rect x="18" y="17" width="12" height="14" fill="#c4b28c"/>
-      <circle cx="21" cy="21" r="1" fill="#a08f6a"/><circle cx="27" cy="21" r="1" fill="#a08f6a"/><circle cx="21" cy="27" r="1" fill="#a08f6a"/><circle cx="27" cy="27" r="1" fill="#a08f6a"/></g>
-    </symbol>
-    <symbol id="i-stones" viewBox="0 0 48 48">
-      <path d="M5 40 L9 28 L19 24 L24 34 L18 42Z" fill="#8a857a"/><path d="M20 42 L24 28 L34 22 L43 32 L38 43Z" fill="#9a958a"/><path d="M15 22 L21 12 L30 15 L27 22Z" fill="#7a7468"/>
-    </symbol>
     <symbol id="t-book" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M4 4h7a3 3 0 0 1 3 3v14a2 2 0 0 0-2-2H4Z"/><path d="M20 4h-4a2 2 0 0 0-2 2"/><path d="M14 19h6V4"/></g></symbol>
   </defs>
 </svg>
 
 <header class="top">
   <div class="top-in">
-    <div class="brand"><svg class="i"><use href="#i-c4"/></svg><h1>Raid <span>Hesap</span></h1></div>
+    <div class="brand"><svg class="i"><use href="#i-c4"/></svg><h1 lang="en">Raid <span>Hesap</span></h1></div>
     <div class="top-r">
       <small id="top-sub"></small>
       <button class="hbtn" id="help-btn" aria-label="Rehber / Guide">?</button>
@@ -774,10 +942,10 @@ const P = { // koruma profilleri (oyun dosyasından)
   sam:    { AntiVehicle: 1, Blunt: .5, Bullet: 1, Heat: .3, Stab: .5 },
 };
 const T = {
-  wood:  "--t1:#8a6338;--t2:#6b4a27",
-  sheet: "--t1:#8d9499;--t2:#666d72",
-  armor: "--t1:#4d5358;--t2:#2f3438",
-  stone: "--t1:#9a958a;--t2:#6f6b63",
+  wood:  "--t1:#a3733f;--t2:#6f4824",
+  sheet: "--t1:#9ea5aa;--t2:#686f74",
+  armor: "--t1:#5a6167;--t2:#30363a",
+  stone: "--t1:#aaa497;--t2:#736e65",
 };
 const GROUPS = { turret: L("Taretler", "Turrets"), door: L("Kapılar", "Doors"), hatch: L("Kapaklar", "Hatches"), wall: L("Duvarlar", "Walls"), window: L("Pencere ve açıklıklar", "Windows and openings"), ext: L("Dış surlar", "High externals"), dep: L("Eşyalar", "Deployables") };
 const TARGETS = [
