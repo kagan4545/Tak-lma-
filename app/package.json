@@ -1,0 +1,22 @@
+{
+  "name": "raid-hesap",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Raid Hesap: Rust oyuncuları için raid, kit ve toplama hesaplayıcısı",
+  "scripts": {
+    "build": "node scripts/build-www.mjs",
+    "sync": "npm run build && npx cap sync ios",
+    "open": "npx cap open ios"
+  },
+  "dependencies": {
+    "@capacitor-community/admob": "8.3.0",
+    "@capacitor/core": "8.6.0",
+    "@capacitor/ios": "8.6.0"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "8.6.0",
+    "@fontsource/ibm-plex-sans": "5.3.0",
+    "@fontsource/jetbrains-mono": "5.3.0",
+    "@fontsource/saira-condensed": "5.3.0"
+  }
+}

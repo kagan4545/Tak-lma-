@@ -1,0 +1,9 @@
+{
+  "appId": "com.raidhesap.app",
+  "appName": "Raid Hesap",
+  "webDir": "www",
+  "ios": {
+    "contentInset": "never",
+    "backgroundColor": "#14120d"
+  }
+}
