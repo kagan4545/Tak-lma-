@@ -188,6 +188,10 @@ h2 { font-family: var(--f-display); font-weight: 700; text-transform: uppercase;
 .field:focus-within { border-color: var(--sulfur); }
 .quick { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 2px; scrollbar-width: none; }
 .quick button { flex: none; background: var(--panel); border: 1px solid var(--line); border-radius: 999px; padding: 7px 13px; font-family: var(--f-mono); font-size: .82rem; }
+.quick button[aria-pressed="true"] { border-color: var(--sulfur); color: var(--sulfur-ink); background: var(--sulfur); font-weight: 700; }
+.quick .link-chip { font-family: var(--f-body); color: var(--sulfur); border-color: var(--sulfur-dim); }
+.mini { font-family: var(--f-display); font-weight: 600; font-size: .74rem; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); margin-top: 4px; }
+.mat .v small { display: block; text-align: right; font-size: .68rem; color: var(--muted); font-weight: 500; }
 .craft { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 .craft div { background: var(--panel); border: 1px solid var(--line); border-radius: 16px; padding: 12px; display: flex; flex-direction: column; gap: 6px; min-width: 0; }
 .craft svg { width: 46px; height: 46px; }
@@ -360,6 +364,25 @@ h2 { font-family: var(--f-display); font-weight: 700; text-transform: uppercase;
       <path d="M24 12 L38 38 H10Z" fill="none" stroke="var(--t2)" stroke-width="2"/>
       <path d="M20 22 v16 M28 22 v16 M20 27h8 M20 33h8" stroke="var(--t2)" stroke-width="2.4"/>
     </symbol>
+    <symbol id="i-node" viewBox="0 0 48 48">
+      <path d="M4 42 L9 24 L18 14 L31 12 L41 20 L45 42Z" fill="#6f6a60"/>
+      <path d="M9 24 L18 14 L31 12 L26 22 L14 28Z" fill="#8a857a"/>
+      <path d="M15 30 l5 -3 l3 4 l-4 3Z M27 25 l6 -2 l2 5 l-5 2Z M22 36 l5 -2 l2 4 l-5 1Z M34 33 l4 -1 l1 4 l-4 1Z" fill="#e8c547"/>
+    </symbol>
+    <symbol id="i-furnace" viewBox="0 0 48 48">
+      <path d="M10 44 V18 Q10 8 24 8 Q38 8 38 18 V44Z" fill="#7a7468"/>
+      <path d="M10 18 Q10 8 24 8 Q38 8 38 18Z" fill="#8e877a"/>
+      <rect x="16" y="26" width="16" height="13" rx="2" fill="#1d1a14"/>
+      <path d="M19 39 Q20 31 24 29 Q23 34 27 33 Q29 36 29 39Z" fill="#f0a63c"/>
+      <path d="M22 39 Q23 35 25 34 Q26 37 26.5 39Z" fill="#ffe08a"/>
+      <rect x="20" y="2" width="8" height="7" fill="#5f594f"/>
+    </symbol>
+    <symbol id="i-wood" viewBox="0 0 48 48">
+      <rect x="5" y="26" width="38" height="12" rx="6" fill="#8a6338"/>
+      <rect x="8" y="13" width="34" height="12" rx="6" fill="#9c7243"/>
+      <circle cx="11" cy="32" r="5" fill="#c9a06a"/><circle cx="11" cy="32" r="2" fill="#a07a45"/>
+      <circle cx="14" cy="19" r="5" fill="#d2ab74"/><circle cx="14" cy="19" r="2" fill="#a07a45"/>
+    </symbol>
     <symbol id="i-wall" viewBox="0 0 48 48">
       <rect x="4" y="6" width="40" height="38" rx="2" fill="var(--t1)"/>
       <path d="M4 15.5h40 M4 25h40 M4 34.5h40 M16 6v9.5 M32 6v9.5 M10 15.5v9.5 M24 15.5v9.5 M38 15.5v9.5 M16 25v9.5 M32 25v9.5 M10 34.5v9.5 M24 34.5v9.5 M38 34.5v9.5" stroke="var(--t2)" stroke-width="2"/>
@@ -402,6 +425,20 @@ h2 { font-family: var(--f-display); font-weight: 700; text-transform: uppercase;
   <!-- SÜLFÜR -->
   <section class="view" id="view-sulfur" hidden>
     <div class="sec">
+      <h2>Toplama hesabı</h2>
+      <div class="field">
+        <svg class="i"><use href="#i-node"/></svg>
+        <div style="flex:1;min-width:0"><label for="need-in">Gereken sülfür</label><input id="need-in" type="number" inputmode="numeric" min="0" step="100"></div>
+      </div>
+      <div class="quick"><button id="from-plan" class="link-chip"></button></div>
+      <span class="mini">Sunucu çarpanı</span>
+      <div class="quick" id="mult"></div>
+      <span class="mini">Alet</span>
+      <div class="quick" id="tool"></div>
+      <div class="mats" id="gather"></div>
+      <p class="note" id="gather-note"></p>
+    </div>
+    <div class="sec">
       <h2>Elindeki sülfür</h2>
       <div class="field">
         <svg class="i"><use href="#i-sulfur"/></svg>
@@ -429,7 +466,7 @@ h2 { font-family: var(--f-display); font-weight: 700; text-transform: uppercase;
     <div class="tabs" role="tablist">
       <button class="tab" role="tab" data-tab="raid"><svg class="i"><use href="#t-raid"/></svg>Raid</button>
       <button class="tab" role="tab" data-tab="mat"><svg class="i"><use href="#t-mat"/></svg>Malzeme</button>
-      <button class="tab" role="tab" data-tab="sulfur"><svg class="i"><use href="#t-sulfur"/></svg>Sülfür</button>
+      <button class="tab" role="tab" data-tab="sulfur"><svg class="i"><use href="#t-sulfur"/></svg>Toplama</button>
       <button class="tab" role="tab" data-tab="book"><svg class="i"><use href="#t-book"/></svg>Tarifler</button>
     </div>
   </div>
@@ -584,6 +621,31 @@ $("reset").onclick = () => { state.counts = {}; state.choice = {}; state.example
 document.querySelectorAll(".tab").forEach(b => b.onclick = () => { state.tab = b.dataset.tab; render(); window.scrollTo(0, 0); });
 $("strip").onclick = () => { state.tab = state.tab === "mat" ? "raid" : "mat"; render(); window.scrollTo(0, 0); };
 
+// Toplama hesabı verileri (Facepunch wiki + raid sitelerinin node tabloları)
+const TOOLS = [
+  { id: "pick", name: "Pickaxe / Jackhammer", short: "Pickaxe", ore: 300 },
+  { id: "stone", name: "Stone Pickaxe", short: "Stone Pick", ore: 257 },
+  { id: "hammer", name: "Salvaged Hammer", short: "S. Hammer", ore: 146 },
+  { id: "rock", name: "Rock", short: "Rock", ore: 100 },
+];
+const CHAR_PER_WOOD = 0.75;
+const FURNACES = [
+  { name: "Furnace", sec: 1.7, sub: n => `≈ ${fmt(Math.ceil(n * 0.2))} odun yakar` },
+  { name: "Large Furnace", sec: 0.3, sub: () => "En hızlısı, yere kurulur" },
+  { name: "Electric Furnace", sec: 1, sub: () => "Elektrikle çalışır, odun yakmaz" },
+];
+const dur = s => { s = Math.ceil(s); const h = Math.floor(s / 3600), m = Math.floor(s % 3600 / 60), r = s % 60;
+  return h ? `${h} sa ${m} dk` : m ? `${m} dk ${r ? r + " sn" : ""}`.trim() : `${r} sn`; };
+if (state.mult == null) state.mult = 1;
+if (!state.tool) state.tool = "pick";
+if (state.linked == null) state.linked = true;
+$("mult").innerHTML = [1, 1.5, 2, 3, 5, 10].map(v => `<button data-v="${v}">${String(v).replace(".", ",")}x</button>`).join("");
+$("mult").querySelectorAll("button").forEach(b => b.onclick = () => { state.mult = Number(b.dataset.v); render(); });
+$("tool").innerHTML = TOOLS.map(x => `<button data-v="${x.id}">${x.short}</button>`).join("");
+$("tool").querySelectorAll("button").forEach(b => b.onclick = () => { state.tool = b.dataset.v; render(); });
+$("from-plan").onclick = () => { state.linked = true; render(); };
+$("need-in").oninput = e => { state.linked = false; state.need = e.target.value; render(); };
+
 // Sülfür
 const input = $("sulfur-in");
 input.value = state.sulfur;
@@ -657,6 +719,32 @@ function render() {
   $("view-mat").querySelectorAll(".opt").forEach(b => b.onclick = () => { state.choice[b.dataset.t] = b.dataset.m; render(); });
   $("view-mat").querySelectorAll(".mats").forEach(m => { if (!m.children.length) m.parentElement.hidden = true; });
 
+  // Toplama hesabı
+  const planNeed = Math.round(B.sulfur);
+  if (state.linked) state.need = planNeed;
+  const needIn = $("need-in");
+  if (document.activeElement !== needIn) needIn.value = state.need || "";
+  const need = Math.max(0, Number(state.need) || 0);
+  $("from-plan").textContent = planNeed ? `Raid planından al (${fmt(planNeed)})` : "Raid planı boş";
+  $("from-plan").setAttribute("aria-pressed", !!state.linked && planNeed > 0);
+  $("mult").querySelectorAll("button").forEach(b => b.setAttribute("aria-pressed", Number(b.dataset.v) === state.mult));
+  $("tool").querySelectorAll("button").forEach(b => b.setAttribute("aria-pressed", b.dataset.v === state.tool));
+  const tool = TOOLS.find(x => x.id === state.tool) || TOOLS[0];
+  const perNode = tool.ore * state.mult;
+  const nodes = Math.ceil(need / perNode);
+  const fromPlan = state.linked && planNeed > 0;
+  const char = fromPlan ? B.char : need * 1.5;
+  const wood = Math.ceil(char / CHAR_PER_WOOD);
+  const grow = (icon, name, sub, v, vsub, key) => `<div class="mat${key ? " key" : ""}">${icon}<span class="nm">${name}<small>${sub}</small></span><span class="v">${v}${vsub ? `<small>${vsub}</small>` : ""}</span></div>`;
+  $("gather").innerHTML = need ? [
+    grow(ico("node"), "Sülfür taşı", `Taş başına ${fmt(perNode)} ore · ${tool.name} · ${state.mult}x`, fmt(nodes), "taş", true),
+    grow(ico("sulfur"), "Sulfur Ore", "Furnace'ta 1 ore = 1 sülfür", fmt(need)),
+    ...FURNACES.map(f => grow(ico("furnace"), f.name, f.sub(need), dur(need * f.sec), "1 tane ile")),
+    grow(ico("char"), "Charcoal", fromPlan ? "Raid planındaki barut için" : "≈ hepsi barut olursa", fmt(char)),
+    grow(ico("wood"), "Odun (kömür için)", state.mult > 1 ? `Yakınca ~%75'i kömüre döner · ${state.mult}x'te ağaç başına ${String(state.mult).replace(".", ",")} kat odun` : "Yakınca yaklaşık %75'i kömüre döner", "≈ " + fmt(wood), "", false),
+  ].join("") : `<div class="mat"><span class="nm">Gereken sülfürü yaz ya da raid planından al.</span></div>`;
+  $("gather-note").textContent = "Çarpan, taştan ve ağaçtan topladığın miktarı artırır; eritme süresi değişmez. Furnace süreleri tek furnace içindir, iki furnace kullanırsan yarıya iner. Pure Ore Tea taştan çıkan ore'u %50 artırır.";
+
   // Sülfür ekranı
   const s = Math.max(0, Number(state.sulfur) || 0);
   $("craft").innerHTML = Object.keys(EXP).map(x =>
@@ -666,7 +754,7 @@ function render() {
   ["raid", "mat", "sulfur", "book"].forEach(v => $("view-" + v).hidden = state.tab !== v);
   document.querySelectorAll(".tab").forEach(b => b.setAttribute("aria-selected", b.dataset.tab === state.tab));
   strip.hidden = !(state.tab === "raid" || state.tab === "mat");
-  $("top-sub").textContent = { raid: "Raid planla", mat: "Raid planı", sulfur: "Ne kadar yaparım?", book: "Tarifler" }[state.tab];
+  $("top-sub").textContent = { raid: "Raid planla", mat: "Raid planı", sulfur: "Toplama ve eritme", book: "Tarifler" }[state.tab];
   save();
 }
 render();
