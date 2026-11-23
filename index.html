@@ -372,7 +372,7 @@ h2 { font-family: var(--f-display); font-weight: 700; text-transform: uppercase;
       <p class="note" id="missing" style="color:var(--danger)" hidden></p>
       <div class="sec" id="tiles"></div>
     </div>
-    <p class="note">Kasım 2026 raid tablolarına göre derlendi; kaynaklar arasında küçük farklar var. "Yeni" etiketli HQ kapaklar Nisan 2026'da eklendi. "≈ tahmini" olanlar benzer parçadan alındı.</p>
+    <p class="note">Kasım 2026 raid tablolarına göre derlendi; kaynaklar arasında küçük farklar var. "Yeni" etiketli HQ kapaklar Nisan 2026'da eklendi. Explo sayıları 20 m içinden ateş içindir; uzaktan daha fazla gerekir.</p>
   </section>
 
   <!-- MALZEME -->
@@ -456,11 +456,11 @@ const TARGETS = [
   { id: "sdoor",   g: "door",  name: "Metal Door",       icon: "door",     tier: "sheet", c4: 1, rocket: 2,  satchel: 4,  ammo: 63 },
   { id: "gdoor",   g: "door",  name: "Garage Door",      icon: "garage",   tier: "sheet", c4: 2, rocket: 3,  satchel: 9,  ammo: 150 },
   { id: "adoor",   g: "door",  name: "HQ Door",          icon: "door",     tier: "armor", c4: 3, rocket: 5,  satchel: 15, ammo: 250 },
-  { id: "addoor",  g: "door",  name: "HQ Double Door",   icon: "ddoor",    tier: "armor", c4: 3, rocket: 5,  satchel: 15, ammo: 250, est: true },
+  { id: "addoor",  g: "door",  name: "HQ Double Door",   icon: "ddoor",    tier: "armor", c4: 3, rocket: 5,  satchel: 15, ammo: 250 },
   { id: "hatch",   g: "hatch", name: "Ladder Hatch",     icon: "hatch",    tier: "sheet", c4: 1, rocket: 2,  satchel: 4,  ammo: 63 },
   { id: "thatch",  g: "hatch", name: "Triangle Ladder Hatch", icon: "trihatch", tier: "sheet", c4: 1, rocket: 2, satchel: 4, ammo: 63 },
-  { id: "ahatch",  g: "hatch", name: "HQ Ladder Hatch",  icon: "hatch",    tier: "armor", c4: 3, rocket: 5,  satchel: 15, ammo: null, isNew: true },
-  { id: "athatch", g: "hatch", name: "HQ Triangle Ladder Hatch", icon: "trihatch", tier: "armor", c4: 3, rocket: 5, satchel: 15, ammo: null, isNew: true },
+  { id: "ahatch",  g: "hatch", name: "HQ Ladder Hatch",  icon: "hatch",    tier: "armor", c4: 3, rocket: 5,  satchel: 15, ammo: 250, isNew: true },
+  { id: "athatch", g: "hatch", name: "HQ Triangle Ladder Hatch", icon: "trihatch", tier: "armor", c4: 3, rocket: 5, satchel: 15, ammo: 250, isNew: true },
   { id: "wwall",   g: "wall",  name: "Wood Wall",        icon: "wall",     tier: "wood",  c4: 1, rocket: 2,  satchel: 3,  ammo: 49 },
   { id: "stwall",  g: "wall",  name: "Stone Wall",       icon: "wall",     tier: "stone", c4: 2, rocket: 4,  satchel: 10, ammo: 185 },
   { id: "smwall",  g: "wall",  name: "Metal Wall",       icon: "wall",     tier: "sheet", c4: 4, rocket: 8,  satchel: 23, ammo: 400 },
