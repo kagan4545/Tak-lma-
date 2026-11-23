@@ -172,7 +172,7 @@ html, body { background: var(--bg); color: var(--fg); }
 html { background:
   radial-gradient(120% 60% at 50% -10%, rgba(150, 52, 34, .22), transparent 60%),
   repeating-linear-gradient(115deg, rgba(255,255,255,.012) 0 2px, transparent 2px 9px),
-  var(--bg); background-attachment: fixed; }
+  var(--bg); }
 body { background: transparent; }
 body {
   font-family: var(--f-body); font-size: 15px; line-height: 1.4;
@@ -217,14 +217,14 @@ h2 { font-family: var(--f-display); font-weight: 700; text-transform: uppercase;
 /* Hedef kutuları */
 .tiles { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 .tile {
-  position: relative; background: linear-gradient(180deg, #201916, #171210); border: 1.5px solid var(--line); border-radius: 16px;
+  position: relative; contain: layout paint; background: linear-gradient(180deg, #201916, #171210); border: 1.5px solid var(--line); border-radius: 16px;
   box-shadow: inset 0 1px 0 rgba(255,255,255,.05), 0 4px 10px rgba(0,0,0,.25);
   padding: 12px; display: flex; flex-direction: column; gap: 8px; min-width: 0;
   transition: border-color .15s, background .15s;
 }
 .tile.on { border-color: var(--sulfur); background: linear-gradient(180deg, #2a1d19, #1c1411); box-shadow: inset 0 1px 0 rgba(255,255,255,.06), 0 0 0 1px rgba(226,81,58,.25), 0 6px 16px rgba(0,0,0,.35); }
 .tile .art { display: flex; align-items: flex-start; justify-content: space-between; }
-.tile .art svg { width: 56px; height: 56px; filter: drop-shadow(0 3px 3px rgba(0,0,0,.55)); }
+.tile .art svg { width: 56px; height: 56px; }
 .badge { font-family: var(--f-mono); font-weight: 700; font-size: .85rem; background: linear-gradient(180deg, var(--sulfur-hi), #b8341f); color: var(--sulfur-ink); box-shadow: 0 2px 6px rgba(0,0,0,.4); border-radius: 999px; padding: 2px 9px; min-width: 32px; text-align: center; }
 .tile:not(.on) .badge { visibility: hidden; }
 .tname { font-weight: 600; font-size: .95rem; line-height: 1.2; }
@@ -293,7 +293,7 @@ h2 { font-family: var(--f-display); font-weight: 700; text-transform: uppercase;
 /* Alt dok: özet şeridi + sekmeler */
 .dock {
   position: fixed; left: 0; right: 0; bottom: 0; z-index: 25;
-  background: rgba(17,13,12,.95); -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px);
+  background: #120e0d;
   border-top: 1px solid var(--line); box-shadow: 0 -8px 20px rgba(0,0,0,.4);
   padding-left: var(--gutter-l); padding-right: var(--gutter-r);
   padding-bottom: env(safe-area-inset-bottom, 0px);
@@ -353,7 +353,7 @@ h2 { font-family: var(--f-display); font-weight: 700; text-transform: uppercase;
 .mat .v small { display: block; text-align: right; font-size: .68rem; color: var(--muted); font-weight: 500; }
 .craft { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 .craft div { background: linear-gradient(180deg, #1e1714, #161110); border: 1px solid var(--line); border-radius: 16px; padding: 12px; display: flex; flex-direction: column; gap: 6px; min-width: 0; }
-.craft svg { width: 50px; height: 50px; filter: drop-shadow(0 3px 3px rgba(0,0,0,.55)); }
+.craft svg { width: 50px; height: 50px; }
 .craft b { font-family: var(--f-mono); font-size: 1.9rem; color: var(--sulfur); font-variant-numeric: tabular-nums; line-height: 1; }
 .craft span { font-weight: 600; }
 .craft small { font-size: .74rem; color: var(--muted); }
@@ -361,7 +361,7 @@ h2 { font-family: var(--f-display); font-weight: 700; text-transform: uppercase;
 /* Tarifler */
 .recipe { background: linear-gradient(180deg, #1e1714, #161110); border: 1px solid var(--line); border-radius: 16px; padding: 14px; display: flex; flex-direction: column; gap: 10px; }
 .recipe-h { display: flex; align-items: center; gap: 12px; }
-.recipe-h svg { width: 52px; height: 52px; filter: drop-shadow(0 3px 3px rgba(0,0,0,.55)); }
+.recipe-h svg { width: 52px; height: 52px; }
 .recipe-h b { font-family: var(--f-display); font-weight: 700; font-size: 1.2rem; text-transform: uppercase; letter-spacing: .02em; display: block; line-height: 1.1; }
 .recipe-h small { color: var(--muted); font-size: .78rem; }
 
@@ -1237,8 +1237,12 @@ function hits(k, t, side, far) {
 // Can bitene kadar kaç atış (start: kalan can)
 function shots(hp, hs, start = hp) {
   if (hs.every(h => h <= 0)) return null;
-  let n = U(start);
-  for (let g = 1; g <= 100000; g++) { for (const h of hs) n = U(n - h); if (n <= 0) return g; }
+  let n = U(start), g = 0;
+  const per = hs.reduce((x, y) => x + y, 0);
+  // Uzun döngüyü kısalt: kalan cana 3 atış kalana kadar bölmeyle atla, sonra float32 ile tek tek say
+  const skip = Math.floor(n / per) - 3;
+  if (skip > 0) { n = U(n - skip * per); g = skip; }
+  for (; g <= 100000;) { g++; for (const h of hs) n = U(n - h); if (n <= 0) return g; }
   return null;
 }
 
@@ -1289,18 +1293,29 @@ function methods(t) {
     for (const b of ks) {
       // Karışımı sadece güçlü patlayıcıdan başlayıp zayıfla bitirerek dene (tersi aynı yolu verir, boşuna yavaşlatır)
       if (b === a || per(b) > per(a) || (per(b) === per(a) && b < a)) continue;
-      let rem = U(t.hp);
+      // Aynı ikili içinde sadece gerçekten daha az bitiriş gerektiren adımları sakla (gerisi zaten daha kötü)
+      let rem = U(t.hp), lastM = shots(t.hp, H[b]) ?? Infinity;
       for (let l = 1; l < L; l++) {
         for (const h of H[a]) rem = U(rem - h);
         const m = shots(t.hp, H[b], rem);
-        if (m !== null) add({ [a]: l, [b]: m }, true);
+        if (m !== null && m < lastM) { add({ [a]: l, [b]: m }, true); lastM = m; }
       }
     }
   }
+  // Daha kötü yolları ele: bir yolu "baskılayan" yol hep daha ucuz ya da daha az parçalıdır, yani sıralamada önce gelir.
+  // Bu yüzden sıralayıp sadece öncekilere bakmak yeterli; 5 karışık yol bulununca karışıkları aramayı bırak.
   const le = (x, y) => ORDER.every(k => (x.parts[k] || 0) <= (y.parts[k] || 0));
-  const kept = out.filter(m => !out.some(o => o !== m && le(o, m) && !le(m, o)));
-  kept.sort((x, y) => x.sulfur - y.sulfur || x.items - y.items);
-  return kept.filter((m, i) => i < 5 || !m.mix);
+  out.sort((x, y) => x.sulfur - y.sulfur || x.items - y.items);
+  const res = [];
+  for (let i = 0; i < out.length; i++) {
+    const m = out[i];
+    if (m.mix && res.length >= 5) continue; // ilk 5 sıradan sonra karışık yol gösterilmez
+    let dom = false;
+    for (let j = 0; j < i && !dom; j++) { const o = out[j]; if (le(o, m) && !le(m, o)) dom = true; }
+    if (dom) continue;
+    res.push(m);
+  }
+  return res;
 }
 const label = parts => ORDER.filter(k => parts[k]).map(k => `${fmt(parts[k])} ${EXP[k].name}`).join(" + ");
 const icons = parts => ORDER.filter(k => parts[k]).map(k => ico(EXP[k].icon)).join("");
@@ -1575,6 +1590,8 @@ $("help-btn").onclick = () => showTour(1);
 document.addEventListener("keydown", e => { if (e.key === "Escape" && tourStep >= 0) endTour(); });
 
 /* ───────── Çizim ───────── */
+// innerHTML'i sadece içerik değiştiyse yaz (gereksiz yeniden çizimi önler)
+const setHTML = (el, html) => { if (el._html !== html) { el._html = html; el.innerHTML = html; } };
 function render() {
   $("exps").querySelectorAll("button").forEach(b => b.setAttribute("aria-pressed", !!state.enabled[b.dataset.v]));
   $("gl").querySelectorAll("button").forEach(b => b.setAttribute("aria-pressed", (b.dataset.v === "1") === !!state.enabled.he));
@@ -1594,14 +1611,14 @@ function render() {
     if (!m) {
       el.classList.add("na");
       el.querySelector(".badge").textContent = n ? "?" : "";
-      el.querySelector(".need").innerHTML = `<span><b>${L("Seçili patlayıcılarla kırılmaz", "Can't break with selected explosives")}</b><small>${L("Yukarıdan başka patlayıcı aç", "Turn on another explosive above")}</small></span>`;
+      setHTML(el.querySelector(".need"), `<span><b>${L("Seçili patlayıcılarla kırılmaz", "Can't break with selected explosives")}</b><small>${L("Yukarıdan başka patlayıcı aç", "Turn on another explosive above")}</small></span>`);
       if (n) broken += n;
       return;
     }
     el.classList.remove("na");
     el.querySelector(".badge").textContent = n ? fmt(m.sulfur * n) + " S" : "";
     const best = m === t.methods[0];
-    el.querySelector(".need").innerHTML = `<span class="ic">${icons(m.parts)}</span><span><b>${label(m.parts)}</b><small>${best ? L("En ucuz", "Cheapest") : L("Senin seçimin", "Your pick")} · ${fmt(m.sulfur)} S ›</small></span>`;
+    setHTML(el.querySelector(".need"), `<span class="ic">${icons(m.parts)}</span><span><b>${label(m.parts)}</b><small>${best ? L("En ucuz", "Cheapest") : L("Senin seçimin", "Your pick")} · ${fmt(m.sulfur)} S ›</small></span>`);
     if (!n) return;
     sel.push(t);
     for (const k in m.parts) tot[k] = (tot[k] || 0) + m.parts[k] * n;
@@ -1615,6 +1632,7 @@ function render() {
   for (const m in B) B[m] += KT.B[m];
   const kitAny = KT.items.length > 0;
 
+  if (state.tab === "kit") {
   // Kit ekranı
   $("kit-list").querySelectorAll(".kitrow").forEach(el => {
     const it = KIT.find(x => x.id === el.dataset.k), q = state.kit[it.id] || 0, inp = el.querySelector("input");
@@ -1627,16 +1645,18 @@ function render() {
     ? [`<div class="mat total"><span class="nm">${L("Kit sülfürü", "Kit sulfur")}</span><span class="v">${fmt(KT.B.sulfur)}</span></div>`,
        ...RAW.concat(INTER).filter(m => m !== "sulfur" && KT.B[m] > 0).map(m => `<div class="mat">${ico(MAT[m].icon)}<span class="nm">${MAT[m].name}</span><span class="v">${fmt(KT.B[m])}</span></div>`)].join("")
     : `<div class="mat"><span class="nm">${L("Kit boş. Yukarıdan mermi, bomba ya da sağlık ekle.", "Kit is empty. Add ammo, grenades or meds above.")}</span></div>`;
+  }
   const any = sel.length > 0 || kitAny, first = ORDER.find(k => tot[k]) || "c4";
 
   // Sarı şerit
   const strip = $("strip");
   strip.disabled = !any && state.tab === "raid";
   const go = `<span class="go">${{ raid: "Plan ›", mat: "Kit ›", kit: L("Toplama ›", "Farm ›"), sulfur: "‹ Raid" }[state.tab] || ""}</span>`;
-  strip.innerHTML = any
+  setHTML(strip, any
     ? `${ico(sel.length ? EXP[first].icon : "bullet", "i big", sel.length ? "" : BUL("#c9a54a", "#d6b257"))}<span class="txt"><span class="q">${sel.length ? label(tot) : L("Sadece kit", "Kit only")}${kitAny && sel.length ? " + kit" : ""}</span><span class="s">${fmt(B.sulfur)} ${L("sülfür", "sulfur")}</span></span>${go}`
-    : `${ico("c4", "i big")}<span class="txt"><span class="q">${L("Hedef seç", "Pick a target")}</span><span class="s">${L("Kapı, kapak ya da duvar ekle", "Add a door, hatch or wall")}</span></span>${state.tab === "raid" ? "" : go}`;
+    : `${ico("c4", "i big")}<span class="txt"><span class="q">${L("Hedef seç", "Pick a target")}</span><span class="s">${L("Kapı, kapak ya da duvar ekle", "Add a door, hatch or wall")}</span></span>${state.tab === "raid" ? "" : go}`);
 
+  if (state.tab === "mat") {
   // Plan ekranı
   const row = (m, v, key, sub) => `<div class="mat${key ? " key" : ""}">${ico(MAT[m].icon)}<span class="nm">${MAT[m].name}${sub ? `<small>${sub}</small>` : ""}</span><span class="v">${fmt(v)}</span></div>`;
   const list = (ms, opts = {}) => ms.filter(m => B[m] > 0).map(m => row(m, B[m], opts.key === m, opts.sub && opts.sub[m])).join("");
@@ -1667,6 +1687,9 @@ function render() {
   $("view-mat").querySelectorAll(".opt").forEach(b => b.onclick = () => { state.choice[b.dataset.t] = b.dataset.m; render(); });
   $("view-mat").querySelectorAll(".mats").forEach(m => { if (!m.children.length) m.parentElement.hidden = true; });
 
+  }
+
+  if (state.tab === "book") {
   // Tarifler: her hedef için en ucuz yol
   $("best-all").innerHTML = TARGETS.map(t => {
     const b = t.methods[0]; if (!b) return "";
@@ -1674,6 +1697,9 @@ function render() {
     return `<div class="mat best-row">${ico(t.icon, "i", T[t.tier])}<span class="nm">${t.name}<small><span class="ic">${icons(b.parts)}</span>${label(b.parts)}${save > 0 ? " · " + L(`tek patlayıcıya göre ${fmt(save)} S ucuz`, `${fmt(save)} S cheaper than a single explosive`) : ""}</small></span><span class="v">${fmt(b.sulfur)}</span></div>`;
   }).join("");
 
+  }
+
+  if (state.tab === "sulfur") {
   // Toplama hesabı
   const planNeed = Math.round(B.sulfur);
   if (state.linked) state.need = planNeed;
@@ -1733,6 +1759,8 @@ function render() {
   const s = Math.max(0, Number(state.sulfur) || 0);
   $("craft").innerHTML = ORDER.filter(x => !EXP[x].loot).map(x =>
     `<div>${ico(EXP[x].icon)}<b>${fmt(Math.floor(s / UNIT[x]))}</b><span>${EXP[x].long}</span><small>${fmt(UNIT[x])} ${L("sülfür / adet", "sulfur each")}</small></div>`).join("");
+
+  }
 
   // Sekmeler
   ["raid", "mat", "kit", "sulfur", "book"].forEach(v => $("view-" + v).hidden = state.tab !== v);
