@@ -1,0 +1,265 @@
+<title>Raid Hesap</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Saira+Condensed:wght@600;800&family=IBM+Plex+Sans:wght@400;600&family=JetBrains+Mono:wght@500;700&display=swap">
+<style>
+/* Layout: tek sütun, telefon öncelikli; üstte sabit özet paneli, altta hedef listesi */
+:root {
+  color-scheme: dark;
+  --bg: #17150f;
+  --panel: #221f17;
+  --panel-2: #2c281d;
+  --line: #3b3526;
+  --fg: #ece6d4;
+  --muted: #a39b84;
+  --sulfur: #e8c547;
+  --sulfur-ink: #1d1a0c;
+  --warn: #e07a4a;
+  --f-display: "Saira Condensed", "Arial Narrow", system-ui, sans-serif;
+  --f-body: "IBM Plex Sans", system-ui, -apple-system, sans-serif;
+  --f-mono: "JetBrains Mono", ui-monospace, Menlo, monospace;
+}
+* { box-sizing: border-box; }
+html, body { background: var(--bg); color: var(--fg); }
+body {
+  font-family: var(--f-body); font-size: 15px; line-height: 1.45;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 12px 40px;
+  -webkit-tap-highlight-color: transparent;
+}
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--bg); }
+.wrap { max-width: 560px; margin: 0 auto; display: flex; flex-direction: column; gap: 14px; }
+header { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
+h1 { font-family: var(--f-display); font-weight: 800; font-size: 2rem; letter-spacing: .02em; margin: 0; text-transform: uppercase; line-height: 1; }
+h1 span { color: var(--sulfur); }
+.tabs { display: flex; gap: 4px; background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 4px; }
+.tabs button { flex: 1; }
+button { font: inherit; color: inherit; cursor: pointer; border: 0; background: none; }
+button:focus-visible, input:focus-visible { outline: 2px solid var(--sulfur); outline-offset: 2px; }
+.tab { padding: 9px 8px; border-radius: 7px; font-weight: 600; color: var(--muted); }
+.tab[aria-selected="true"] { background: var(--panel-2); color: var(--fg); }
+.label { font-family: var(--f-display); font-weight: 600; text-transform: uppercase; letter-spacing: .08em; font-size: .8rem; color: var(--muted); }
+
+/* Özet */
+.summary { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: var(--sulfur); color: var(--sulfur-ink); border-radius: 12px; padding: 14px 16px; display: grid; gap: 10px; box-shadow: 0 8px 24px rgba(0,0,0,.45); }
+.summary .big { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
+.summary .num { font-family: var(--f-mono); font-weight: 700; font-size: 2.1rem; line-height: 1; font-variant-numeric: tabular-nums; }
+.summary .unit { font-family: var(--f-display); font-weight: 800; text-transform: uppercase; letter-spacing: .06em; font-size: 1rem; }
+.summary .items { font-family: var(--f-display); font-weight: 600; font-size: 1.05rem; text-align: right; }
+.summary .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; border-top: 1px solid rgba(29,26,12,.25); padding-top: 9px; }
+.summary .grid div { display: flex; flex-direction: column; min-width: 0; }
+.summary .grid b { font-family: var(--f-mono); font-size: 1rem; font-variant-numeric: tabular-nums; }
+.summary .grid small { font-size: .72rem; text-transform: uppercase; letter-spacing: .06em; opacity: .75; }
+.summary .extra { font-size: .8rem; opacity: .85; }
+
+/* Patlayıcı seçimi */
+.seg { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; }
+.seg button { background: var(--panel); border: 1px solid var(--line); border-radius: 9px; padding: 8px 4px; display: flex; flex-direction: column; align-items: center; gap: 2px; min-width: 0; }
+.seg button b { font-family: var(--f-display); font-size: .95rem; letter-spacing: .02em; }
+.seg button small { font-family: var(--f-mono); font-size: .68rem; color: var(--muted); }
+.seg button[aria-pressed="true"] { border-color: var(--sulfur); background: var(--panel-2); }
+.seg button[aria-pressed="true"] b { color: var(--sulfur); }
+
+/* Hedef listesi */
+.group { display: flex; flex-direction: column; gap: 6px; }
+.row { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 10px; background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 10px 10px 10px 14px; }
+.row.on { border-color: #6b5c27; background: var(--panel-2); }
+.row .name { font-weight: 600; }
+.row .meta { font-family: var(--f-mono); font-size: .74rem; color: var(--muted); }
+.row .meta em { font-style: normal; color: var(--sulfur); }
+.step { display: flex; align-items: center; gap: 4px; }
+.step button { width: 40px; height: 40px; border-radius: 8px; background: var(--bg); border: 1px solid var(--line); font-size: 1.3rem; line-height: 1; }
+.step button:active { background: var(--line); }
+.step output { width: 30px; text-align: center; font-family: var(--f-mono); font-weight: 700; font-size: 1.1rem; font-variant-numeric: tabular-nums; }
+.row.on .step output { color: var(--sulfur); }
+.actions { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+.ghost { color: var(--muted); font-size: .85rem; padding: 6px 2px; text-decoration: underline; text-underline-offset: 3px; }
+.note { font-size: .78rem; color: var(--muted); }
+.tag { font-size: .72rem; font-family: var(--f-mono); color: var(--warn); }
+
+/* Sülfür sekmesi */
+.field { display: flex; flex-direction: column; gap: 6px; }
+.field input { font-family: var(--f-mono); font-size: 1.6rem; font-weight: 700; background: var(--panel); border: 1px solid var(--line); color: var(--fg); border-radius: 10px; padding: 12px 14px; width: 100%; }
+.quick { display: flex; gap: 6px; flex-wrap: wrap; }
+.quick button { background: var(--panel); border: 1px solid var(--line); border-radius: 999px; padding: 6px 12px; font-family: var(--f-mono); font-size: .82rem; }
+.craft { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.craft div { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 12px; display: flex; flex-direction: column; gap: 2px; }
+.craft b { font-family: var(--f-mono); font-size: 1.8rem; color: var(--sulfur); font-variant-numeric: tabular-nums; line-height: 1.1; }
+.craft span { font-weight: 600; }
+.craft small { font-size: .74rem; color: var(--muted); }
+table { width: 100%; border-collapse: collapse; font-size: .85rem; }
+th, td { text-align: right; padding: 7px 6px; border-bottom: 1px solid var(--line); font-variant-numeric: tabular-nums; }
+th:first-child, td:first-child { text-align: left; }
+th { font-family: var(--f-display); text-transform: uppercase; letter-spacing: .06em; font-size: .75rem; color: var(--muted); font-weight: 600; }
+td { font-family: var(--f-mono); }
+td:first-child { font-family: var(--f-body); }
+.tablewrap { overflow-x: auto; background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 4px 8px; }
+@media (max-width: 380px) { .seg button small { display: none; } .summary .num { font-size: 1.8rem; } }
+@media (prefers-reduced-motion: no-preference) { .summary .num { transition: color .2s; } }
+</style>
+
+<div class="wrap">
+  <header>
+    <h1>Raid <span>Hesap</span></h1>
+    <span class="label">Rust araç kiti</span>
+  </header>
+
+  <div class="tabs" role="tablist">
+    <button class="tab" role="tab" id="tab-raid" aria-selected="true">Raid maliyeti</button>
+    <button class="tab" role="tab" id="tab-sulfur" aria-selected="false">Elimdeki sülfür</button>
+  </div>
+
+  <section id="view-raid" class="group" style="gap:14px">
+    <div class="summary" aria-live="polite">
+      <div class="big">
+        <div><span class="num" id="s-sulfur">0</span> <span class="unit">sülfür</span></div>
+        <div class="items" id="s-items">Hedef seç</div>
+      </div>
+      <div class="grid">
+        <div><b id="s-gp">0</b><small>Barut</small></div>
+        <div><b id="s-char">0</b><small>Kömür</small></div>
+        <div><b id="s-frag">0</b><small>Metal parça</small></div>
+      </div>
+      <div class="extra" id="s-extra"></div>
+    </div>
+
+    <div class="group">
+      <span class="label">Patlayıcı</span>
+      <div class="seg" id="seg"></div>
+    </div>
+
+    <div class="group">
+      <div class="actions">
+        <span class="label">Hedefler</span>
+        <span><span class="tag" id="example-tag">örnek seçim</span> <button class="ghost" id="reset">Sıfırla</button></span>
+      </div>
+      <div class="group" id="list"></div>
+    </div>
+
+    <p class="note">Sayılar oyunun güncel raid tablolarına göre yaklaşık değerlerdir; Facepunch güncellemelerinde değişebilir. "En ucuz" her hedef için en az sülfür harcayan patlayıcıyı seçer.</p>
+  </section>
+
+  <section id="view-sulfur" class="group" style="gap:14px" hidden>
+    <div class="field">
+      <label class="label" for="sulfur-in">Elimdeki sülfür</label>
+      <input id="sulfur-in" type="number" inputmode="numeric" min="0" step="100" value="10000">
+      <div class="quick" id="quick"></div>
+    </div>
+    <div class="craft" id="craft"></div>
+    <span class="label">Tek parça maliyeti</span>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>Patlayıcı</th><th>Sülfür</th><th>Barut</th><th>Kömür</th><th>Metal</th></tr></thead>
+        <tbody id="cost-table"></tbody>
+      </table>
+    </div>
+    <p class="note">Barut tarifi: 10 barut = 20 sülfür + 30 kömür. Patlayıcı (explosives): 50 barut + 10 sülfür + 10 metal parça + 3 düşük kalite yakıt.</p>
+  </section>
+</div>
+
+<script>
+const EXP = {
+  c4:     { name: "C4",      long: "C4 (Timed Explosive)", sulfur: 2200, gp: 1000, char: 3000, frag: 200, extra: { "Bez": 5, "Tech trash": 2, "Düşük kalite yakıt": 60 } },
+  rocket: { name: "Roket",   long: "Roket",                sulfur: 1400, gp: 650,  char: 1950, frag: 100, extra: { "Metal boru": 2, "Düşük kalite yakıt": 30 } },
+  satchel:{ name: "Çanta",   long: "Satchel Charge",       sulfur: 480,  gp: 240,  char: 720,  frag: 80,  extra: { "İp": 1, "Küçük sandık": 1 } },
+  ammo:   { name: "Mermi",   long: "Patlayıcı 5.56",       sulfur: 25,   gp: 10,   char: 30,   frag: 5,   extra: {} },
+};
+const TARGETS = [
+  { id: "wdoor",  name: "Ahşap kapı",          c4: 1, rocket: 2,  satchel: 2,  ammo: 19 },
+  { id: "sdoor",  name: "Sac metal kapı",      c4: 1, rocket: 2,  satchel: 4,  ammo: 63 },
+  { id: "hatch",  name: "Merdivenli kapak",    c4: 1, rocket: 2,  satchel: 4,  ammo: 63 },
+  { id: "gdoor",  name: "Garaj kapısı",        c4: 2, rocket: 3,  satchel: 9,  ammo: 150 },
+  { id: "adoor",  name: "Zırhlı kapı",         c4: 2, rocket: 4,  satchel: 12, ammo: 200 },
+  { id: "wwall",  name: "Ahşap duvar",         c4: 1, rocket: 2,  satchel: 3,  ammo: 49 },
+  { id: "stwall", name: "Taş duvar",           c4: 4, rocket: 10, satchel: 10, ammo: 185 },
+  { id: "smwall", name: "Sac metal duvar",     c4: 4, rocket: 8,  satchel: 23, ammo: 400 },
+  { id: "awall",  name: "Zırhlı duvar",        c4: 8, rocket: 15, satchel: 46, ammo: 799 },
+  { id: "hes",    name: "Yüksek taş sur",      c4: 4, rocket: 10, satchel: 10, ammo: 185 },
+];
+const MODES = ["cheap", "c4", "rocket", "satchel", "ammo"];
+const EXAMPLE = { adoor: 1, stwall: 2 };
+const fmt = n => n.toLocaleString("tr-TR");
+
+let state = { mode: "cheap", counts: { ...EXAMPLE }, example: true, tab: "raid", sulfur: 10000 };
+try { const s = JSON.parse(localStorage.getItem("raidhesap")); if (s && s.counts) state = { ...state, ...s }; } catch (e) {}
+const save = () => { try { localStorage.setItem("raidhesap", JSON.stringify(state)); } catch (e) {} };
+
+function pick(t, mode) {
+  if (mode !== "cheap") return mode;
+  return ["c4", "rocket", "satchel", "ammo"].reduce((best, k) => t[k] * EXP[k].sulfur < t[best] * EXP[best].sulfur ? k : best, "c4");
+}
+
+const seg = document.getElementById("seg");
+MODES.forEach(m => {
+  const b = document.createElement("button");
+  b.dataset.mode = m;
+  b.innerHTML = m === "cheap" ? "<b>En ucuz</b><small>otomatik</small>" : `<b>${EXP[m].name}</b><small>${fmt(EXP[m].sulfur)}</small>`;
+  b.onclick = () => { state.mode = m; render(); };
+  seg.appendChild(b);
+});
+
+const list = document.getElementById("list");
+TARGETS.forEach(t => {
+  const row = document.createElement("div");
+  row.className = "row";
+  row.innerHTML = `<div><div class="name">${t.name}</div><div class="meta"></div></div>
+    <div class="step"><button aria-label="${t.name} azalt">−</button><output>0</output><button aria-label="${t.name} artır">+</button></div>`;
+  const [minus, plus] = row.querySelectorAll("button");
+  const change = d => { state.counts[t.id] = Math.max(0, (state.counts[t.id] || 0) + d); state.example = false; render(); };
+  minus.onclick = () => change(-1);
+  plus.onclick = () => change(1);
+  t.el = row;
+  list.appendChild(row);
+});
+
+document.getElementById("reset").onclick = () => { state.counts = {}; state.example = false; render(); };
+
+function render() {
+  seg.querySelectorAll("button").forEach(b => b.setAttribute("aria-pressed", b.dataset.mode === state.mode));
+  const tot = { sulfur: 0, gp: 0, char: 0, frag: 0 }, used = {}, extra = {};
+  TARGETS.forEach(t => {
+    const n = state.counts[t.id] || 0, k = pick(t, state.mode), q = t[k];
+    t.el.classList.toggle("on", n > 0);
+    t.el.querySelector("output").textContent = n;
+    t.el.querySelector(".meta").innerHTML = `${q} ${EXP[k].name} · <em>${fmt(q * EXP[k].sulfur)}</em> sülfür`;
+    if (!n) return;
+    const c = q * n;
+    used[k] = (used[k] || 0) + c;
+    for (const f in tot) tot[f] += EXP[k][f] * c;
+    for (const e in EXP[k].extra) extra[e] = (extra[e] || 0) + EXP[k].extra[e] * c;
+  });
+  document.getElementById("s-sulfur").textContent = fmt(tot.sulfur);
+  document.getElementById("s-gp").textContent = fmt(tot.gp);
+  document.getElementById("s-char").textContent = fmt(tot.char);
+  document.getElementById("s-frag").textContent = fmt(tot.frag);
+  const parts = Object.keys(used).map(k => `${used[k]} ${EXP[k].name}`);
+  document.getElementById("s-items").textContent = parts.length ? parts.join(" + ") : "Hedef seç";
+  const ex = Object.keys(extra).map(e => `${fmt(extra[e])} ${e}`);
+  document.getElementById("s-extra").textContent = ex.length ? "Ayrıca: " + ex.join(", ") : "";
+  document.getElementById("example-tag").hidden = !state.example;
+
+  ["raid", "sulfur"].forEach(v => {
+    document.getElementById("tab-" + v).setAttribute("aria-selected", state.tab === v);
+    document.getElementById("view-" + v).hidden = state.tab !== v;
+  });
+
+  const s = Math.max(0, Number(state.sulfur) || 0);
+  document.getElementById("craft").innerHTML = ["c4", "rocket", "satchel", "ammo"].map(k =>
+    `<div><b>${fmt(Math.floor(s / EXP[k].sulfur))}</b><span>${EXP[k].long}</span><small>${fmt(EXP[k].sulfur)} sülfür / adet</small></div>`).join("");
+  save();
+}
+
+document.getElementById("cost-table").innerHTML = ["c4", "rocket", "satchel", "ammo"].map(k =>
+  `<tr><td>${EXP[k].long}</td><td>${fmt(EXP[k].sulfur)}</td><td>${fmt(EXP[k].gp)}</td><td>${fmt(EXP[k].char)}</td><td>${fmt(EXP[k].frag)}</td></tr>`).join("");
+
+const input = document.getElementById("sulfur-in");
+input.value = state.sulfur;
+input.oninput = () => { state.sulfur = input.value; render(); };
+document.getElementById("quick").innerHTML = [2200, 5000, 10000, 20000, 50000].map(v => `<button data-v="${v}">${fmt(v)}</button>`).join("");
+document.querySelectorAll("#quick button").forEach(b => b.onclick = () => { input.value = b.dataset.v; state.sulfur = b.dataset.v; render(); });
+document.getElementById("tab-raid").onclick = () => { state.tab = "raid"; render(); };
+document.getElementById("tab-sulfur").onclick = () => { state.tab = "sulfur"; render(); };
+render();
+</script>
